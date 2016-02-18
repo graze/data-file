@@ -63,10 +63,7 @@ class CopyTest extends FileTestCase
         $maker = new MakeDirectory();
         $maker->makeDirectory($newPath, 0444);
 
-        static::setExpectedException(
-            CopyFailedException::class,
-            "Failed to copy file from: '$localFile' to '$newPath'. copy(/not/a/real/path/copy_failed.text): failed to open stream: No such file or directory"
-        );
+        static::setExpectedException(CopyFailedException::class,);
 
         $localFile->copy($newPath->getPath());
     }
