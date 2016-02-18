@@ -60,6 +60,7 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface
         if (!$newPath) {
             $newPath = $this->path . '-copy';
         }
+
         if (@$this->filesystem->copy($this->path, $newPath)) {
             return $this->getClone()->setPath($newPath);
         } else {

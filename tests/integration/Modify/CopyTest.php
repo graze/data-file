@@ -5,6 +5,7 @@ namespace Graze\DataFile\Test\Fuctional\Modify;
 use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Exception\CopyFailedException;
+use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
 use Mockery as m;
@@ -58,13 +59,15 @@ class CopyTest extends FileTestCase
         $localFile = new LocalFile(static::$dir . 'copy_failed.text');
         $localFile->put('some ascii text');
 
-        $newPath = '/not/a/real/path/' . $localFile->getFilename();
+        $newPath = new LocalFile(static::$dir . 'copy_failed/copy_failed.text');
+        $maker = new MakeDirectory();
+        $maker->makeDirectory($newPath, 0444);
 
         static::setExpectedException(
             CopyFailedException::class,
             "Failed to copy file from: '$localFile' to '$newPath'. copy(/not/a/real/path/copy_failed.text): failed to open stream: No such file or directory"
         );
 
-        $localFile->copy($newPath);
+        $localFile->copy($newPath->getPath());
     }
 }

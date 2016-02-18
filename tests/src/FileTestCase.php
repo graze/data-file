@@ -4,7 +4,7 @@ namespace Graze\DataFile\Test;
 
 abstract class FileTestCase extends TestCase
 {
-    const TEST_DATA_PATH = '__tmp/data/';
+    const TEST_DATA_PATH = '/tmp/data/';
 
     /**
      * @var string
@@ -19,7 +19,7 @@ abstract class FileTestCase extends TestCase
     public static function tearDownAfterClass()
     {
         if (is_dir(static::$dir)) {
-            //static::rmDirRecursive(static::$dir);
+            static::rmDirRecursive(static::$dir);
         }
     }
 
@@ -31,7 +31,7 @@ abstract class FileTestCase extends TestCase
     private static function getTestDir()
     {
         date_default_timezone_set('UTC');
-        $dir = __DIR__ . '/' . static::TEST_DATA_PATH . strftime('%Y%m%d-%H%M/');
+        $dir = static::TEST_DATA_PATH . strftime('%Y%m%d-%H%M/');
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true);
         }
