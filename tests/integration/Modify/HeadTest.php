@@ -198,10 +198,7 @@ Line 10
     {
         $file = $this->createFile('option_pass_through.test');
 
-        static::setExpectedException(
-            'InvalidArgumentException',
-            "Missing option: 'lines'"
-        );
+        static::setExpectedException(InvalidArgumentException::class);
 
         $this->head->modify($file);
     }

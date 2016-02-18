@@ -22,7 +22,7 @@ class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactor
     /**
      * @var int
      */
-    private $lines;
+    protected $lines;
 
     /**
      * Can this file be modified by this modifier
@@ -51,12 +51,7 @@ class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactor
     public function modify(FileNodeInterface $file, array $options = [])
     {
         $this->options = $options;
-        $lines = $this->getOption('lines', null);
-
-        if (is_null($lines)) {
-            throw new InvalidArgumentException("Missing option: 'lines'");
-        }
-
+        $lines = $this->requireOption('lines');
         unset($options['lines']);
 
         if (!($file instanceof LocalFile)) {

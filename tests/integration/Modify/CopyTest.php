@@ -63,7 +63,7 @@ class CopyTest extends FileTestCase
         $maker = new MakeDirectory();
         $maker->makeDirectory($newPath, 0444);
 
-        static::setExpectedException(CopyFailedException::class,);
+        static::setExpectedException(CopyFailedException::class);
 
         $localFile->copy($newPath->getPath());
     }
