@@ -1,0 +1,68 @@
+{
+    "name": "graze/data-file",
+    "description": "File manipulation",
+    "keywords": [
+        "graze",
+        "data-file"
+    ],
+    "homepage": "https://github.com/graze/data-file",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Harry Bragg",
+            "email": "harry.bragg@graze.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Graze Developers",
+            "email": "developers@graze.com",
+            "homepage": "http://www.graze.com",
+            "role": "Development Team"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "graze/data-structure": "^2.0",
+        "league/flysystem": "^1.0",
+        "psr/log": "^1.0",
+        "symfony/process": "^3.0",
+        "graze/data-node": "^0.1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.*",
+        "mockery/mockery": "^0.9.4",
+        "squizlabs/php_codesniffer": "^2.5",
+        "league/flysystem-memory": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Graze\\DataFile\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Graze\\DataFile\\Test\\": "tests/src",
+            "Graze\\DataFile\\Test\\Unit\\": "tests/unit",
+            "Graze\\DataFile\\Test\\Integration\\": "tests/integration"
+        }
+    },
+    "scripts": {
+        "test": [
+            "composer lint --quiet",
+            "composer test:unit --quiet",
+            "composer test:integration --quiet"
+        ],
+        "test:unit": [
+            "vendor/bin/phpunit --colors=always --testsuite unit"
+        ],
+        "test:integration": [
+            "vendor/bin/phpunit --colors=always --testsuite integration"
+        ],
+        "lint": [
+            "vendor/bin/phpcs -p --standard=PSR2 --warning-severity=0 src/ tests/"
+        ],
+        "lint:auto-fix": [
+            "vendor/bin/phpcbf -p --standard=PSR2 src/ tests/"
+        ]
+    }
+}
