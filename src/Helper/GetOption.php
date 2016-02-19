@@ -9,7 +9,7 @@ trait GetOption
     /**
      * @var array
      */
-    protected $options;
+    protected $options = [];
 
     /**
      * Get an option value

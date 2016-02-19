@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Test\Functional\Modify\Transfer;
+namespace Graze\DataFile\Test\Integration\Modify\Transfer;
 
 use Graze\DataFile\Modify\Exception\TransferFailedException;
 use Graze\DataFile\Modify\Transfer\FileTransferInterface;

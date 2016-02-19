@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Test\Functional\Modify\Contract;
+namespace Graze\DataFile\Test\Integration\Modify\Contract;
 
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionType;

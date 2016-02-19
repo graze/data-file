@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Test\Functional\Modify;
+namespace Graze\DataFile\Test\Integration\Modify;
 
 use Graze\DataFile\Modify\Exception\MakeDirectoryFailedException;
 use Graze\DataFile\Modify\MakeDirectory;

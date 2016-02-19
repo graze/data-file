@@ -1,6 +1,6 @@
 # data-file
 
-<img align="right" src="http://media1.giphy.com/media/Z8d1CTOi4ola0/giphy.gif" />
+<img align="right" src="http://media1.giphy.com/media/Z8d1CTOi4ola0/giphy.gif" width="300px" />
 
 File manipulation
 
@@ -18,6 +18,15 @@ $ composer require graze/data-file
 - `FileExpanderInterface` - Expand a single file into a collection of files
 - `FileContractorInterface` - Contract a collection of files into a single file
 - `FileTransferInterface` - Transfer a file to another file system
+
+### Things
+
+- Compression: `Gzip`,`Zip`
+- Merging
+- Generic File Transfer
+- Convert Encoding
+- Manipulation: `Replace Text`,`Head`,`Tail`
+- Info: `FileInfo`
 
 ## Testing
 

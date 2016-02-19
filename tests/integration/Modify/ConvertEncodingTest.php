@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Test\Functional\Modify;
+namespace Graze\DataFile\Test\Integration\Modify;
 
 use Graze\DataFile\Modify\ConvertEncoding;
 use Graze\DataFile\Node\FileNodeInterface;

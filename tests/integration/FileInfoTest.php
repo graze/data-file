@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Test\Functional\Info\File;
+namespace Graze\DataFile\Test\Integration\Info\File;
 
 use Graze\DataFile\FileInfo;
 use Graze\DataFile\Helper\Process\ProcessFactory;
