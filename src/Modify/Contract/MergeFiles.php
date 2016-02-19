@@ -74,7 +74,7 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
         $maker = new MakeDirectory();
         $maker->makeDirectory($file);
 
-        $process = $this->processFactory->createProcess($cmd);
+        $process = $this->getProcess($cmd);
         $process->run();
 
         if (!$process->isSuccessful()) {

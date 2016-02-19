@@ -11,7 +11,7 @@ trait ProcessTrait
     /**
      * @var ProcessFactory
      */
-    protected $processFactory;
+    private $processFactory;
 
     /**
      * @param ProcessFactory $processFactory
