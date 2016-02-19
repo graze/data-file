@@ -16,4 +16,8 @@ before_script:
 
 script:
   - composer lint
-  - composer test
+  - composer test:coverage-clover
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover ./tests/report/coverage.clover

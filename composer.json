@@ -59,6 +59,12 @@
         "test:integration": [
             "vendor/bin/phpunit --colors=always --testsuite integration"
         ],
+        "test:coverage": [
+            "vendor/bin/phpunit --coverage-text"
+        ],
+        "test:coverage-clover": [
+            "vendor/bin/phpunit --coverage-clover=./tests/report/coverage.clover"
+        ],
         "lint": [
             "vendor/bin/phpcs -p --standard=PSR2 --warning-severity=0 src/ tests/"
         ],
