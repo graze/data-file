@@ -30,7 +30,12 @@ class MetadataFinder implements FileFinderInterface
     public function findFiles(FileNodeCollectionInterface $files)
     {
         return $files->filter(function (FileNode $file) {
-            return ($this->filter->matches($file->getMetadata()));
+            $metadata = $file->getMetadata();
+            if ($metadata) {
+                return ($this->filter->matches($file->getMetadata()));
+            } else {
+                return false;
+            }
         });
     }
 }

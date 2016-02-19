@@ -13,13 +13,13 @@ abstract class FileTestCase extends TestCase
 
     public static function setUpBeforeClass()
     {
-        static::$dir = static::getTestDir();
+        static::$dir = self::getTestDir();
     }
 
     public static function tearDownAfterClass()
     {
         if (is_dir(static::$dir)) {
-            static::rmDirRecursive(static::$dir);
+            self::rmDirRecursive(static::$dir);
         }
     }
 
@@ -49,7 +49,7 @@ abstract class FileTestCase extends TestCase
     {
         $files = array_diff(scandir($path), array('.', '..'));
         foreach ($files as $file) {
-            (is_dir("$path/$file")) ? static::rmDirRecursive("$path/$file") : unlink("$path/$file");
+            (is_dir("$path/$file")) ? self::rmDirRecursive("$path/$file") : unlink("$path/$file");
         }
         return rmdir($path);
     }

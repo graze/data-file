@@ -9,6 +9,7 @@ use Graze\DataFile\Finder\MetadataFinder;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeCollection;
 use Graze\DataFile\Test\TestCase;
+use Hamcrest\Core\AllOf;
 use Mockery as m;
 
 class MetadataFinderTest extends TestCase
@@ -60,5 +61,18 @@ class MetadataFinderTest extends TestCase
         $found = $finder->findFiles($collection);
         static::assertCount(1, $found->getAll());
         static::assertEquals([$file], $found->getAll());
+    }
+
+    public function testFindFilesReturningFalseWillNotIncludeTheFileInTheResults()
+    {
+        $file = m::mock(FileNode::class);
+        $file->shouldReceive('getMetadata')
+             ->andReturn(false);
+        $collection = new FileNodeCollection();
+        $collection->add($file);
+
+        $finder = new MetadataFinder(new AllOfFilter());
+
+        static::assertEquals(0, $finder->findFiles($collection)->count());
     }
 }

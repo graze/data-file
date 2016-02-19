@@ -94,8 +94,6 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
         $output = $file->getClone()
                        ->setPath($outputFilePath);
 
-        $replacementString = null;
-
         if (is_array($fromText)) {
             if (is_array($toText) &&
                 count($fromText) == count($toText)

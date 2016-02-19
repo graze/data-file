@@ -17,7 +17,7 @@ use Mockery as m;
 class MergeFilesTest extends FileTestCase
 {
     /**
-     * @var ProcessFactory
+     * @var ProcessFactory|m\MockInterface
      */
     protected $processFactory;
 
