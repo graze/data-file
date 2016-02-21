@@ -2,11 +2,11 @@
 
 namespace Graze\DataFile\Test\Helper;
 
-use Graze\DataFile\Helper\GetOption;
+use Graze\DataFile\Helper\GetOptionTrait;
 
 class FakeGetOption
 {
-    use GetOption;
+    use GetOptionTrait;
 
     /**
      * @param array $options

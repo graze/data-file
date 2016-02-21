@@ -2,11 +2,11 @@
 
 namespace Graze\DataFile\Format;
 
-use Graze\DataFile\Helper\GetOption;
+use Graze\DataFile\Helper\GetOptionTrait;
 
 class CsvFormat implements CsvFormatInterface
 {
-    use GetOption;
+    use GetOptionTrait;
 
     const DEFAULT_DELIMITER       = ',';
     const DEFAULT_NULL_OUTPUT     = '\\N';

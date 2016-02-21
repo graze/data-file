@@ -2,9 +2,10 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
+use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
-use Graze\DataFile\Helper\Process\ProcessTrait;
+use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use InvalidArgumentException;
@@ -15,7 +16,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
 {
     use OptionalLoggerTrait;
-    use ProcessTrait;
+    use FileProcessTrait;
+    use GetOptionTrait;
 
     /**
      * Compress a file and return the new file
@@ -44,6 +46,7 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
      */
     public function zip(LocalFile $file, array $options = [])
     {
+        $this->options = $options;
         $pathInfo = pathinfo($file->getPath());
 
         if (!$file->exists()) {
@@ -61,33 +64,7 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
         ]);
         $cmd = "zip {$outputFile->getPath()} {$file->getPath()}";
 
-        $process = $this->getProcess($cmd);
-        $process->run();
-
-        if (!$process->isSuccessful() || !$outputFile->exists() || exec("wc -c < {$outputFile->getPath()}") == 0) {
-            throw new ProcessFailedException($process);
-        }
-
-        if (!$this->getOption($options, 'keepOldFile', true)) {
-            $this->log(LogLevel::DEBUG, "Deleting old file: {file}", ['file' => $file]);
-            $file->delete();
-        }
-
-        return $outputFile;
-    }
-
-    /**
-     * Get an option value
-     *
-     * @param array  $options
-     * @param string $name
-     * @param mixed  $default
-     *
-     * @return mixed
-     */
-    private function getOption($options, $name, $default)
-    {
-        return (isset($options[$name])) ? $options[$name] : $default;
+        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 
     /**
@@ -116,6 +93,7 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
      */
     public function unzip(LocalFile $file, array $options = [])
     {
+        $this->options = $options;
         $pathInfo = pathinfo($file->getPath());
 
         if (!$file->exists()) {
@@ -134,18 +112,6 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
 
         $cmd = "unzip -p {$file->getPath()} > {$outputFile->getPath()}";
 
-        $process = $this->getProcess($cmd);
-        $process->run();
-
-        if (!$process->isSuccessful() || !$outputFile->exists() || exec("wc -c < {$outputFile->getPath()}") == 0) {
-            throw new ProcessFailedException($process);
-        }
-
-        if (!$this->getOption($options, 'keepOldFile', true)) {
-            $this->log(LogLevel::DEBUG, "Deleting old file: {file}", ['file' => $file]);
-            $file->delete();
-        }
-
-        return $outputFile;
+        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 }

@@ -4,7 +4,7 @@ namespace Graze\DataFile\Helper;
 
 use InvalidArgumentException;
 
-trait GetOption
+trait GetOptionTrait
 {
     /**
      * @var array

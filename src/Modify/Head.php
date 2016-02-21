@@ -2,7 +2,7 @@
 
 namespace Graze\DataFile\Modify;
 
-use Graze\DataFile\Helper\GetOption;
+use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
@@ -16,8 +16,8 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
 {
     use OptionalLoggerTrait;
-    use ProcessTrait;
-    use GetOption;
+    use FileProcessTrait;
+    use GetOptionTrait;
 
     /**
      * @var int
@@ -97,18 +97,6 @@ class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactor
 
         $cmd = sprintf('head -n %s %s > %s', $this->lines, $file->getPath(), $output->getPath());
 
-        $process = $this->getProcess($cmd);
-        $process->run();
-
-        if (!$process->isSuccessful() || !$output->exists()) {
-            throw new ProcessFailedException($process);
-        }
-
-        if (!$this->getOption('keepOldFile', true)) {
-            $this->log(LogLevel::DEBUG, "Deleting original file: {file}", ['file' => $file]);
-            $file->delete();
-        }
-
-        return $output;
+        return $this->processFile($file, $output, $cmd, $this->getOption('keepOldFile', true));
     }
 }

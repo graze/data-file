@@ -3,7 +3,7 @@
 namespace Graze\DataFile\Modify\Contract;
 
 use DirectoryIterator;
-use Graze\DataFile\Helper\GetOption;
+use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
@@ -18,7 +18,7 @@ use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MergeFiles implements FileContractorInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
 {
-    use GetOption;
+    use GetOptionTrait;
     use OptionalLoggerTrait;
     use ProcessTrait;
 
