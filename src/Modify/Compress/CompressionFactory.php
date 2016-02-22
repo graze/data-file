@@ -10,12 +10,12 @@ class CompressionFactory
     const TYPE_UNKNOWN = 'unknown';
 
     /**
-     * @var CompressionTypeInterface[]
+     * @var CompressorInterface[]
      */
     private $compressors;
 
     /**
-     * @var CompressionTypeInterface[]
+     * @var DeCompressorInterface[]
      */
     private $deCompressors;
 
@@ -26,9 +26,7 @@ class CompressionFactory
         $zip = new Zip();
 
         $this->addCompressor($gzip);
-        $this->addDecompressor($gzip);
         $this->addCompressor($zip);
-        $this->addDecompressor($zip);
     }
 
     /**
@@ -38,17 +36,14 @@ class CompressionFactory
      */
     public function addCompressor(CompressionTypeInterface $type)
     {
-        $this->compressors[$type->getName()] = $type;
-    }
+        if ($type instanceof CompressorInterface) {
+            $this->compressors[$type->getName()] = $type;
+        }
+        if ($type instanceof DeCompressorInterface) {
+            $this->deCompressors[$type->getName()] = $type;
+        }
 
-    /**
-     * @param CompressionTypeInterface $type
-     *
-     * @return static
-     */
-    public function addDeCompressor(CompressionTypeInterface $type)
-    {
-        $this->deCompressors[$type->getName()] = $type;
+        return $this;
     }
 
     /**

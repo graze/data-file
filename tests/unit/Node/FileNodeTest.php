@@ -3,7 +3,6 @@
 namespace Graze\DataFile\Test\Integration\Node;
 
 use Graze\DataFile\Modify\Exception\CopyFailedException;
-use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Test\TestCase;
 use League\Flysystem\FilesystemInterface;
@@ -31,8 +30,8 @@ class FileNodeTest extends TestCase
         $newPath = new FileNode($fileSystem, 'some/target');
 
         $fileSystem->shouldReceive('copy')
-            ->with($localFile->getPath(), $newPath->getPath())
-            ->andReturn(false);
+                   ->with($localFile->getPath(), $newPath->getPath())
+                   ->andReturn(false);
 
         $this->expectException(CopyFailedException::class);
 

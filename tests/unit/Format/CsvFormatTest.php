@@ -33,7 +33,7 @@ class CsvFormatTest extends TestCase
             'quoteCharacter' => '',
             'nullOutput'     => '',
             'includeHeaders' => false,
-            'lineTerminator' => "----"
+            'lineTerminator' => "----",
         ]);
 
         static::assertEquals("\t", $definition->getDelimiter(), "Delimiter should be set to '\\t' (tab)");

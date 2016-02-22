@@ -2,7 +2,6 @@
 
 namespace Graze\DataFile\Test\Unit\Format;
 
-use Graze\DataFile\Format\FormatAwareInterface;
 use Graze\DataFile\Test\Format\FakeFormatAware;
 use Graze\DataFile\Test\TestCase;
 use Mockery as m;
@@ -33,7 +32,7 @@ class FormatAwareTraitTest extends TestCase
         $this->formatAware->setFormat($format);
 
         $format->shouldReceive('getType')
-            ->andReturn('test_format');
+               ->andReturn('test_format');
 
         static::assertEquals('test_format', $this->formatAware->getFormatType());
     }

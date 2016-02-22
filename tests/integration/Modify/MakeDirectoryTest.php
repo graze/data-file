@@ -2,7 +2,6 @@
 
 namespace Graze\DataFile\Test\Integration\Modify;
 
-use Graze\DataFile\Modify\Exception\MakeDirectoryFailedException;
 use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;

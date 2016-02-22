@@ -9,7 +9,6 @@ use Graze\DataFile\Finder\MetadataFinder;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeCollection;
 use Graze\DataFile\Test\TestCase;
-use Hamcrest\Core\AllOf;
 use Mockery as m;
 
 class MetadataFinderTest extends TestCase
