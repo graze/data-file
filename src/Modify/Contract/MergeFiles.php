@@ -8,7 +8,6 @@ use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
-use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeCollectionInterface;

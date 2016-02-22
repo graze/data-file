@@ -2,7 +2,6 @@
 
 namespace Graze\DataFile\Test\Integration\Node;
 
-use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
@@ -100,8 +99,10 @@ class LocalFileTest extends FileTestCase
 
         $compressed->getContents();
 
-        static::assertFalse(file_exists(static::$dir . 'file_uncompressed_todelete'),
-            "The uncompressed file should be deleted");
+        static::assertFalse(
+            file_exists(static::$dir . 'file_uncompressed_todelete'),
+            "The uncompressed file should be deleted"
+        );
     }
 
     public function testSetEncodingModifiesTheEncoding()

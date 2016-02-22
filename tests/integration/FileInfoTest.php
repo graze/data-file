@@ -5,8 +5,6 @@ namespace Graze\DataFile\Test\Integration\Info\File;
 use Graze\DataFile\FileInfo;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
-use Graze\DataFile\Modify\Compress\CompressionType;
-use Graze\DataFile\Modify\Compress\Compressor;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Compress\Zip;
 use Graze\DataFile\Node\LocalFile;

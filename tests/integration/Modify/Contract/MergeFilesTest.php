@@ -4,7 +4,6 @@ namespace Graze\DataFile\Test\Integration\Modify\Contract;
 
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
-use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Contract\FileContractorInterface;
 use Graze\DataFile\Modify\Contract\MergeFiles;

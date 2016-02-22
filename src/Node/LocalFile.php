@@ -9,7 +9,7 @@ use League\Flysystem\Filesystem;
 class LocalFile extends FileNode implements LocalFileNodeInterface
 {
     /**
-     * @var string - CompressionType::
+     * @var string
      */
     protected $compression;
 

@@ -79,7 +79,7 @@ class CompressionFactory
     }
 
     /**
-     * @param string $compression CompressionType::
+     * @param string $compression
      *
      * @return DeCompressorInterface
      * @throws InvalidCompressionTypeException

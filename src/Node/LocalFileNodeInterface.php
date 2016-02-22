@@ -5,7 +5,7 @@ namespace Graze\DataFile\Node;
 interface LocalFileNodeInterface extends FileNodeInterface
 {
     /**
-     * @return string - see CompressionType::
+     * @return string
      */
     public function getCompression();
 

@@ -2,10 +2,7 @@
 
 namespace Graze\DataFile\Test\Fuctional\Modify;
 
-use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\Compress\Gzip;
-use Graze\DataFile\Modify\Exception\CopyFailedException;
-use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
 use Mockery as m;
