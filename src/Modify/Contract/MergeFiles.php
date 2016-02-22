@@ -9,6 +9,7 @@ use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\MakeDirectory;
+use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeCollectionInterface;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
@@ -24,11 +25,16 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
 
     /**
      * @param FileNodeCollectionInterface $files
+     * @param FileNodeInterface           $target
      *
      * @return bool
      */
-    public function canContract(FileNodeCollectionInterface $files)
+    public function canContract(FileNodeCollectionInterface $files, FileNodeInterface $target)
     {
+        if (!($target instanceof LocalFile)) {
+            return false;
+        }
+
         foreach ($files->getIterator() as $file) {
             if (!($file instanceof LocalFile) ||
                 !($file->exists()) ||
@@ -44,25 +50,22 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
      * Do the expansion and return a collection
      *
      * @param FileNodeCollectionInterface $files
-     * @param FileNodeInterface           $file
+     * @param FileNodeInterface           $target
      * @param array                       $options :keepOldFiles <bool> (Default: true) Keep the old files after merging
      *
      * @return FileNodeInterface
      */
     public function contract(
         FileNodeCollectionInterface $files,
-        FileNodeInterface $file,
+        FileNodeInterface $target,
         array $options = []
     ) {
         $this->options = $options;
-        if (!$this->canContract($files)) {
+        if (!$this->canContract($files, $target)) {
             throw new \InvalidArgumentException("The supplied files are not valid");
         }
-        if (!($file instanceof LocalFile)) {
-            throw new \InvalidArgumentException("The supplied file should be a local file");
-        }
 
-        $this->log(LogLevel::INFO, "Merging files in collection $files into: {$file}");
+        $this->log(LogLevel::INFO, "Merging files in collection $files into: {$target}");
 
         $filePaths = $files->map(function (LocalFile $item) {
             return $item->getPath();
@@ -71,11 +74,27 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
         $cmd = sprintf(
             'cat %s > %s',
             implode(' ', $filePaths),
-            $file->getPath()
+            $target->getPath()
         );
 
-        $maker = new MakeDirectory();
-        $maker->makeDirectory($file);
+        return $this->runCommand($files, $target, $cmd, $this->getOption('keepOldFiles', true));
+    }
+
+    /**
+     * @param FileNodeCollectionInterface $files
+     * @param FileNodeInterface           $target
+     * @param string                      $cmd
+     * @param bool                        $keepOld
+     *
+     * @return FileNodeInterface
+     * @throws \Graze\DataFile\Modify\Exception\MakeDirectoryFailedException
+     */
+    private function runCommand(FileNodeCollectionInterface $files, FileNodeInterface $target, $cmd, $keepOld = true)
+    {
+        if ($target instanceof FileNode) {
+            $maker = new MakeDirectory();
+            $maker->makeDirectory($target);
+        }
 
         $process = $this->getProcess($cmd);
         $process->run();
@@ -84,7 +103,7 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
             throw new ProcessFailedException($process);
         }
 
-        if (!$this->getOption('keepOldFiles', true)) {
+        if (!$keepOld) {
             $this->log(LogLevel::DEBUG, "Deleting old files in collection $files");
             $files->map(function (LocalFile $item) {
                 if ($item->exists()) {
@@ -97,6 +116,6 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
             });
         }
 
-        return $file;
+        return $target;
     }
 }

@@ -22,10 +22,6 @@ class MakeDirectory
      */
     public function makeDirectory(FileNode $file, $visibility = null)
     {
-        if (!($file instanceof FileNode)) {
-            throw new \InvalidArgumentException("Node: $file is not a FileNode");
-        }
-
         $madeDirectory = $file->getFilesystem()->createDir($file->getDirectory(), [
             'visibility' => $visibility ?: static::VISIBILITY_PUBLIC,
         ]);

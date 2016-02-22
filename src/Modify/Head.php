@@ -20,7 +20,7 @@ class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactor
     use GetOptionTrait;
 
     /**
-     * @var int
+     * @var string
      */
     protected $lines;
 

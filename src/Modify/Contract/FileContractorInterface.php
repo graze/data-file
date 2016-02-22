@@ -9,23 +9,24 @@ interface FileContractorInterface
 {
     /**
      * @param FileNodeCollectionInterface $files
+     * @param FileNodeInterface           $target
      *
      * @return bool
      */
-    public function canContract(FileNodeCollectionInterface $files);
+    public function canContract(FileNodeCollectionInterface $files, FileNodeInterface $target);
 
     /**
      * Do the expansion and return a collection
      *
      * @param FileNodeCollectionInterface $files
-     * @param FileNodeInterface           $file
+     * @param FileNodeInterface           $target
      * @param array                       $options
      *
      * @return FileNodeInterface
      */
     public function contract(
         FileNodeCollectionInterface $files,
-        FileNodeInterface $file,
+        FileNodeInterface $target,
         array $options = []
     );
 }
