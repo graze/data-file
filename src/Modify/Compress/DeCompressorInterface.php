@@ -2,17 +2,17 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
-use Graze\DataFile\Node\FileNodeInterface;
+use Graze\DataFile\Node\LocalFileNodeInterface;
 
 interface DeCompressorInterface
 {
     /**
      * Decompress a file and return the decompressed file
      *
-     * @param FileNodeInterface $node
-     * @param array             $options
+     * @param LocalFileNodeInterface $node
+     * @param array                  $options
      *
-     * @return FileNodeInterface
+     * @return LocalFileNodeInterface
      */
-    public function decompress(FileNodeInterface $node, array $options = []);
+    public function decompress(LocalFileNodeInterface $node, array $options = []);
 }

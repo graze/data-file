@@ -37,7 +37,7 @@ class CopyTest extends FileTestCase
         $gzip = new Gzip();
         $gzipped = $gzip->compress($newFile);
 
-        static::assertEquals(CompressionType::GZIP, $gzipped->getCompression());
+        static::assertEquals(Gzip::NAME, $gzipped->getCompression());
 
         $gzipCopy = $gzipped->copy($gzipped->getPath() . '.copy');
 

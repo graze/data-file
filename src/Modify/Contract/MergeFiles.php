@@ -7,6 +7,7 @@ use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
+use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressionType;
 use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\FileNode;
@@ -38,7 +39,7 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
         foreach ($files->getIterator() as $file) {
             if (!($file instanceof LocalFile) ||
                 !($file->exists()) ||
-                ($file->getCompression() != CompressionType::NONE)
+                ($file->getCompression() != CompressionFactory::TYPE_NONE)
             ) {
                 return false;
             }

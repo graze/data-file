@@ -62,7 +62,7 @@ class LocalFileTest extends FileTestCase
     public function testCompression()
     {
         $file = (new LocalFile(static::$dir . 'file_compression.test'))
-            ->setCompression(CompressionType::GZIP);
+            ->setCompression(Gzip::NAME);
         static::assertEquals('gzip', $file->getCompression());
     }
 
@@ -100,7 +100,8 @@ class LocalFileTest extends FileTestCase
 
         $compressed->getContents();
 
-        static::assertFalse(file_exists(static::$dir . 'file_uncompressed_todelete'), "The uncompressed file should be deleted");
+        static::assertFalse(file_exists(static::$dir . 'file_uncompressed_todelete'),
+            "The uncompressed file should be deleted");
     }
 
     public function testSetEncodingModifiesTheEncoding()
@@ -129,9 +130,9 @@ class LocalFileTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'file_set_compression.test');
         $file->put('uncompressed contents');
 
-        $file->setCompression(CompressionType::GZIP);
+        $file->setCompression(Gzip::NAME);
 
-        static::assertEquals(CompressionType::GZIP, $file->getCompression());
+        static::assertEquals(Gzip::NAME, $file->getCompression());
     }
 
     public function testSetCompressionReturnsIsFluent()
@@ -139,7 +140,7 @@ class LocalFileTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'file_set_compression2.test');
         $file->put('uncompressed contents');
 
-        $newFile = $file->setCompression(CompressionType::GZIP);
+        $newFile = $file->setCompression(Gzip::NAME);
 
         static::assertNotNull($newFile);
         static::assertSame($file, $newFile);

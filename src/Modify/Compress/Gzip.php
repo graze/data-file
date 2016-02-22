@@ -2,14 +2,34 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
-class Gzip extends AbstractCompressor
+use Graze\DataFile\Helper\GetOptionTrait;
+use Graze\DataFile\Helper\OptionalLoggerTrait;
+use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
+use Graze\DataFile\Modify\FileProcessTrait;
+use Graze\DataFile\Node\LocalFileNodeInterface;
+use Psr\Log\LoggerAwareInterface;
+
+class Gzip implements
+    CompressionTypeInterface,
+    CompressorInterface,
+    DeCompressorInterface,
+    LoggerAwareInterface,
+    ProcessFactoryAwareInterface
 {
+    use GetOptionTrait;
+    use FileProcessTrait;
+    use OptionalLoggerTrait;
+    use CompressorTrait;
+    use DeCompressorTrait;
+
+    const NAME = 'gzip';
+
     /**
      * Get the extension used by this compressor
      *
      * @return string
      */
-    protected function getExtension()
+    public function getExtension()
     {
         return 'gz';
     }
@@ -17,34 +37,34 @@ class Gzip extends AbstractCompressor
     /**
      * @return string
      */
-    protected function getCompression()
+    public function getName()
     {
-        return CompressionType::GZIP;
+        return static::NAME;
     }
 
     /**
      * Get the command line to compress a file
      *
-     * @param string $fromPath
-     * @param string $toPath
+     * @param LocalFileNodeInterface $from
+     * @param LocalFileNodeInterface $to
      *
      * @return string
      */
-    protected function getCompressCommand($fromPath, $toPath)
+    public function getCompressCommand(LocalFileNodeInterface $from, LocalFileNodeInterface $to)
     {
-        return sprintf("gzip -c %s > %s", escapeshellarg($fromPath), escapeshellarg($toPath));
+        return sprintf("gzip -c %s > %s", escapeshellarg($from->getPath()), escapeshellarg($to->getPath()));
     }
 
     /**
      * Get the command line to decompress a file
      *
-     * @param string $fromPath
-     * @param string $toPath
+     * @param LocalFileNodeInterface $from
+     * @param LocalFileNodeInterface $to
      *
      * @return string
      */
-    protected function getDecompressCommand($fromPath, $toPath)
+    public function getDecompressCommand(LocalFileNodeInterface $from, LocalFileNodeInterface $to)
     {
-        return sprintf("gunzip -c %s > %s", escapeshellarg($fromPath), escapeshellarg($toPath));
+        return sprintf("gunzip -c %s > %s", escapeshellarg($from->getPath()), escapeshellarg($to->getPath()));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Graze\DataFile\Modify\Compress;
+namespace Graze\DataFile\Modify\Exception;
 
 use Exception;
 

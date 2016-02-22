@@ -15,14 +15,16 @@ interface LocalFileNodeInterface extends FileNodeInterface
     public function getEncoding();
 
     /**
-     * @param string $compression - @see CompressionType::
-     * @return $this
+     * @param string $compression - @see CompressionFactory
+     *
+     * @return static
      */
     public function setCompression($compression);
 
     /**
      * @param string $encoding
-     * @return $this
+     *
+     * @return static
      */
     public function setEncoding($encoding);
 }

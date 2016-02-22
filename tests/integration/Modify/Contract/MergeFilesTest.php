@@ -3,7 +3,9 @@
 namespace Graze\DataFile\Test\Integration\Modify\Contract;
 
 use Graze\DataFile\Helper\Process\ProcessFactory;
+use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressionType;
+use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Contract\FileContractorInterface;
 use Graze\DataFile\Modify\Contract\MergeFiles;
 use Graze\DataFile\Modify\MakeDirectory;
@@ -57,7 +59,7 @@ class MergeFilesTest extends FileTestCase
         $file1->shouldReceive('exists')
               ->andReturn(true);
         $file1->shouldReceive('getCompression')
-              ->andReturn(CompressionType::NONE);
+              ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file1);
 
         $out = m::mock(LocalFile::class);
@@ -66,7 +68,7 @@ class MergeFilesTest extends FileTestCase
 
         $file2 = m::mock(FileNodeInterface::class);
         $file2->shouldReceive('getCompression')
-              ->andReturn(CompressionType::NONE);
+              ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file2);
 
         static::assertFalse($this->merge->canContract($collection, $out));
@@ -79,7 +81,7 @@ class MergeFilesTest extends FileTestCase
         $file1->shouldReceive('exists')
               ->andReturn(true);
         $file1->shouldReceive('getCompression')
-              ->andReturn(CompressionType::NONE);
+              ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file1);
 
         $out = m::mock(LocalFile::class);
@@ -90,7 +92,7 @@ class MergeFilesTest extends FileTestCase
         $file2->shouldReceive('exists')
               ->andReturn(false);
         $file2->shouldReceive('getCompression')
-              ->andReturn(CompressionType::NONE);
+              ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file2);
 
         static::assertFalse($this->merge->canContract($collection, $out));
@@ -103,7 +105,7 @@ class MergeFilesTest extends FileTestCase
         $file1->shouldReceive('exists')
               ->andReturn(true);
         $file1->shouldReceive('getCompression')
-              ->andReturn(CompressionType::NONE);
+              ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file1);
 
         $out = m::mock(LocalFile::class);
@@ -114,7 +116,7 @@ class MergeFilesTest extends FileTestCase
         $file2->shouldReceive('exists')
               ->andReturn(true);
         $file2->shouldReceive('getCompression')
-              ->andReturn(CompressionType::GZIP);
+              ->andReturn(Gzip::NAME);
         $collection->add($file2);
 
         static::assertFalse($this->merge->canContract($collection, $out));
@@ -127,7 +129,7 @@ class MergeFilesTest extends FileTestCase
         $file->shouldReceive('exists')
              ->andReturn(false);
         $file->shouldReceive('getCompression')
-             ->andReturn(CompressionType::NONE);
+             ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file);
 
         $target = m::mock(LocalFile::class);
@@ -144,7 +146,7 @@ class MergeFilesTest extends FileTestCase
         $file->shouldReceive('exists')
              ->andReturn(true);
         $file->shouldReceive('getCompression')
-             ->andReturn(CompressionType::NONE);
+             ->andReturn(CompressionFactory::TYPE_NONE);
         $collection->add($file);
 
         $target = m::mock(FileNodeInterface::class);

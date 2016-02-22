@@ -3,7 +3,8 @@
 namespace Graze\DataFile\Test\Integration\Modify\Compress;
 
 use Graze\DataFile\Helper\Process\ProcessFactory;
-use Graze\DataFile\Modify\Compress\CompressionType;
+use Graze\DataFile\Modify\Compress\CompressionFactory;
+use Graze\DataFile\Modify\Compress\Compressor;
 use Graze\DataFile\Modify\Compress\CompressorInterface;
 use Graze\DataFile\Modify\Compress\DeCompressorInterface;
 use Graze\DataFile\Modify\Compress\Gzip;
@@ -45,7 +46,7 @@ class GzipTest extends FileTestCase
         static::assertInstanceOf(FileNodeInterface::class, $compressedFile);
         static::assertEquals(static::$dir . 'uncompressed_gz.gz', $compressedFile->getPath());
         static::assertTrue($compressedFile->exists());
-        static::assertEquals(CompressionType::GZIP, $compressedFile->getCompression());
+        static::assertEquals(Gzip::NAME, $compressedFile->getCompression());
 
         $cmd = "file {$compressedFile->getPath()} | grep " . escapeshellarg('\bgzip\b') . " | wc -l";
         $result = exec($cmd);
@@ -64,7 +65,7 @@ class GzipTest extends FileTestCase
         static::assertInstanceOf(FileNodeInterface::class, $uncompressedFile);
         static::assertEquals(static::$dir . 'get_decompressed_uncompressed_gz', $uncompressedFile->getPath());
         static::assertTrue($uncompressedFile->exists());
-        static::assertEquals(CompressionType::NONE, $uncompressedFile->getCompression());
+        static::assertEquals(CompressionFactory::TYPE_NONE, $uncompressedFile->getCompression());
 
         $cmd = "file {$uncompressedFile->getPath()} | grep " . escapeshellarg('\bgzip\b') . " | wc -l";
         $result = exec($cmd);
@@ -169,25 +170,5 @@ class GzipTest extends FileTestCase
 
         static::assertFalse($compressedFile->exists());
         static::assertTrue($uncompresssedFile->exists());
-    }
-
-    public function testCallingCompressWithANonLocalFileWillThrowAnException()
-    {
-        $file = m::mock(FileNodeInterface::class);
-        $file->shouldReceive('__toString')->andReturn('test\node');
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->gzip->compress($file);
-    }
-
-    public function testCallingDeCompressWithANonLocalFileWillThrowAnException()
-    {
-        $file = m::mock(FileNodeInterface::class);
-        $file->shouldReceive('__toString')->andReturn('test\node');
-
-        $this->expectException(InvalidArgumentException::class);
-
-        $this->gzip->decompress($file);
     }
 }

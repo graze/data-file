@@ -3,7 +3,7 @@
 namespace Graze\DataFile\Modify;
 
 use Graze\DataFile\Helper\Process\ProcessTrait;
-use Graze\DataFile\Node\LocalFile;
+use Graze\DataFile\Node\LocalFileNodeInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
@@ -12,15 +12,19 @@ trait FileProcessTrait
     use ProcessTrait;
 
     /**
-     * @param LocalFile $file
-     * @param LocalFile $output
-     * @param string    $cmd
-     * @param bool      $deleteOld
+     * @param LocalFileNodeInterface $file
+     * @param LocalFileNodeInterface $output
+     * @param string                 $cmd
+     * @param bool                   $deleteOld
      *
-     * @return LocalFile
+     * @return LocalFileNodeInterface
      */
-    protected function processFile(LocalFile $file, LocalFile $output, $cmd, $deleteOld = true)
-    {
+    protected function processFile(
+        LocalFileNodeInterface $file,
+        LocalFileNodeInterface $output,
+        $cmd,
+        $deleteOld = true
+    ) {
         $process = $this->getProcess($cmd);
         $process->run();
 

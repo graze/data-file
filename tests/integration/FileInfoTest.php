@@ -4,7 +4,9 @@ namespace Graze\DataFile\Test\Integration\Info\File;
 
 use Graze\DataFile\FileInfo;
 use Graze\DataFile\Helper\Process\ProcessFactory;
+use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressionType;
+use Graze\DataFile\Modify\Compress\Compressor;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Compress\Zip;
 use Graze\DataFile\Node\LocalFile;
@@ -65,7 +67,7 @@ class FileInfoTest extends FileTestCase
             $file->getCompression(),
             $this->fileInfo->findCompression($file)
         );
-        static::assertEquals(CompressionType::NONE, $file->getCompression());
+        static::assertEquals(CompressionFactory::TYPE_NONE, $file->getCompression());
     }
 
     public function testGetFileCompressionForGzipFile()
@@ -79,7 +81,7 @@ class FileInfoTest extends FileTestCase
             $gzipFile->getCompression(),
             $this->fileInfo->findCompression($gzipFile)
         );
-        static::assertEquals(CompressionType::GZIP, $gzipFile->getCompression());
+        static::assertEquals(Gzip::NAME, $gzipFile->getCompression());
     }
 
     public function testGetFileCompressionForZipFile()
@@ -93,7 +95,7 @@ class FileInfoTest extends FileTestCase
             $zipFile->getCompression(),
             $this->fileInfo->findCompression($zipFile)
         );
-        static::assertEquals(CompressionType::ZIP, $zipFile->getCompression());
+        static::assertEquals(Zip::NAME, $zipFile->getCompression());
     }
 
     public function testGetFileEncodingForCompressedFile()
@@ -158,7 +160,7 @@ class FileInfoTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'unknown_compression.test');
         $file->put('random stuff and things 2!');
 
-        static::assertEquals(CompressionType::UNKNOWN, $this->fileInfo->findCompression($file));
+        static::assertEquals(CompressionFactory::TYPE_UNKNOWN, $this->fileInfo->findCompression($file));
     }
 
     public function testWhenTheProcessReturnsAnUnknownFileNullIsReturned()

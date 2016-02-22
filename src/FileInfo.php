@@ -5,8 +5,8 @@ namespace Graze\DataFile;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
-use Graze\DataFile\Modify\Compress\CompressionType;
-use Graze\DataFile\Node\LocalFile;
+use Graze\DataFile\Modify\Compress\CompressionFactory;
+use Graze\DataFile\Node\LocalFileNodeInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -19,14 +19,12 @@ class FileInfo implements ProcessFactoryAwareInterface, LoggerAwareInterface
     /**
      * Find the Encoding of a specified file
      *
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
-     * @param LocalFile $file
+     * @param LocalFileNodeInterface $file
      *
      * @return null|string
      * @throws ProcessFailedException
      */
-    public function findEncoding(LocalFile $file)
+    public function findEncoding(LocalFileNodeInterface $file)
     {
         $cmd = "file --brief --uncompress --mime {$file->getPath()}";
 
@@ -51,13 +49,11 @@ class FileInfo implements ProcessFactoryAwareInterface, LoggerAwareInterface
     /**
      * Find the compression of a specified file
      *
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
-     * @param LocalFile $file
+     * @param LocalFileNodeInterface $file
      *
      * @return string|null
      */
-    public function findCompression(LocalFile $file)
+    public function findCompression(LocalFileNodeInterface $file)
     {
         $cmd = "file --brief --uncompress --mime {$file->getPath()}";
 
@@ -68,17 +64,19 @@ class FileInfo implements ProcessFactoryAwareInterface, LoggerAwareInterface
             throw new ProcessFailedException($process);
         }
 
+        $compressionFactory = new CompressionFactory();
+
         $result = $process->getOutput();
         if (preg_match('/compressed-encoding=application\/(?:x-)?(.+?);/i', $result, $matches)) {
-            if (in_array($matches[1], CompressionType::getCompressionTypes())) {
+            if ($compressionFactory->isCompression($matches[1])) {
                 $this->log(LogLevel::DEBUG, "Found the compression for '{file}' as '{compression}'", [
                     'file'        => $file,
                     'compression' => $matches[1],
                 ]);
                 return $matches[1];
             }
-            return CompressionType::UNKNOWN;
+            return CompressionFactory::TYPE_UNKNOWN;
         }
-        return CompressionType::NONE;
+        return CompressionFactory::TYPE_NONE;
     }
 }

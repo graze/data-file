@@ -2,17 +2,17 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
-use Graze\DataFile\Node\FileNodeInterface;
+use Graze\DataFile\Node\LocalFileNodeInterface;
 
 interface CompressorInterface
 {
     /**
      * Compress a file and return the new file
      *
-     * @param FileNodeInterface $node
-     * @param array             $options
+     * @param LocalFileNodeInterface $node
+     * @param array                  $options
      *
-     * @return FileNodeInterface
+     * @return LocalFileNodeInterface
      */
-    public function compress(FileNodeInterface $node, array $options = []);
+    public function compress(LocalFileNodeInterface $node, array $options = []);
 }
