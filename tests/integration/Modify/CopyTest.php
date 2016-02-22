@@ -53,18 +53,4 @@ class CopyTest extends FileTestCase
 
         static::assertEquals($localFile->getPath() . '-copy', $newFile);
     }
-
-    public function testWhenCopyFailsItRaisesAnException()
-    {
-        $localFile = new LocalFile(static::$dir . 'copy_failed.text');
-        $localFile->put('some ascii text');
-
-        $newPath = new LocalFile(static::$dir . 'copy_failed/copy_failed.text');
-        $maker = new MakeDirectory();
-        $maker->makeDirectory($newPath, MakeDirectory::VISIBILITY_PRIVATE);
-
-        $this->expectException(CopyFailedException::class);
-
-        $localFile->copy($newPath->getPath());
-    }
 }

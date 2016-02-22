@@ -54,19 +54,4 @@ class MakeDirectoryTest extends FileTestCase
 
         static::assertSame($retFile, $file);
     }
-
-    public function testCreatingADirectoryWithoutPermissionThrowsAnException()
-    {
-        $validDirectory = new LocalFile(static::$dir . 'valid/dir.test');
-
-        $this->maker->makeDirectory($validDirectory, MakeDirectory::VISIBILITY_PRIVATE);
-        static::assertTrue(file_exists($validDirectory->getDirectory()));
-        static::assertEquals(0700, fileperms($validDirectory->getDirectory()) & 0777);
-
-        $invalidDirectory = new LocalFile(static::$dir . 'valid/invalid/dir.test');
-
-        $this->expectException(MakedirectoryFailedException::class);
-
-        $this->maker->makeDirectory($invalidDirectory);
-    }
 }
