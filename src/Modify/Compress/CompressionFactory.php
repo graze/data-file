@@ -31,14 +31,6 @@ class CompressionFactory
      */
     public function getDeCompressor($compression)
     {
-        switch ($compression) {
-            case CompressionType::GZIP:
-                return new Gzip();
-            case CompressionType::ZIP:
-                return new Zip();
-            case CompressionType::NONE:
-            default:
-                throw new InvalidCompressionTypeException($compression);
-        }
+        return $this->getCompressor($compression);
     }
 }

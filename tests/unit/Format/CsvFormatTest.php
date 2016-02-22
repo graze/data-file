@@ -20,9 +20,9 @@ class CsvFormatTest extends TestCase
 
         static::assertEquals(',', $definition->getDelimiter(), "Default Delimiter should be ','");
         static::assertEquals('"', $definition->getQuoteCharacter(), "Default quote character should be \"");
-        static::assertTrue($definition->useQuotes(), "Quoting should be on by default");
+        static::assertTrue($definition->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $definition->getNullOutput(), "Null character should be '\\N'");
-        static::assertTrue($definition->getIncludeHeaders(), "Headers should be on by default");
+        static::assertTrue($definition->hasHeaders(), "Headers should be on by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
     }
 
@@ -38,9 +38,9 @@ class CsvFormatTest extends TestCase
 
         static::assertEquals("\t", $definition->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
         static::assertEquals('', $definition->getQuoteCharacter(), "Quote character should be blank");
-        static::assertFalse($definition->useQuotes(), "Quoting should be off");
+        static::assertFalse($definition->hasQuotes(), "Quoting should be off");
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertFalse($definition->getIncludeHeaders(), "Headers should be off");
+        static::assertFalse($definition->hasHeaders(), "Headers should be off");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
     }
 
@@ -50,20 +50,20 @@ class CsvFormatTest extends TestCase
 
         static::assertEquals(',', $definition->getDelimiter(), "Default Delimiter should be ','");
         static::assertEquals('"', $definition->getQuoteCharacter(), "Default quote character should be \"");
-        static::assertTrue($definition->useQuotes(), "Quoting should be on by default");
+        static::assertTrue($definition->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $definition->getNullOutput(), "Null character should be '\\N'");
-        static::assertTrue($definition->getIncludeHeaders(), "Headers should be on by default");
+        static::assertTrue($definition->hasHeaders(), "Headers should be on by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
 
         static::assertSame($definition, $definition->setDelimiter("\t"), "SetDelimiter should be fluent");
         static::assertEquals("\t", $definition->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
         static::assertSame($definition, $definition->setQuoteCharacter(''), "setQuoteCharacter should be fluent");
         static::assertEquals('', $definition->getQuoteCharacter(), "Quote character should be blank");
-        static::assertFalse($definition->useQuotes(), "Quoting should be off");
+        static::assertFalse($definition->hasQuotes(), "Quoting should be off");
         static::assertSame($definition, $definition->setNullOutput(''), "setNullOutput should be fluent");
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertSame($definition, $definition->setIncludeHeaders(false), "setIncludeHeaders should be fluent");
-        static::assertFalse($definition->getIncludeHeaders(), "Headers should be off");
+        static::assertSame($definition, $definition->setHeaders(false), "setIncludeHeaders should be fluent");
+        static::assertFalse($definition->hasHeaders(), "Headers should be off");
         static::assertSame($definition, $definition->setLineTerminator('----'), "setLineTerminator should be fluent");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
     }

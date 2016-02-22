@@ -11,6 +11,7 @@ interface CsvFormatInterface extends FormatInterface
 
     /**
      * @param string $delimiter
+     *
      * @return CsvFormatInterface
      */
     public function setDelimiter($delimiter);
@@ -18,7 +19,7 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @return bool
      */
-    public function useQuotes();
+    public function hasQuotes();
 
     /**
      * @return string
@@ -27,6 +28,7 @@ interface CsvFormatInterface extends FormatInterface
 
     /**
      * @param string $quoteCharacter
+     *
      * @return CsvFormatInterface
      */
     public function setQuoteCharacter($quoteCharacter);
@@ -38,6 +40,7 @@ interface CsvFormatInterface extends FormatInterface
 
     /**
      * @param string $nullOutput
+     *
      * @return CsvFormatInterface
      */
     public function setNullOutput($nullOutput);
@@ -45,13 +48,14 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @return bool
      */
-    public function getIncludeHeaders();
+    public function hasHeaders();
 
     /**
-     * @param boolean $includeHeaders
+     * @param bool $includeHeaders
+     *
      * @return CsvFormatInterface
      */
-    public function setIncludeHeaders($includeHeaders);
+    public function setHeaders($includeHeaders);
 
     /**
      * @return string
@@ -60,6 +64,7 @@ interface CsvFormatInterface extends FormatInterface
 
     /**
      * @param string $lineTerminator
+     *
      * @return CsvFormatInterface
      */
     public function setLineTerminator($lineTerminator);

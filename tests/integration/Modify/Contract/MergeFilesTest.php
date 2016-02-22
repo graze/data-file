@@ -120,21 +120,6 @@ class MergeFilesTest extends FileTestCase
         static::assertFalse($this->merge->canContract($collection, $out));
     }
 
-    public function testCallingCanContractWithANonLocalTargetWillThrowAnException()
-    {
-        $collection = new FileNodeCollection();
-        $file = m::mock(LocalFile::class);
-        $file->shouldReceive('exists')
-             ->andReturn(true);
-        $file->shouldReceive('getCompression')
-             ->andReturn(CompressionType::NONE);
-        $collection->add($file);
-
-        $target = m::mock(FileNodeInterface::class);
-
-        static::assertFalse($this->merge->canContract($collection, $target));
-    }
-
     public function testCallingContractWithAFileThatCannotBeContractedWillThrowAnException()
     {
         $collection = new FileNodeCollection();
@@ -163,6 +148,8 @@ class MergeFilesTest extends FileTestCase
         $collection->add($file);
 
         $target = m::mock(FileNodeInterface::class);
+
+        static::assertFalse($this->merge->canContract($collection, $target));
 
         $this->expectException(InvalidArgumentException::class);
 

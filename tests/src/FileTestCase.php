@@ -41,7 +41,7 @@ abstract class FileTestCase extends TestCase
     /**
      * Delete the folder and all files/folders within it
      *
-     * @param $path
+     * @param string $path
      *
      * @return bool
      */

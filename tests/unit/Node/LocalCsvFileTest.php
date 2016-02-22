@@ -3,6 +3,9 @@
 namespace Graze\DataFile\Test\Unit\Node;
 
 use Graze\DataFile\Format\CsvFormat;
+use Graze\DataFile\Format\CsvFormatInterface;
+use Graze\DataFile\Format\FormatAwareInterface;
+use Graze\DataFile\Format\FormatInterface;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\TestCase;
 
@@ -26,9 +29,9 @@ class LocalCsvFileTest extends TestCase
         $file = (new LocalFile('fake/path'))
             ->setFormat(new CsvFormat());
 
-        static::assertInstanceOf('Graze\DataFile\Format\FormatAwareInterface', $file);
-        static::assertInstanceOf('Graze\DataFile\Format\FormatInterface', $file->getFormat());
-        static::assertInstanceOf('Graze\DataFile\Format\CsvFormatInterface', $file->getFormat());
+        static::assertInstanceOf(FormatAwareInterface::class, $file);
+        static::assertInstanceOf(FormatInterface::class, $file->getFormat());
+        static::assertInstanceOf(CsvFormatInterface::class, $file->getFormat());
     }
 
     public function testFormatTypeIsCsv()
@@ -46,12 +49,12 @@ class LocalCsvFileTest extends TestCase
 
         $format = $file->getFormat();
 
-        static::assertInstanceOf('Graze\DataFile\Format\CsvFormatInterface', $format);
+        static::assertInstanceOf(CsvFormatInterface::class, $format);
 
         static::assertEquals(',', $format->getDelimiter(), "Default Delimiter should be ','");
-        static::assertTrue($format->useQuotes(), "Quoting should be on by default");
+        static::assertTrue($format->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $format->getNullOutput(), "Null character should be '\\N'");
-        static::assertTrue($format->getIncludeHeaders(), "Headers should be on by default");
+        static::assertTrue($format->hasHeaders(), "Headers should be on by default");
         static::assertEquals("\n", $format->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('"', $format->getQuoteCharacter(), "Default quote character should be \"");
     }
@@ -66,13 +69,13 @@ class LocalCsvFileTest extends TestCase
                 'includeHeaders' => false,
                 'lineTerminator' => "----",
             ]));
-        
+
         $format = $file->getFormat();
 
         static::assertEquals("\t", $format->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
-        static::assertFalse($format->useQuotes(), "Quoting should be off");
+        static::assertFalse($format->hasQuotes(), "Quoting should be off");
         static::assertEquals('', $format->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertFalse($format->getIncludeHeaders(), "Headers should be off");
+        static::assertFalse($format->hasHeaders(), "Headers should be off");
         static::assertEquals("----", $format->getLineTerminator(), "Line terminator should be '----'");
         static::assertEquals(
             '',
@@ -91,11 +94,11 @@ class LocalCsvFileTest extends TestCase
         static::assertEquals("\t", $format->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
         static::assertSame($format, $format->setQuoteCharacter(''), "setQuoteCharacter should be fluent");
         static::assertEquals('', $format->getQuoteCharacter(), "Quote character should be blank");
-        static::assertFalse($format->useQuotes(), "Quoting should be off");
+        static::assertFalse($format->hasQuotes(), "Quoting should be off");
         static::assertSame($format, $format->setNullOutput(''), "setNullOutput should be fluent");
         static::assertEquals('', $format->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertSame($format, $format->setIncludeHeaders(false), "setIncludeHeaders should be fluent");
-        static::assertFalse($format->getIncludeHeaders(), "Headers should be off");
+        static::assertSame($format, $format->setHeaders(false), "setIncludeHeaders should be fluent");
+        static::assertFalse($format->hasHeaders(), "Headers should be off");
         static::assertSame($format, $format->setLineTerminator('----'), "setLineTerminator should be fluent");
         static::assertEquals("----", $format->getLineTerminator(), "Line terminator should be '----'");
     }

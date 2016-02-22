@@ -67,6 +67,8 @@ trait ProcessTrait
      * @param string $level
      * @param string $message
      * @param array  $context
+     *
+     * @return void
      */
     abstract protected function log($level, $message, array $context = []);
 }

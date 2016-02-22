@@ -7,7 +7,7 @@ use Graze\DataNode\NodeInterface;
 interface FileNodeInterface extends NodeInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
     public function getDirectory();
 

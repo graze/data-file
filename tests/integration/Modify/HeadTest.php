@@ -83,7 +83,7 @@ class HeadTest extends FileTestCase
     }
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @return LocalFile
      */

@@ -12,7 +12,11 @@ use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
-abstract class AbstractCompressor implements CompressorInterface, DeCompressorInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
+abstract class AbstractCompressor implements
+    CompressorInterface,
+    DeCompressorInterface,
+    LoggerAwareInterface,
+    ProcessFactoryAwareInterface
 {
     use OptionalLoggerTrait;
     use FileProcessTrait;

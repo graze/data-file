@@ -84,7 +84,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return bool
      */
-    public function useQuotes()
+    public function hasQuotes()
     {
         return $this->quoteCharacter <> '';
     }
@@ -111,17 +111,17 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return bool
      */
-    public function getIncludeHeaders()
+    public function hasHeaders()
     {
         return $this->includeHeaders;
     }
 
     /**
-     * @param boolean $includeHeaders
+     * @param bool $includeHeaders
      *
      * @return CsvFormat
      */
-    public function setIncludeHeaders($includeHeaders)
+    public function setHeaders($includeHeaders)
     {
         $this->includeHeaders = $includeHeaders;
         return $this;
