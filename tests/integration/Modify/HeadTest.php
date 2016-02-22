@@ -198,7 +198,7 @@ Line 10
     {
         $file = $this->createFile('option_pass_through.test');
 
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->head->modify($file);
     }
@@ -209,10 +209,7 @@ Line 10
         $file->shouldReceive('__toString')
              ->andReturn('some/file/here');
 
-        static::setExpectedException(
-            InvalidArgumentException::class,
-            "Supplied: some/file/here is not a LocalFile"
-        );
+        $this->expectException(InvalidArgumentException::class);
 
         $this->head->modify($file, ['lines' => 1]);
     }
@@ -227,7 +224,7 @@ Line 10
         $file = new LocalFile(static::$dir . 'failed_tail.test');
         $file->put('nothing interesting here');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
         $this->head->head($file, 3);
     }

@@ -74,7 +74,7 @@ class FileNodeCollectionTest extends TestCase
     {
         $node = m::mock(NodeInterface::class);
 
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->collection->add($node);
     }

@@ -10,6 +10,7 @@ use Graze\DataFile\Modify\Compress\Zip;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
 use Mockery as m;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
 class FileInfoTest extends FileTestCase
@@ -72,7 +73,7 @@ class FileInfoTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'tobegzipped_file.test');
         $file->put('some random text');
         $gzip = new Gzip();
-        $gzipFile = $gzip->gzip($file);
+        $gzipFile = $gzip->compress($file);
 
         static::assertEquals(
             $gzipFile->getCompression(),
@@ -86,7 +87,7 @@ class FileInfoTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'tobezipped.test');
         $file->put('some random text');
         $zip = new Zip();
-        $zipFile = $zip->zip($file);
+        $zipFile = $zip->compress($file);
 
         static::assertEquals(
             $zipFile->getCompression(),
@@ -101,13 +102,12 @@ class FileInfoTest extends FileTestCase
             ->setEncoding('UTF-8');
         $utf8file->put(mb_convert_encoding('Some random Text €±§', 'UTF-8'));
         $gzip = new Gzip();
-        $gzipFile = $gzip->gzip($utf8file);
+        $gzipFile = $gzip->compress($utf8file);
 
         static::assertEquals(
             strtolower($gzipFile->getEncoding()),
             strtolower($this->fileInfo->findEncoding($gzipFile))
         );
-
 
         static::assertEquals('utf-8', $this->fileInfo->findEncoding($gzipFile));
         static::assertEquals($utf8file->getEncoding(), $gzipFile->getEncoding());
@@ -124,9 +124,7 @@ class FileInfoTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'failed_find_encoding_process.test');
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(
-            'Symfony\Component\Process\Exception\ProcessFailedException'
-        );
+        $this->expectException(ProcessFailedException::class);
 
         $this->fileInfo->findEncoding($file);
     }
@@ -142,9 +140,7 @@ class FileInfoTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'failed_find_encoding_process.test');
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(
-            'Symfony\Component\Process\Exception\ProcessFailedException'
-        );
+        $this->expectException(ProcessFailedException::class);
 
         $this->fileInfo->findCompression($file);
     }

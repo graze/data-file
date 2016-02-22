@@ -18,7 +18,7 @@ trait OptionalLoggerTrait
     protected function log($level, $message, array $context = [])
     {
         if ($this->logger) {
-            $this->logger->log($level, __CLASS__ . ":" . $message, $context);
+            $this->logger->log($level, __CLASS__ . ": " . $message, $context);
         }
     }
 }

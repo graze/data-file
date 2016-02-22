@@ -5,14 +5,12 @@ namespace Graze\DataFile\Modify\Compress;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
-use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class Gzip implements CompressorInterface, DeCompressorInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
 {
@@ -33,38 +31,27 @@ class Gzip implements CompressorInterface, DeCompressorInterface, LoggerAwareInt
         if (!($node instanceof LocalFile)) {
             throw new InvalidArgumentException("Node: $node should be a LocalFile");
         }
-        return $this->gzip($node, $options);
-    }
 
-    /**
-     * @param LocalFile $file
-     * @param array     $options -keepOldFile <bool> (Default: true)
-     *
-     * @return LocalFile
-     * @throws ProcessFailedException
-     */
-    public function gzip(LocalFile $file, array $options = [])
-    {
         $this->options = $options;
-        $pathInfo = pathinfo($file->getPath());
+        $pathInfo = pathinfo($node->getPath());
 
-        if (!$file->exists()) {
-            throw new InvalidArgumentException("The file: $file does not exist");
+        if (!$node->exists()) {
+            throw new InvalidArgumentException("The file: $node does not exist");
         }
 
-        $outputFile = $file->getClone()
+        $outputFile = $node->getClone()
                            ->setPath($pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.gz')
                            ->setCompression(CompressionType::GZIP);
 
         $this->log(LogLevel::INFO, "Compressing file: {file} into {target} using {compression}", [
-            'file'        => $file,
+            'file'        => $node,
             'target'      => $outputFile,
             'compression' => CompressionType::GZIP,
         ]);
 
-        $cmd = "gzip -c {$file->getPath()} > {$outputFile->getPath()}";
+        $cmd = "gzip -c {$node->getPath()} > {$outputFile->getPath()}";
 
-        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
+        return $this->processFile($node, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 
     /**
@@ -80,39 +67,26 @@ class Gzip implements CompressorInterface, DeCompressorInterface, LoggerAwareInt
         if (!($node instanceof LocalFile)) {
             throw new InvalidArgumentException("Node: $node should be a LocalFile");
         }
-        return $this->gunzip($node, $options);
-    }
 
-    /**
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
-     * @param LocalFile $file
-     * @param array     $options
-     *
-     * @return LocalFile
-     */
-    public function gunzip(LocalFile $file, array $options = [])
-    {
         $this->options = $options;
-        $pathInfo = pathinfo($file->getPath());
+        $pathInfo = pathinfo($node->getPath());
 
-        if (!$file->exists()) {
-            throw new InvalidArgumentException("The file: $file does not exist");
+        if (!$node->exists()) {
+            throw new InvalidArgumentException("The file: $node does not exist");
         }
 
-        $outputFile = $file->getClone()
+        $outputFile = $node->getClone()
                            ->setPath($pathInfo['dirname'] . '/' . $pathInfo['filename'])
                            ->setCompression(CompressionType::NONE);
 
         $this->log(LogLevel::INFO, "DeCompressing file: {file} into {target} using {compression}", [
-            'file'        => $file,
+            'file'        => $node,
             'target'      => $outputFile,
             'compression' => CompressionType::GZIP,
         ]);
 
-        $cmd = "gunzip -c {$file->getPath()} > {$outputFile->getPath()}";
+        $cmd = "gunzip -c {$node->getPath()} > {$outputFile->getPath()}";
 
-
-        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
+        return $this->processFile($node, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 }

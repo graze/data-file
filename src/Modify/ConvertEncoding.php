@@ -96,7 +96,7 @@ class ConvertEncoding implements FileModifierInterface, LoggerAwareInterface, Pr
      */
     public function modify(FileNodeInterface $file, array $options = [])
     {
-        if (!$this->canModify($file)) {
+        if (!$this->canModify($file) || !($file instanceof LocalFile)) {
             throw new InvalidArgumentException("Supplied: $file is not a valid LocalFile");
         }
 

@@ -33,38 +33,25 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
             throw new InvalidArgumentException("Node: $node should be a LocalFile");
         }
 
-        return $this->zip($node, $options);
-    }
-
-    /**
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
-     * @param LocalFile $file
-     * @param array     $options -keepOldFile <bool> (Default: true)
-     *
-     * @return LocalFile
-     */
-    public function zip(LocalFile $file, array $options = [])
-    {
         $this->options = $options;
-        $pathInfo = pathinfo($file->getPath());
+        $pathInfo = pathinfo($node->getPath());
 
-        if (!$file->exists()) {
-            throw new InvalidArgumentException("The file: $file does not exist");
+        if (!$node->exists()) {
+            throw new InvalidArgumentException("The file: $node does not exist");
         }
 
-        $outputFile = $file->getClone()
+        $outputFile = $node->getClone()
                            ->setPath($pathInfo['dirname'] . '/' . $pathInfo['filename'] . '.zip')
                            ->setCompression(CompressionType::ZIP);
 
         $this->log(LogLevel::INFO, "Compressing file: {file} into {target} using {compression}", [
-            'file'        => $file,
+            'file'        => $node,
             'target'      => $outputFile,
             'compression' => CompressionType::ZIP,
         ]);
-        $cmd = "zip {$outputFile->getPath()} {$file->getPath()}";
+        $cmd = "zip {$outputFile->getPath()} {$node->getPath()}";
 
-        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
+        return $this->processFile($node, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 
     /**
@@ -80,38 +67,26 @@ class Zip implements CompressorInterface, DeCompressorInterface, LoggerAwareInte
         if (!($node instanceof LocalFile)) {
             throw new InvalidArgumentException("Node: $node should be a LocalFile");
         }
-        return $this->unzip($node, $options);
-    }
 
-    /**
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
-     * @param LocalFile $file
-     * @param array     $options
-     *
-     * @return FileNodeInterface
-     */
-    public function unzip(LocalFile $file, array $options = [])
-    {
         $this->options = $options;
-        $pathInfo = pathinfo($file->getPath());
+        $pathInfo = pathinfo($node->getPath());
 
-        if (!$file->exists()) {
-            throw new InvalidArgumentException("The file: $file does not exist");
+        if (!$node->exists()) {
+            throw new InvalidArgumentException("The file: $node does not exist");
         }
 
-        $outputFile = $file->getClone()
+        $outputFile = $node->getClone()
                            ->setPath($pathInfo['dirname'] . '/' . $pathInfo['filename'])
                            ->setCompression(CompressionType::NONE);
 
         $this->log(LogLevel::INFO, "DeCompressing file: {file} into {target} using {compression}", [
-            'file'        => $file,
+            'file'        => $node,
             'target'      => $outputFile,
             'compression' => CompressionType::ZIP,
         ]);
 
-        $cmd = "unzip -p {$file->getPath()} > {$outputFile->getPath()}";
+        $cmd = "unzip -p {$node->getPath()} > {$outputFile->getPath()}";
 
-        return $this->processFile($file, $outputFile, $cmd, $this->getOption('keepOldFile', true));
+        return $this->processFile($node, $outputFile, $cmd, $this->getOption('keepOldFile', true));
     }
 }

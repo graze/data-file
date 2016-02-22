@@ -3,11 +3,12 @@
 namespace Graze\DataFile\Test\Unit\Helper;
 
 use Graze\DataFile\Test\Helper\FakeOptionalLogger;
+use Graze\DataFile\Test\TestCase;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-class OptionalLoggerTraitTest
+class OptionalLoggerTraitTest extends TestCase
 {
     /**
      * @var FakeOptionalLogger
@@ -30,7 +31,7 @@ class OptionalLoggerTraitTest
         $this->logger->setLogger($logger);
 
         $logger->shouldReceive('log')
-               ->with(LogLevel::INFO, 'some text', [])
+               ->with(LogLevel::INFO, 'Graze\DataFile\Test\Helper\FakeOptionalLogger: some text', [])
                ->once();
 
         $this->logger->doLog('some text');

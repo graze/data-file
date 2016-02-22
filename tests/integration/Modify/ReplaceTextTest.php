@@ -92,10 +92,7 @@ class ReplaceTextTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'multiple_replace_failure.test');
         $file->put('some text that text should be replaced');
 
-        static::setExpectedException(
-            InvalidArgumentException::class,
-            "Number of items in 'fromText' (2) is different to 'toText' (1)"
-        );
+        $this->expectException(InvalidArgumentException::class);
 
         $this->replacer->replaceText($file, ['text', 'pants that'], ['pants']);
     }
@@ -167,7 +164,7 @@ class ReplaceTextTest extends FileTestCase
 
     public function testCallingModifyWithNoFromTextThrowsInvalidArgumentsException()
     {
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $file = new LocalFile(static::$dir . 'simple_replace.test');
         $file->put('some text that text should be replaced');
@@ -177,7 +174,7 @@ class ReplaceTextTest extends FileTestCase
 
     public function testCallingModifyWithNoToTextThrowsInvalidArgumentsException()
     {
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $file = new LocalFile(static::$dir . 'simple_replace.test');
         $file->put('some text that text should be replaced');
@@ -191,10 +188,7 @@ class ReplaceTextTest extends FileTestCase
         $file->shouldReceive('__toString')
              ->andReturn('some/file/here');
 
-        static::setExpectedException(
-            InvalidArgumentException::class,
-            "Supplied: some/file/here is not a LocalFile"
-        );
+        $this->expectException(InvalidArgumentException::class);
 
         $this->replacer->modify($file, ['fromText' => 'pants', 'toText' => 'more pants']);
     }
@@ -221,7 +215,7 @@ class ReplaceTextTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'failed_replace_text.test');
         $file->put('some text that text should be replaced');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
         $this->replacer->replaceText($file, 'text', 'pants');
     }

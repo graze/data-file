@@ -39,37 +39,37 @@ class CompressionFactoryTest extends TestCase
 
     public function testGetCompressorForNoneWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getCompressor(CompressionType::NONE);
     }
 
     public function testGetDeCompressorForNoneWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getDeCompressor(CompressionType::NONE);
     }
 
     public function testGetCompressorForUnknownWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getCompressor(CompressionType::UNKNOWN);
     }
 
     public function testGetDeCompressorForUnknownWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getDeCompressor(CompressionType::UNKNOWN);
     }
 
     public function testGetCompressorForRandomWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getCompressor('random');
     }
 
     public function testGetDeCompressorForRandomWillThrowAnException()
     {
-        static::setExpectedException(InvalidCompressionTypeException::class);
+        $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getDeCompressor('random');
     }
 }

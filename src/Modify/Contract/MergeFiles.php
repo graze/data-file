@@ -58,6 +58,9 @@ class MergeFiles implements FileContractorInterface, LoggerAwareInterface, Proce
         if (!$this->canContract($files)) {
             throw new \InvalidArgumentException("The supplied files are not valid");
         }
+        if (!($file instanceof LocalFile)) {
+            throw new \InvalidArgumentException("The supplied file should be a local file");
+        }
 
         $this->log(LogLevel::INFO, "Merging files in collection $files into: {$file}");
 

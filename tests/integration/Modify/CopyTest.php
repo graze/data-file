@@ -35,7 +35,7 @@ class CopyTest extends FileTestCase
         static::assertEquals('ascii', $newFile->getEncoding());
 
         $gzip = new Gzip();
-        $gzipped = $gzip->gzip($newFile);
+        $gzipped = $gzip->compress($newFile);
 
         static::assertEquals(CompressionType::GZIP, $gzipped->getCompression());
 
@@ -61,9 +61,9 @@ class CopyTest extends FileTestCase
 
         $newPath = new LocalFile(static::$dir . 'copy_failed/copy_failed.text');
         $maker = new MakeDirectory();
-        $maker->makeDirectory($newPath, 0444);
+        $maker->makeDirectory($newPath, MakeDirectory::VISIBILITY_PRIVATE);
 
-        static::setExpectedException(CopyFailedException::class);
+        $this->expectException(CopyFailedException::class);
 
         $localFile->copy($newPath->getPath());
     }

@@ -3,30 +3,34 @@
 namespace Graze\DataFile\Modify;
 
 use Graze\DataFile\Modify\Exception\MakeDirectoryFailedException;
+use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\LocalFile;
 
 class MakeDirectory
 {
+    const VISIBILITY_PUBLIC  = 'public';
+    const VISIBILITY_PRIVATE = 'private';
+
     /**
      * Create the directory specified by the $file if it does not exist
      *
-     * @param LocalFile $file
-     * @param int       $mode
+     * @param FileNode $file
+     * @param string   $visibility public or private visibility
      *
      * @return LocalFile The original file inputted
      * @throws MakeDirectoryFailedException
      */
-    public function makeDirectory(LocalFile $file, $mode = 0777)
+    public function makeDirectory(FileNode $file, $visibility = null)
     {
-        if (!($file instanceof LocalFile)) {
-            throw new \InvalidArgumentException("Node: $file is not a LocalFile");
+        if (!($file instanceof FileNode)) {
+            throw new \InvalidArgumentException("Node: $file is not a FileNode");
         }
 
-        if (!file_exists($file->getDirectory())) {
-            if (!@mkdir($file->getDirectory(), $mode, true)) {
-                $lastError = error_get_last();
-                throw new MakeDirectoryFailedException($file, $lastError['message']);
-            }
+        $madeDirectory = $file->getFilesystem()->createDir($file->getDirectory(), [
+            'visibility' => $visibility ?: static::VISIBILITY_PUBLIC,
+        ]);
+        if (!$madeDirectory) {
+            throw new MakeDirectoryFailedException($file, error_get_last()['message']);
         }
 
         return $file;

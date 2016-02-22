@@ -39,7 +39,7 @@ class GzipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->gzip->gzip($file);
+        $compressedFile = $this->gzip->compress($file);
 
         static::assertNotNull($compressedFile);
         static::assertInstanceOf(FileNodeInterface::class, $compressedFile);
@@ -57,8 +57,8 @@ class GzipTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'get_decompressed_uncompressed_gz.test');
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->gzip->gzip($file);
-        $uncompressedFile = $this->gzip->gunzip($compressedFile);
+        $compressedFile = $this->gzip->compress($file);
+        $uncompressedFile = $this->gzip->decompress($compressedFile);
 
         static::assertNotNull($uncompressedFile);
         static::assertInstanceOf(FileNodeInterface::class, $uncompressedFile);
@@ -75,24 +75,18 @@ class GzipTest extends FileTestCase
     {
         $file = new LocalFile(static::$dir . 'invalid_gzip.test');
 
-        static::setExpectedException(
-            'InvalidArgumentException',
-            'The file: ' . $file->getPath() . ' does not exist'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->gzip->gzip($file);
+        $this->gzip->compress($file);
     }
 
     public function testCallingGunzipWithAFileThatDoesNotExistsThrowsAnException()
     {
         $file = new LocalFile(static::$dir . 'invalid_gunzip.test');
 
-        static::setExpectedException(
-            'InvalidArgumentException',
-            'The file: ' . $file->getPath() . ' does not exist'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->gzip->gunzip($file);
+        $this->gzip->decompress($file);
     }
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnGzip()
@@ -114,9 +108,9 @@ class GzipTest extends FileTestCase
 
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
-        $this->gzip->gzip($file);
+        $this->gzip->compress($file);
     }
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnGunzip()
@@ -138,9 +132,9 @@ class GzipTest extends FileTestCase
 
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
-        $this->gzip->gunzip($file);
+        $this->gzip->decompress($file);
     }
 
     public function testPassingTheKeepOldFileOptionWillKeepTheFile()
@@ -149,12 +143,12 @@ class GzipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->gzip->gzip($file, ['keepOldFile' => true]);
+        $compressedFile = $this->gzip->compress($file, ['keepOldFile' => true]);
 
         static::assertTrue($file->exists());
         static::assertTrue($compressedFile->exists());
 
-        $uncompresssedFile = $this->gzip->gunzip($compressedFile, ['keepOldFile' => true]);
+        $uncompresssedFile = $this->gzip->decompress($compressedFile, ['keepOldFile' => true]);
 
         static::assertTrue($compressedFile->exists());
         static::assertTrue($uncompresssedFile->exists());
@@ -166,12 +160,12 @@ class GzipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->gzip->gzip($file, ['keepOldFile' => false]);
+        $compressedFile = $this->gzip->compress($file, ['keepOldFile' => false]);
 
         static::assertFalse($file->exists());
         static::assertTrue($compressedFile->exists());
 
-        $uncompresssedFile = $this->gzip->gunzip($compressedFile, ['keepOldFile' => false]);
+        $uncompresssedFile = $this->gzip->decompress($compressedFile, ['keepOldFile' => false]);
 
         static::assertFalse($compressedFile->exists());
         static::assertTrue($uncompresssedFile->exists());
@@ -182,7 +176,7 @@ class GzipTest extends FileTestCase
         $file = m::mock(FileNodeInterface::class);
         $file->shouldReceive('__toString')->andReturn('test\node');
 
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->gzip->compress($file);
     }
@@ -192,7 +186,7 @@ class GzipTest extends FileTestCase
         $file = m::mock(FileNodeInterface::class);
         $file->shouldReceive('__toString')->andReturn('test\node');
 
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->gzip->decompress($file);
     }

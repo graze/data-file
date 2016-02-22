@@ -2,6 +2,7 @@
 
 namespace Graze\DataFile\Node;
 
+use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressionType;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
@@ -57,7 +58,9 @@ class LocalFile extends FileNode implements LocalFileNodeInterface
         if ($this->exists() &&
             $this->getCompression() != CompressionType::NONE
         ) {
-            $uncompressed = $this->decompress();
+            $factory = new CompressionFactory();
+            $compressor = $factory->getDeCompressor($this->getCompression());
+            $uncompressed = $compressor->decompress($this);
             $content = $uncompressed->getContents();
             $uncompressed->delete();
             return $content;

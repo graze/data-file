@@ -47,7 +47,7 @@ class ZipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->zip->zip($file);
+        $compressedFile = $this->zip->compress($file);
 
         static::assertNotNull($compressedFile);
         static::assertInstanceOf(FileNodeInterface::class, $compressedFile);
@@ -65,10 +65,10 @@ class ZipTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'get_decompressed_uncompressed_zip.test');
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->zip->zip($file);
+        $compressedFile = $this->zip->compress($file);
 
         static::assertTrue($compressedFile->exists());
-        $uncompressedFile = $this->zip->unzip($compressedFile);
+        $uncompressedFile = $this->zip->decompress($compressedFile);
 
         static::assertNotNull($uncompressedFile);
         static::assertInstanceOf(FileNodeInterface::class, $uncompressedFile);
@@ -85,24 +85,18 @@ class ZipTest extends FileTestCase
     {
         $file = new LocalFile(static::$dir . 'invalid_zip.test');
 
-        static::setExpectedException(
-            'InvalidArgumentException',
-            'The file: ' . $file->getPath() . ' does not exist'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->zip->zip($file);
+        $this->zip->compress($file);
     }
 
     public function testCallingUnzipWithAFileThatDoesNotExistsThrowsAnException()
     {
         $file = new LocalFile(static::$dir . 'invalid_zip.zip');
 
-        static::setExpectedException(
-            'InvalidArgumentException',
-            'The file: ' . $file->getPath() . ' does not exist'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->zip->unzip($file);
+        $this->zip->decompress($file);
     }
 
     public function testWhenTheProcessFailsAnExceptionIsthrownOnZip()
@@ -122,9 +116,9 @@ class ZipTest extends FileTestCase
 
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
-        $this->zip->zip($file);
+        $this->zip->compress($file);
     }
 
     public function testWhenTheProcessFailsAnExceptionIsthrownOnUnzip()
@@ -144,11 +138,10 @@ class ZipTest extends FileTestCase
 
         $file->put('random stuff and things 2!');
 
-        static::setExpectedException(ProcessFailedException::class);
+        $this->expectException(ProcessFailedException::class);
 
-        $this->zip->unzip($file);
+        $this->zip->decompress($file);
     }
-
 
     public function testPassingTheKeepOldFileOptionWillKeepTheFile()
     {
@@ -156,12 +149,12 @@ class ZipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->zip->zip($file, ['keepOldFile' => true]);
+        $compressedFile = $this->zip->compress($file, ['keepOldFile' => true]);
 
         static::assertTrue($file->exists());
         static::assertTrue($compressedFile->exists());
 
-        $uncompresssedFile = $this->zip->unzip($compressedFile, ['keepOldFile' => true]);
+        $uncompresssedFile = $this->zip->decompress($compressedFile, ['keepOldFile' => true]);
 
         static::assertTrue($compressedFile->exists());
         static::assertTrue($uncompresssedFile->exists());
@@ -173,12 +166,12 @@ class ZipTest extends FileTestCase
 
         $file->put('random stuff and things!');
 
-        $compressedFile = $this->zip->zip($file, ['keepOldFile' => false]);
+        $compressedFile = $this->zip->compress($file, ['keepOldFile' => false]);
 
         static::assertFalse($file->exists());
         static::assertTrue($compressedFile->exists());
 
-        $uncompresssedFile = $this->zip->unzip($compressedFile, ['keepOldFile' => false]);
+        $uncompresssedFile = $this->zip->decompress($compressedFile, ['keepOldFile' => false]);
 
         static::assertFalse($compressedFile->exists());
         static::assertTrue($uncompresssedFile->exists());
@@ -189,10 +182,7 @@ class ZipTest extends FileTestCase
         $file = m::mock(FileNodeInterface::class);
         $file->shouldReceive('__toString')->andReturn('test\node');
 
-        static::setExpectedException(
-            InvalidArgumentException::class,
-            'Node: test\node should be a LocalFile'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
         $this->zip->compress($file);
     }
@@ -202,10 +192,7 @@ class ZipTest extends FileTestCase
         $file = m::mock(FileNodeInterface::class);
         $file->shouldReceive('__toString')->andReturn('test\node');
 
-        static::setExpectedException(
-            InvalidArgumentException::class,
-            'Node: test\node should be a LocalFile'
-        );
+        $this->expectException(InvalidArgumentException::class);
 
         $this->zip->decompress($file);
     }

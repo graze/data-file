@@ -99,7 +99,8 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
                 count($fromText) == count($toText)
             ) {
                 $sedStrings = [];
-                for ($i = 0; $i < count($fromText); $i++) {
+                $fromSize = count($fromText);
+                for ($i = 0; $i < $fromSize; $i++) {
                     $sedStrings[] = $this->getReplacementCommand($fromText[$i], $toText[$i]);
                 }
                 $replacementString = implode(';', $sedStrings);

@@ -32,15 +32,15 @@ class MakeDirectoryTest extends FileTestCase
         static::assertSame($file, $retFile);
     }
 
-    public function testCanMakeDirectorWithSpecificUMode()
+    public function testCanMakeDirectoryWithSpecificUMode()
     {
         $file = new LocalFile(static::$dir . 'umode_test/file');
 
         static::assertFalse(file_exists($file->getDirectory()));
 
-        $retFile = $this->maker->makeDirectory($file, 0744);
+        $retFile = $this->maker->makeDirectory($file, MakeDirectory::VISIBILITY_PUBLIC);
 
-        static::assertEquals(0744, fileperms($file->getDirectory()) & 0777);
+        static::assertEquals(0755, fileperms($file->getDirectory()) & 0777);
         static::assertSame($retFile, $file);
     }
 
@@ -59,16 +59,13 @@ class MakeDirectoryTest extends FileTestCase
     {
         $validDirectory = new LocalFile(static::$dir . 'valid/dir.test');
 
-        $this->maker->makeDirectory($validDirectory, 0444);
+        $this->maker->makeDirectory($validDirectory, MakeDirectory::VISIBILITY_PRIVATE);
         static::assertTrue(file_exists($validDirectory->getDirectory()));
-        static::assertEquals(0444, fileperms($validDirectory->getDirectory()) & 0777);
+        static::assertEquals(0700, fileperms($validDirectory->getDirectory()) & 0777);
 
         $invalidDirectory = new LocalFile(static::$dir . 'valid/invalid/dir.test');
 
-        static::setExpectedException(
-            MakedirectoryFailedException::class,
-            "Failed to create directory: '{$invalidDirectory->getDirectory()}'. mkdir(): Permission denied"
-        );
+        $this->expectException(MakedirectoryFailedException::class);
 
         $this->maker->makeDirectory($invalidDirectory);
     }

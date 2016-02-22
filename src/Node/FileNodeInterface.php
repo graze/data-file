@@ -32,4 +32,9 @@ interface FileNodeInterface extends NodeInterface
      * @return bool
      */
     public function exists();
+
+    /**
+     * @return bool
+     */
+    public function delete();
 }

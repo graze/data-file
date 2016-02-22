@@ -6,7 +6,9 @@ use Graze\DataFile\Modify\ConvertEncoding;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
+use InvalidArgumentException;
 use Mockery as m;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class ConvertEncodingTest extends FileTestCase
 {
@@ -36,6 +38,15 @@ class ConvertEncodingTest extends FileTestCase
         static::assertFalse($this->converter->canModify($randomThing));
     }
 
+    public function testModifyWillCheckIfItCanModifyFirst()
+    {
+        $randomThing = m::mock(FileNodeInterface::class);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->converter->modify($randomThing);
+    }
+
     public function testChangeEncodingCanConvertBetweenASCIIAndUtf8()
     {
         $asciiFile = new LocalFile(static::$dir . 'ascii_file.test');
@@ -45,6 +56,20 @@ class ConvertEncodingTest extends FileTestCase
         static::assertEquals(1, $isAscii, "Original file to convert is not ascii");
 
         $newFile = $this->converter->toEncoding($asciiFile, 'UTF-8');
+
+        $isUTF8 = exec("file {$newFile->getPath()} | grep -i " . escapeshellarg('\UTF-8\b') . " | wc -l");
+        static::assertEquals(1, $isUTF8, "Converted file should be UTF8");
+    }
+
+    public function testCallingModifyWillConvertTheEncoding()
+    {
+        $asciiFile = new LocalFile(static::$dir . 'ascii_file_modify.test');
+        $asciiFile->put(mb_convert_encoding('Some random Text', 'ASCII'));
+
+        $isAscii = exec("file {$asciiFile->getPath()} | grep -i " . escapeshellarg('\bascii\b') . " | wc -l");
+        static::assertEquals(1, $isAscii, "Original file to convert is not ascii");
+
+        $newFile = $this->converter->modify($asciiFile, ['encoding' => 'UTF-8']);
 
         $isUTF8 = exec("file {$newFile->getPath()} | grep -i " . escapeshellarg('\UTF-8\b') . " | wc -l");
         static::assertEquals(1, $isUTF8, "Converted file should be UTF8");
@@ -104,9 +129,7 @@ class ConvertEncodingTest extends FileTestCase
         $asciiFile = new LocalFile(static::$dir . 'ascii_fail.test');
         $asciiFile->put(mb_convert_encoding('Some random Text', 'ASCII'));
 
-        static::setExpectedException(
-            'Symfony\Component\Process\Exception\ProcessFailedException'
-        );
+        $this->expectException(ProcessFailedException::class);
 
         $this->converter->toEncoding($asciiFile, 'NotARealEncoding');
     }

@@ -12,7 +12,9 @@ use Graze\DataFile\Node\FileNodeCollectionInterface;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
+use InvalidArgumentException;
 use Mockery as m;
+use Symfony\Component\Process\Exception\ProcessFailedException;
 
 class MergeFilesTest extends FileTestCase
 {
@@ -113,6 +115,40 @@ class MergeFilesTest extends FileTestCase
         static::assertFalse($this->merge->canContract($collection));
     }
 
+    public function testCallingContractWithAFileThatCannotBeContractedWillThrowAnException()
+    {
+        $collection = new FileNodeCollection();
+        $file = m::mock(LocalFile::class);
+        $file->shouldReceive('exists')
+             ->andReturn(false);
+        $file->shouldReceive('getCompression')
+             ->andReturn(CompressionType::NONE);
+        $collection->add($file);
+
+        $target = m::mock(LocalFile::class);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->merge->contract($collection, $target);
+    }
+
+    public function testCallingContractWithANonLocalTargetWillThrowAnException()
+    {
+        $collection = new FileNodeCollection();
+        $file = m::mock(LocalFile::class);
+        $file->shouldReceive('exists')
+             ->andReturn(true);
+        $file->shouldReceive('getCompression')
+             ->andReturn(CompressionType::NONE);
+        $collection->add($file);
+
+        $target = m::mock(FileNodeInterface::class);
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $this->merge->contract($collection, $target);
+    }
+
     public function testSimpleMergeFiles()
     {
         $collection = $this->createCollection('simple.merge/', 3);
@@ -203,7 +239,7 @@ class MergeFilesTest extends FileTestCase
         $process->shouldReceive('isSuccessful')->andReturn(false);
 
         // set exception as no guarantee process will run on local system
-        static::setExpectedException('Symfony\Component\Process\Exception\ProcessFailedException');
+        $this->expectException(ProcessFailedException::class);
 
         $collection = $this->createCollection('simple.merge/', 3);
 

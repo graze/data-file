@@ -35,7 +35,7 @@ class GetOptionTraitTest extends TestCase
     public function testRequireOptionWillThrowAnExceptionIfTheOptionDoesNotExist()
     {
         $fake = new FakeGetOption();
-        static::setExpectedException(InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $fake->checkRequireOption('name');
     }
 }

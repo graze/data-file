@@ -75,10 +75,7 @@ class TransferTest extends FileTestCase
 
         $toFile = new LocalFile(static::$dir . 'fail_to.text');
 
-        static::setExpectedException(
-            FileNotFoundException::class,
-            "File not found at path: " . realpath($fromFile)
-        );
+        $this->expectException(FileNotFoundException::class);
 
         $this->transfer->copyTo($fromFile, $toFile);
     }
@@ -89,10 +86,7 @@ class TransferTest extends FileTestCase
 
         $toFile = new LocalFile(static::$dir . 'fail_move_to.text');
 
-        static::setExpectedException(
-            FileNotFoundException::class,
-            "File not found at path: " . realpath($fromFile)
-        );
+        $this->expectException(FileNotFoundException::class);
 
         $this->transfer->moveTo($fromFile, $toFile);
     }
@@ -107,10 +101,7 @@ class TransferTest extends FileTestCase
 
         $filesystem->shouldReceive('readStream')->with($fromFile->getPath())->andReturn(false);
 
-        static::setExpectedException(
-            TransferFailedException::class,
-            "Failed to transfer file: $fromFile to $toFile. "
-        );
+        $this->expectException(TransferFailedException::class);
 
         $this->transfer->copyTo($fromFile, $toFile);
     }
@@ -125,10 +116,7 @@ class TransferTest extends FileTestCase
 
         $filesystem->shouldReceive('readStream')->with($fromFile->getPath())->andReturn(false);
 
-        static::setExpectedException(
-            TransferFailedException::class,
-            "Failed to transfer file: $fromFile to $toFile. "
-        );
+        $this->expectException(TransferFailedException::class);
 
         $this->transfer->moveTo($fromFile, $toFile);
     }
