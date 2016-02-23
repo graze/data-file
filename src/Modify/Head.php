@@ -88,17 +88,8 @@ class Head implements FileModifierInterface, LoggerAwareInterface, ProcessFactor
         $this->options = $options;
         $this->lines = $lines;
 
-        $postfix = $this->getOption('postfix', 'tail');
-        if (strlen($postfix) > 0) {
-            $postfix = '-' . $postfix;
-        }
-
-        $pathInfo = pathinfo($file->getPath());
-        $outputFileName = $pathInfo['filename'] . $postfix . '.' . $pathInfo['extension'];
-        $outputFilePath = $pathInfo['dirname'] . '/' . $outputFileName;
-
-        $output = $file->getClone()
-                       ->setPath($outputFilePath);
+        $postfix = $this->getOption('postfix', 'head');
+        $output = $this->getTargetFile($file, $postfix);
 
         $this->log(LogLevel::INFO, "Retrieving the last {lines} from file {file}", [
             'lines' => $this->lines,

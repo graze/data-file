@@ -67,7 +67,7 @@ class HeadTest extends FileTestCase
 
     public function testBasicReadingTheFirstNLines()
     {
-        $file = $this->createFile('first.five.lines');
+        $file = $this->createFile('first_five_lines');
 
         $newFile = $this->head->head($file, 5);
 

@@ -67,7 +67,7 @@ class TailTest extends FileTestCase
 
     public function testBasicReadingTheLastNLines()
     {
-        $file = $this->createFile('last.five.lines');
+        $file = $this->createFile('last_five_lines');
 
         $newFile = $this->tail->tail($file, 5);
 
