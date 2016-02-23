@@ -109,7 +109,6 @@ class FindCompressionTest extends FileTestCase
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnFindCompression()
     {
-        /** @var Process|MockInterface $process */
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('cmd');

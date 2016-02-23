@@ -76,7 +76,6 @@ class FindEncodingTest extends FileTestCase
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnFindEncoding()
     {
-        /** @var Process|MockInterface $process */
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('cmd');
