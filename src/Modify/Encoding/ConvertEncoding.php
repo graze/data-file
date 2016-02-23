@@ -53,17 +53,8 @@ class ConvertEncoding implements FileModifierInterface, LoggerAwareInterface, Pr
     {
         $this->options = $options;
 
-        $pathInfo = pathinfo($file->getPath());
-
-        $outputFileName = sprintf(
-            '%s-%s.%s',
-            $pathInfo['filename'],
-            $this->getOption('postfix', $encoding),
-            $pathInfo['extension']
-        );
-
-        $output = $file->getClone()
-                       ->setPath($pathInfo['dirname'] . '/' . $outputFileName)
+        $postfix = $this->getOption('postfix', $encoding);
+        $output = $this->getTargetFile($file, $postfix)
                        ->setEncoding($encoding);
 
         $cmd = "iconv " .

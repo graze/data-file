@@ -89,20 +89,9 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
     public function replaceText(LocalFile $file, $fromText, $toText, array $options = [])
     {
         $this->options = $options;
+
         $postfix = $this->getOption('postfix', 'replace');
-        if (strlen($postfix) > 0) {
-            $postfix = '-' . $postfix;
-        }
-
-        $pathInfo = pathinfo($file->getPath());
-        $outputFileName = $pathInfo['filename'] . $postfix;
-        if (isset($pathInfo['extension'])) {
-            $outputFileName .= '.' . $pathInfo['extension'];
-        }
-        $outputFilePath = $pathInfo['dirname'] . '/' . $outputFileName;
-
-        $output = $file->getClone()
-                       ->setPath($outputFilePath);
+        $output = $this->getTargetFile($file, $postfix);
 
         if (is_array($fromText)) {
             if (is_array($toText) &&

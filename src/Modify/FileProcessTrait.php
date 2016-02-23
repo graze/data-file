@@ -50,4 +50,27 @@ trait FileProcessTrait
 
         return $output;
     }
+
+    /**
+     * Create a target file from a source file and postfix
+     *
+     * @param LocalFileNodeInterface $file
+     * @param string                 $postfix
+     *
+     * @return LocalFileNodeInterface
+     */
+    protected function getTargetFile(LocalFileNodeInterface $file, $postfix)
+    {
+        if (strlen($postfix) > 0) {
+            $postfix = '-' . $postfix;
+        }
+
+        $pathInfo = pathinfo($file->getPath());
+        $extension = isset($pathInfo['extension']) ? '.' . $pathInfo['extension'] : '';
+
+        $path = sprintf('%s/%s%s%s', $pathInfo['dirname'], $pathInfo['filename'], $postfix, $extension);
+
+        return $file->getClone()
+                    ->setPath($path);
+    }
 }
