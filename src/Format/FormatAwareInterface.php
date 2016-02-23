@@ -15,6 +15,7 @@ interface FormatAwareInterface
      * Set the format for this object
      *
      * @param FormatInterface $format
+     *
      * @return $this
      */
     public function setFormat(FormatInterface $format);

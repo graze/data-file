@@ -2,8 +2,6 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
-use Graze\DataFile\Node\FileNodeInterface;
-
 interface CompressionTypeInterface
 {
     /**

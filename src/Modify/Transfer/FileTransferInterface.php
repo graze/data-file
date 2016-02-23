@@ -11,6 +11,7 @@ interface FileTransferInterface
      *
      * @param FileNode $from
      * @param FileNode $to
+     *
      * @return FileNode (Returns $to)
      */
     public function copyTo(FileNode $from, FileNode $to);
@@ -20,6 +21,7 @@ interface FileTransferInterface
      *
      * @param FileNode $from
      * @param FileNode $to
+     *
      * @return FileNode (Returns $to)
      */
     public function moveTo(FileNode $from, FileNode $to);

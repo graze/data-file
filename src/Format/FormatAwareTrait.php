@@ -19,6 +19,7 @@ trait FormatAwareTrait
 
     /**
      * @param FormatInterface $format
+     *
      * @return $this
      */
     public function setFormat(FormatInterface $format)

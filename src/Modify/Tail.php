@@ -5,7 +5,6 @@ namespace Graze\DataFile\Modify;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
-use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use InvalidArgumentException;

@@ -1,16 +1,17 @@
 <?php
 
-namespace Graze\DataFile\Modify;
+namespace Graze\DataFile\Modify\Encoding;
 
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
+use Graze\DataFile\Modify\FileModifierInterface;
+use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Convert the Encoding of a file
