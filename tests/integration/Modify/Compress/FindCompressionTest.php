@@ -93,7 +93,10 @@ class FindCompressionTest extends FileTestCase
     {
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('mustRun');
-        $process->shouldReceive('getOutput')->andReturn('text/plain; charset=utf-8 compressed-encoding=application/lzop; charset=binary; charset=binary');
+        $process->shouldReceive('getOutput')
+                ->andReturn(
+                    'text/plain; charset=utf-8 compressed-encoding=application/lzop; charset=binary; charset=binary'
+                );
 
         $this->processFactory->shouldReceive('createProcess')
                              ->andReturn($process);
@@ -106,6 +109,7 @@ class FindCompressionTest extends FileTestCase
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnFindCompression()
     {
+        /** @var Process|MockInterface $process */
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('cmd');

@@ -10,6 +10,7 @@ use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\FileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\MockInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -21,7 +22,7 @@ class FindEncodingTest extends FileTestCase
     protected $findEncoding;
 
     /**
-     * @var ProcessFactory|m\MockInterface
+     * @var ProcessFactory|MockInterface
      */
     protected $processFactory;
 
@@ -75,6 +76,7 @@ class FindEncodingTest extends FileTestCase
 
     public function testWhenTheProcessFailsAnExceptionIsThrownOnFindEncoding()
     {
+        /** @var Process|MockInterface $process */
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('cmd');

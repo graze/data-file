@@ -4,7 +4,6 @@ namespace Graze\DataFile\Test\Integration\Modify\Compress;
 
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
-use Graze\DataFile\Modify\Compress\Compressor;
 use Graze\DataFile\Modify\Compress\CompressorInterface;
 use Graze\DataFile\Modify\Compress\DeCompressorInterface;
 use Graze\DataFile\Modify\Compress\Zip;
