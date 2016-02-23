@@ -42,7 +42,7 @@ Or run individual suites using:
 
 ```shell
 $ make test-unit
-$ make test-functional
+$ make test-integration
 $ make test-matrix
 ```
 
