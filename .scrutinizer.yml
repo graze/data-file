@@ -1,5 +1,7 @@
 # .scrutinizer.yml
 build:
+    before:
+        - apt-get update && apt-get install -y zip unzip gzip libc6 php5-xdebug --no-install-recommends
     environment:
         php: 5.6
 
