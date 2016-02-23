@@ -25,6 +25,8 @@ $ composer require graze/data-file
 - `FileExpanderInterface` - Expand a single file into a collection of files
 - `FileContractorInterface` - Contract a collection of files into a single file
 - `FileTransferInterface` - Transfer a file to another file system
+- `FileFinderInterface` - Find files based on a configuration
+- `FormatInterface` - Formatting information about a file
 
 ### Things it does
 
