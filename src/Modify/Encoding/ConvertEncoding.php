@@ -1,16 +1,28 @@
 <?php
+/**
+ * This file is part of graze/data-file
+ *
+ * Copyright (c) 2016 Nature Delivered Ltd. <https://www.graze.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://github.com/graze/data-file/blob/master/LICENSE.md
+ * @link    https://github.com/graze/data-file
+ */
 
-namespace Graze\DataFile\Modify;
+namespace Graze\DataFile\Modify\Encoding;
 
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
+use Graze\DataFile\Modify\FileModifierInterface;
+use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 
 /**
  * Convert the Encoding of a file

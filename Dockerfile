@@ -6,8 +6,8 @@ RUN docker-php-ext-install mbstring \
     && curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && echo "zend_extension=$(find / -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
 
-ADD . /opt/graze/dataFile
+ADD . /opt/graze/data-file
 
-WORKDIR /opt/graze/dataFile
+WORKDIR /opt/graze/data-file
 
 CMD /bin/bash
