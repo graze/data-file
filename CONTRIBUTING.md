@@ -46,9 +46,10 @@ $ make test-integration
 $ make test-matrix
 ```
 
-You can get a coverage report in text and HTML by running:
+You can get a coverage report in text, HTML and clover XML by running:
 
 ```shell
 $ make test-coverage
+$ make test-coverage-html
 $ make test-coverage-clover
 ```
