@@ -71,4 +71,11 @@ class CompressionFactoryTest extends TestCase
         $this->expectException(InvalidCompressionTypeException::class);
         $this->factory->getDeCompressor('random');
     }
+
+    public function testIsCompression()
+    {
+        static::assertTrue($this->factory->isCompression(Gzip::NAME));
+        static::assertTrue($this->factory->isCompression(Zip::NAME));
+        static::assertFalse($this->factory->isCompression('lzop'));
+    }
 }
