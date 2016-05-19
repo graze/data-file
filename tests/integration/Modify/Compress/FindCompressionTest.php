@@ -20,14 +20,14 @@ use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Compress\Zip;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\MockInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class FindCompressionTest extends FileTestCase
+class FindCompressionTest extends AbstractFileTestCase
 {
     /**
      * @var FindCompression

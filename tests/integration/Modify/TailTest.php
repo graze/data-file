@@ -18,14 +18,14 @@ use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Modify\Tail;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\MockInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class TailTest extends FileTestCase
+class TailTest extends AbstractFileTestCase
 {
     /**
      * @var Tail

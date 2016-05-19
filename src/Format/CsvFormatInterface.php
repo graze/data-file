@@ -23,7 +23,7 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @param string $delimiter
      *
-     * @return CsvFormatInterface
+     * @return static
      */
     public function setDelimiter($delimiter);
 
@@ -40,7 +40,7 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @param string $quoteCharacter
      *
-     * @return CsvFormatInterface
+     * @return static
      */
     public function setQuoteCharacter($quoteCharacter);
 
@@ -52,7 +52,7 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @param string $nullOutput
      *
-     * @return CsvFormatInterface
+     * @return static
      */
     public function setNullOutput($nullOutput);
 
@@ -62,11 +62,16 @@ interface CsvFormatInterface extends FormatInterface
     public function hasHeaders();
 
     /**
-     * @param bool $includeHeaders
+     * @param int $headers
      *
-     * @return CsvFormatInterface
+     * @return static
      */
-    public function setHeaders($includeHeaders);
+    public function setHeaders($headers);
+
+    /**
+     * @return int
+     */
+    public function getHeaders();
 
     /**
      * @return string
@@ -76,7 +81,47 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @param string $lineTerminator
      *
-     * @return CsvFormatInterface
+     * @return static
      */
     public function setLineTerminator($lineTerminator);
+
+    /**
+     * @return string
+     */
+    public function getEscapeCharacter();
+
+    /**
+     * @param string $escape
+     *
+     * @return static
+     */
+    public function setEscapeCharacter($escape);
+
+    /**
+     * Get the limit that should be returned (-1 for no limit)
+     *
+     * @return int
+     */
+    public function getLimit();
+
+    /**
+     * Set the limit of the number of items to be returned (-1 for not limit)
+     *
+     * @param int $limit
+     *
+     * @return static
+     */
+    public function setLimit($limit);
+
+    /**
+     * @return bool
+     */
+    public function isDoubleQuote();
+
+    /**
+     * @param bool $doubleQuote
+     *
+     * @return static
+     */
+    public function setDoubleQuote($doubleQuote);
 }

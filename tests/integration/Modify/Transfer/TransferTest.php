@@ -18,13 +18,13 @@ use Graze\DataFile\Modify\Transfer\FileTransferInterface;
 use Graze\DataFile\Modify\Transfer\Transfer;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Memory\MemoryAdapter;
 use Mockery as m;
 
-class TransferTest extends FileTestCase
+class TransferTest extends AbstractFileTestCase
 {
     /**
      * @var FileTransferInterface

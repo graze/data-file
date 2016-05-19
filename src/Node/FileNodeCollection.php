@@ -61,7 +61,9 @@ class FileNodeCollection extends NodeCollection implements FileNodeCollectionInt
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $value
+     *
+     * @return $this
      */
     public function add($value)
     {

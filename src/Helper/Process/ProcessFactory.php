@@ -36,7 +36,7 @@ class ProcessFactory
         array $env = null,
         $input = null,
         $timeout = 60,
-        array $options = array()
+        array $options = []
     ) {
         return new Process(
             $commandline,

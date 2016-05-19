@@ -16,6 +16,7 @@ namespace Graze\DataFile\Finder;
 use Graze\ArrayFilter\ArrayFilterInterface;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeCollectionInterface;
+use Graze\DataStructure\Collection\CollectionInterface;
 
 /**
  * Find files based on their metadata
@@ -36,7 +37,9 @@ class MetadataFinder implements FileFinderInterface
     }
 
     /**
-     * @inheritdoc
+     * @param FileNodeCollectionInterface $files
+     *
+     * @return CollectionInterface
      */
     public function findFiles(FileNodeCollectionInterface $files)
     {

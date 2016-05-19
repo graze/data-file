@@ -137,8 +137,8 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
     /**
      * Get the string replacement command for a single item
      *
-     * @param $fromText
-     * @param $toText
+     * @param string $fromText
+     * @param string $toText
      *
      * @return string
      */

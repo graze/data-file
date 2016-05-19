@@ -13,7 +13,7 @@
 
 namespace Graze\DataFile\Test;
 
-abstract class FileTestCase extends TestCase
+abstract class AbstractFileTestCase extends TestCase
 {
     const TEST_DATA_PATH = '/tmp/data/';
 
@@ -58,7 +58,7 @@ abstract class FileTestCase extends TestCase
      */
     private static function rmDirRecursive($path)
     {
-        $files = array_diff(scandir($path), array('.', '..'));
+        $files = array_diff(scandir($path), ['.', '..']);
         foreach ($files as $file) {
             (is_dir("$path/$file")) ? self::rmDirRecursive("$path/$file") : unlink("$path/$file");
         }

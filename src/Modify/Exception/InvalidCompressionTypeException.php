@@ -17,6 +17,13 @@ use Exception;
 
 class InvalidCompressionTypeException extends Exception
 {
+    /**
+     * InvalidCompressionTypeException constructor.
+     *
+     * @param string         $compression
+     * @param string         $message
+     * @param Exception|null $previous
+     */
     public function __construct($compression, $message = '', Exception $previous = null)
     {
         $message = "Unknown compression type: $compression. " . $message;

@@ -20,14 +20,14 @@ use Graze\DataFile\Modify\Compress\DeCompressorInterface;
 use Graze\DataFile\Modify\Compress\Zip;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Mockery\MockInterface;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
-class ZipTest extends FileTestCase
+class ZipTest extends AbstractFileTestCase
 {
     /**
      * @var Zip
@@ -116,7 +116,7 @@ class ZipTest extends FileTestCase
         $this->processFactory->shouldReceive('createProcess')
                              ->andReturn($process);
         $process->shouldReceive('run')->once();
-        $process->shouldReceive('isSuccessful')->once()->andReturn(false);
+        $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');
         $process->shouldReceive('getExitCode')->andReturn(1);
         $process->shouldReceive('getExitCodeText')->andReturn('bla');
@@ -138,7 +138,7 @@ class ZipTest extends FileTestCase
         $this->processFactory->shouldReceive('createProcess')
                              ->andReturn($process);
         $process->shouldReceive('run')->once();
-        $process->shouldReceive('isSuccessful')->once()->andReturn(false);
+        $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');
         $process->shouldReceive('getExitCode')->andReturn(1);
         $process->shouldReceive('getExitCodeText')->andReturn('bla');
