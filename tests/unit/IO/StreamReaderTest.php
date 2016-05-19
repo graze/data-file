@@ -15,14 +15,14 @@ namespace Graze\DataFile\Test\Unit\IO;
 
 use ArrayIterator;
 use Graze\DataFile\Format\Parser\ParserInterface;
-use Graze\DataFile\IO\FileReader;
+use Graze\DataFile\IO\StreamReader;
 use Graze\DataFile\Test\Helper\CreateStreamTrait;
 use Graze\DataFile\Test\TestCase;
 use Iterator;
 use Mockery as m;
 use Mockery\MockInterface;
 
-class FileReaderTest extends TestCase
+class StreamReaderTest extends TestCase
 {
     use CreateStreamTrait;
 
@@ -30,7 +30,7 @@ class FileReaderTest extends TestCase
      * @param string   $string
      * @param Iterator $iterator
      *
-     * @return FileReader
+     * @return StreamReader
      */
     private function buildReader($string, Iterator $iterator)
     {
@@ -42,7 +42,7 @@ class FileReaderTest extends TestCase
                ->with($stream)
                ->andReturn($iterator);
 
-        return new FileReader($stream, $parser);
+        return new StreamReader($stream, $parser);
     }
 
     public function testFetchWithNoCallable()

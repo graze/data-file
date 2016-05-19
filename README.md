@@ -46,8 +46,8 @@ $ composer require graze/data-file
   - Line manipulation: `Head`,`Tail` - Retrieve a segment of a file
   - Replace Text: `ReplaceText` - Replace all instances of a string with another string
 - IO
-  - Read: `FileReader` - Read a file in a specified format
-  - Write: `FileWriter` - Write a file in a specified format
+  - Read: `StreamReader` - Read a file in a specified format
+  - Write: `StreamWriter` - Write a file in a specified format
 
 ## Testing
 

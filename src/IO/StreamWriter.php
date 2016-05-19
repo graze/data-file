@@ -21,7 +21,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Traversable;
 
-class FileWriter implements WriterInterface, LoggerAwareInterface
+class StreamWriter implements WriterInterface, LoggerAwareInterface
 {
     use OptionalLoggerTrait;
 

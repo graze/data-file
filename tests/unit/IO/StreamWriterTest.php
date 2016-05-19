@@ -17,14 +17,14 @@ use ArrayIterator;
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Format\Formatter\CsvFormatter;
 use Graze\DataFile\Format\Formatter\FormatterInterface;
-use Graze\DataFile\IO\FileWriter;
+use Graze\DataFile\IO\StreamWriter;
 use Graze\DataFile\Test\TestCase;
 use GuzzleHttp\Psr7\Stream;
 use Mockery as m;
 use Mockery\MockInterface;
 use Psr\Http\Message\StreamInterface;
 
-class FileWriterTest extends TestCase
+class StreamWriterTest extends TestCase
 {
     /**
      * @var StreamInterface|MockInterface
@@ -45,7 +45,7 @@ class FileWriterTest extends TestCase
             ['e', 'f', 'g', 'h'],
         ];
 
-        $writer = new FileWriter($this->stream, new CsvFormatter(new CsvFormat()));
+        $writer = new StreamWriter($this->stream, new CsvFormatter(new CsvFormat()));
 
         $writer->insertAll($data);
 
@@ -65,7 +65,7 @@ CSV;
             ['e', 'f', 'g', 'h'],
         ]);
 
-        $writer = new FileWriter($this->stream, new CsvFormatter(new CsvFormat()));
+        $writer = new StreamWriter($this->stream, new CsvFormatter(new CsvFormat()));
 
         $writer->insertAll($data);
 
@@ -80,7 +80,7 @@ CSV;
 
     public function testInsertRow()
     {
-        $writer = new FileWriter($this->stream, new CsvFormatter(new CsvFormat()));
+        $writer = new StreamWriter($this->stream, new CsvFormatter(new CsvFormat()));
 
         $writer->insertOne(['a', 'b', 'c', 'd']);
         $writer->insertOne(['e', 'f', 'g', 'h']);
@@ -99,7 +99,7 @@ CSV;
         /** @var FormatterInterface|MockInterface $formatter */
         $formatter = m::mock(FormatterInterface::class);
 
-        $writer = new FileWriter($this->stream, $formatter);
+        $writer = new StreamWriter($this->stream, $formatter);
 
         $formatter->shouldReceive('getInitialBlock')
                   ->andReturn('--init--');

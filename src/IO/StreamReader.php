@@ -20,7 +20,7 @@ use Iterator;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerAwareInterface;
 
-class FileReader implements ReaderInterface, LoggerAwareInterface
+class StreamReader implements ReaderInterface, LoggerAwareInterface
 {
     use OptionalLoggerTrait;
 
