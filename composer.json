@@ -28,9 +28,7 @@
         "symfony/process": "^3.0",
         "graze/data-node": "^1.0",
         "graze/array-filter": "^1.0",
-        "league/csv": "^8.0",
         "guzzlehttp/psr7": "^1.3",
-        "ajgl/csv-rfc": "^0.2.0",
         "graze/csv-token": "^0.2"
     },
     "require-dev": {
@@ -38,7 +36,8 @@
         "mockery/mockery": "^0.9.4",
         "squizlabs/php_codesniffer": "^2.5",
         "league/flysystem-memory": "^1.0",
-        "graze/standards": "^1.0"
+        "graze/standards": "^1.0",
+        "akamon/mockery-callable-mock": "^1.0"
     },
     "autoload": {
         "psr-4": {

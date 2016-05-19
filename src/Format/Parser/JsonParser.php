@@ -16,8 +16,8 @@ namespace Graze\DataFile\Format\Parser;
 use ArrayIterator;
 use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Helper\LineStreamIterator;
+use Graze\DataFile\Helper\MapIterator;
 use Iterator;
-use League\Csv\Modifier\MapIterator;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
