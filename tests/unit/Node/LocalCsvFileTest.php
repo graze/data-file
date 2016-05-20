@@ -66,6 +66,7 @@ class LocalCsvFileTest extends TestCase
         static::assertTrue($format->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $format->getNullOutput(), "Null character should be '\\N'");
         static::assertTrue($format->hasHeaders(), "Headers should be on by default");
+        static::assertEquals(1, $format->getHeaders(), "Headers should have a default of 1");
         static::assertEquals("\n", $format->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('"', $format->getQuoteCharacter(), "Default quote character should be \"");
     }
@@ -77,7 +78,7 @@ class LocalCsvFileTest extends TestCase
                 'delimiter'      => "\t",
                 'quoteCharacter' => '',
                 'nullOutput'     => '',
-                'includeHeaders' => false,
+                'headers'        => 0,
                 'lineTerminator' => "----",
             ]));
 
@@ -108,8 +109,9 @@ class LocalCsvFileTest extends TestCase
         static::assertFalse($format->hasQuotes(), "Quoting should be off");
         static::assertSame($format, $format->setNullOutput(''), "setNullOutput should be fluent");
         static::assertEquals('', $format->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertSame($format, $format->setHeaders(false), "setIncludeHeaders should be fluent");
+        static::assertSame($format, $format->setHeaders(0), "setHeaders should be fluent");
         static::assertFalse($format->hasHeaders(), "Headers should be off");
+        static::assertEquals(0, $format->getHeaders(), "Headers should be 0");
         static::assertSame($format, $format->setLineTerminator('----'), "setLineTerminator should be fluent");
         static::assertEquals("----", $format->getLineTerminator(), "Line terminator should be '----'");
     }

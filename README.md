@@ -26,12 +26,18 @@ $ composer require graze/data-file
 - `FileContractorInterface` - Contract a collection of files into a single file
 - `FileTransferInterface` - Transfer a file to another file system
 - `FileFinderInterface` - Find files based on a configuration
-- `FormatInterface` - Formatting information about a file
+- `FormatInterface` - Format information about a file
+- `FormatterInterface` - How to format a file based on a format
+- `ParserInterface` - Parse a stream of data
+- `ReaderInterface` - Read a stream
+- `WriterInterface` - Write a stream
 
 ### Things it does
 
 - Finder: `MetadataFinder` - Will find files based on their metadata (size, created time, etc)
-- Format: `CsvFormat` - Defines how a csv file is formatted
+- Format: `CsvFormat`, `JsonFormat` - Defines how a csv or json file is formatted
+  - Formatter: `CsvFormatter`, `JsonFormatter` - Format data into csv or json file
+  - Parse: `CsvParser`, `JsonParser` - Parse a file containing csv, or json data
 - Modify
   - Compression: `Gzip`, `Zip`, `FindCompression` - Compress, decompress and find the compression of files
   - Merge: `Merge` - Join multiple files into a single file
@@ -39,6 +45,9 @@ $ composer require graze/data-file
   - Encoding: `ConvertEncoding`, `FindEncoding` - Change or find the encoding of a file
   - Line manipulation: `Head`,`Tail` - Retrieve a segment of a file
   - Replace Text: `ReplaceText` - Replace all instances of a string with another string
+- IO
+  - Read: `StreamReader` - Read a file in a specified format
+  - Write: `StreamWriter` - Write a file in a specified format
 
 ## Testing
 

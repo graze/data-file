@@ -16,12 +16,12 @@ namespace Graze\DataFile\Test\Integration\Modify;
 use Graze\DataFile\Modify\Encoding\ConvertEncoding;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class ConvertEncodingTest extends FileTestCase
+class ConvertEncodingTest extends AbstractFileTestCase
 {
     /**
      * @var ConvertEncoding

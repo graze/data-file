@@ -15,10 +15,10 @@ namespace Graze\DataFile\Test\Fuctional\Modify;
 
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use Mockery as m;
 
-class CopyTest extends FileTestCase
+class CopyTest extends AbstractFileTestCase
 {
     public function testCopyCreatesADuplicateFile()
     {

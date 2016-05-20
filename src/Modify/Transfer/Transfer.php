@@ -25,7 +25,11 @@ class Transfer implements FileTransferInterface, LoggerAwareInterface
     use OptionalLoggerTrait;
 
     /**
-     * {@inheritdoc}
+     * @param FileNode $from
+     * @param FileNode $to
+     *
+     * @return FileNode
+     * @throws TransferFailedException
      */
     public function copyTo(FileNode $from, FileNode $to)
     {
@@ -46,7 +50,11 @@ class Transfer implements FileTransferInterface, LoggerAwareInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @param FileNode $from
+     * @param FileNode $to
+     *
+     * @return FileNode
+     * @throws TransferFailedException
      */
     public function moveTo(FileNode $from, FileNode $to)
     {

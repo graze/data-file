@@ -40,6 +40,74 @@ interface FileNodeInterface extends NodeInterface
     public function getContents();
 
     /**
+     * Read the file.
+     *
+     * @return string file contents
+     */
+    public function read();
+
+    /**
+     * Read the file as a stream.
+     *
+     * @return resource file stream
+     */
+    public function readStream();
+
+    /**
+     * Write the new file.
+     *
+     * @param string $content
+     *
+     * @return bool success boolean
+     */
+    public function write($content);
+
+    /**
+     * Write the new file using a stream.
+     *
+     * @param resource $resource
+     *
+     * @return bool success boolean
+     */
+    public function writeStream($resource);
+
+    /**
+     * Update the file contents.
+     *
+     * @param string $content
+     *
+     * @return bool success boolean
+     */
+    public function update($content);
+
+    /**
+     * Update the file contents with a stream.
+     *
+     * @param resource $resource
+     *
+     * @return bool success boolean
+     */
+    public function updateStream($resource);
+
+    /**
+     * Create the file or update if exists.
+     *
+     * @param string $content
+     *
+     * @return bool success boolean
+     */
+    public function put($content);
+
+    /**
+     * Create the file or update if exists using a stream.
+     *
+     * @param resource $resource
+     *
+     * @return bool success boolean
+     */
+    public function putStream($resource);
+
+    /**
      * @return bool
      */
     public function exists();

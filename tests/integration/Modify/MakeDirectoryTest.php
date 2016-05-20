@@ -15,10 +15,10 @@ namespace Graze\DataFile\Test\Integration\Modify;
 
 use Graze\DataFile\Modify\MakeDirectory;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use Mockery as m;
 
-class MakeDirectoryTest extends FileTestCase
+class MakeDirectoryTest extends AbstractFileTestCase
 {
     /**
      * @var MakeDirectory

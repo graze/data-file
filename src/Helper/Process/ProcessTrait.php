@@ -66,7 +66,7 @@ trait ProcessTrait
         array $env = null,
         $input = null,
         $timeout = 60,
-        array $options = array()
+        array $options = []
     ) {
         $this->log(LogLevel::DEBUG, "Running command: {cmd}", ['cmd' => $commandline]);
         return $this->getProcessFactory()->createProcess($commandline, $cwd, $env, $input, $timeout, $options);

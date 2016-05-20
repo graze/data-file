@@ -23,12 +23,12 @@ use Graze\DataFile\Node\FileNodeCollection;
 use Graze\DataFile\Node\FileNodeCollectionInterface;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class MergeFilesTest extends FileTestCase
+class MergeFilesTest extends AbstractFileTestCase
 {
     /**
      * @var ProcessFactory|m\MockInterface

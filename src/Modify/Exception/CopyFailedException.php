@@ -18,6 +18,14 @@ use Graze\DataFile\Node\FileNodeInterface;
 
 class CopyFailedException extends Exception
 {
+    /**
+     * CopyFailedException constructor.
+     *
+     * @param FileNodeInterface $fromFile
+     * @param int               $newPath
+     * @param string            $message
+     * @param Exception|null    $previous
+     */
     public function __construct(FileNodeInterface $fromFile, $newPath, $message = '', Exception $previous = null)
     {
         $message = "Failed to copy file from: '$fromFile' to '$newPath'. " . $message;

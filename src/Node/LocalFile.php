@@ -14,10 +14,13 @@
 namespace Graze\DataFile\Node;
 
 use Graze\DataFile\Modify\Compress\CompressionFactory;
+use GuzzleHttp\Psr7\LazyOpenStream;
+use GuzzleHttp\Psr7\Stream;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use Psr\Http\Message\StreamInterface;
 
-class LocalFile extends FileNode implements LocalFileNodeInterface
+class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamInterface
 {
     /**
      * @var string
@@ -97,5 +100,17 @@ class LocalFile extends FileNode implements LocalFileNodeInterface
         $this->compression = $compression;
 
         return $this;
+    }
+
+    /**
+     * Get a stream for the given node
+     *
+     * @param string $mode
+     *
+     * @return StreamInterface
+     */
+    public function getStream($mode = 'c+')
+    {
+        return new LazyOpenStream($this->getPath(), $mode);
     }
 }

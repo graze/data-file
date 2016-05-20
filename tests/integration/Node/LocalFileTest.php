@@ -16,9 +16,10 @@ namespace Graze\DataFile\Test\Integration\Node;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
-use Graze\DataFile\Test\FileTestCase;
+use Graze\DataFile\Test\AbstractFileTestCase;
+use Psr\Http\Message\StreamInterface;
 
-class LocalFileTest extends FileTestCase
+class LocalFileTest extends AbstractFileTestCase
 {
     public function testInstanceOf()
     {
@@ -163,5 +164,19 @@ class LocalFileTest extends FileTestCase
         $file = new LocalFile(static::$dir . 'file_dont_care.test');
 
         static::assertEquals(static::$dir, $file->getDirectory());
+    }
+
+    public function testGetStream()
+    {
+        $file = new LocalFile(static::$dir . 'file_get_stream.test');
+
+        $stream = $file->getStream();
+
+        static::assertInstanceOf(StreamInterface::class, $stream);
+
+        $stream->write('some text');
+        $stream->close();
+
+        static::assertEquals('some text', $file->read());
     }
 }

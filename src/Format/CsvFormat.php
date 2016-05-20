@@ -21,56 +21,60 @@ class CsvFormat implements CsvFormatInterface
 
     const DEFAULT_DELIMITER       = ',';
     const DEFAULT_NULL_OUTPUT     = '\\N';
-    const DEFAULT_INCLUDE_HEADERS = true;
+    const DEFAULT_HEADERS         = 1;
     const DEFAULT_LINE_TERMINATOR = "\n";
     const DEFAULT_QUOTE_CHARACTER = '"';
+    const DEFAULT_ESCAPE          = '\\';
+    const DEFAULT_LIMIT           = -1;
+    const DEFAULT_DOUBLE_QUOTE    = false;
 
     const OPTION_DELIMITER       = 'delimiter';
     const OPTION_NULL_OUTPUT     = 'nullOutput';
-    const OPTION_INCLUDE_HEADERS = 'includeHeaders';
+    const OPTION_HEADERS         = 'headers';
     const OPTION_LINE_TERMINATOR = 'lineTerminator';
     const OPTION_QUOTE_CHARACTER = 'quoteCharacter';
+    const OPTION_ESCAPE          = 'escape';
+    const OPTION_LIMIT           = 'limit';
+    const OPTION_DOUBLE_QUOTE    = 'doubleQuote';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $delimiter;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $quoteCharacter;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $nullOutput;
-
-    /**
-     * @var bool
-     */
-    protected $includeHeaders;
-
-    /**
-     * @var string
-     */
+    /** @var int */
+    protected $headers;
+    /** @var string */
     protected $lineTerminator;
+    /** @var bool */
+    protected $nullQuotes;
+    /** @var string */
+    protected $escape;
+    /** @var int */
+    protected $limit;
+    /** @var bool */
+    protected $doubleQuote;
 
     /**
      * @param array $options -delimiter <string> (Default: ,) Character to use between fields
      *                       -quoteCharacter <string> (Default: ")
      *                       -nullOutput <string> (Default: \N)
-     *                       -includeHeaders <bool> (Default: true)
-     *                       -lineTerminator <string> (Default: \n) [Not current implemented]
+     *                       -headers <int> (Default: 1)
+     *                       -lineTerminator <string> (Default: \n)
+     *
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         $this->options = $options;
         $this->delimiter = $this->getOption(static::OPTION_DELIMITER, static::DEFAULT_DELIMITER);
         $this->quoteCharacter = $this->getOption(static::OPTION_QUOTE_CHARACTER, static::DEFAULT_QUOTE_CHARACTER);
         $this->nullOutput = $this->getOption(static::OPTION_NULL_OUTPUT, static::DEFAULT_NULL_OUTPUT);
-        $this->includeHeaders = $this->getOption(static::OPTION_INCLUDE_HEADERS, static::DEFAULT_INCLUDE_HEADERS);
+        $this->headers = $this->getOption(static::OPTION_HEADERS, static::DEFAULT_HEADERS);
         $this->lineTerminator = $this->getOption(static::OPTION_LINE_TERMINATOR, static::DEFAULT_LINE_TERMINATOR);
+        $this->escape = $this->getOption(static::OPTION_ESCAPE, static::DEFAULT_ESCAPE);
+        $this->limit = $this->getOption(static::OPTION_LIMIT, static::DEFAULT_LIMIT);
+        $this->doubleQuote = $this->getOption(static::OPTION_DOUBLE_QUOTE, static::DEFAULT_DOUBLE_QUOTE);
     }
 
     /**
@@ -84,7 +88,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @param string $delimiter
      *
-     * @return CsvFormat
+     * @return static
      */
     public function setDelimiter($delimiter)
     {
@@ -111,7 +115,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @param string $nullOutput
      *
-     * @return CsvFormat
+     * @return static
      */
     public function setNullOutput($nullOutput)
     {
@@ -124,18 +128,26 @@ class CsvFormat implements CsvFormatInterface
      */
     public function hasHeaders()
     {
-        return $this->includeHeaders;
+        return $this->headers > 0;
     }
 
     /**
-     * @param bool $includeHeaders
+     * @param int $headers
      *
-     * @return CsvFormat
+     * @return static
      */
-    public function setHeaders($includeHeaders)
+    public function setHeaders($headers)
     {
-        $this->includeHeaders = $includeHeaders;
+        $this->headers = $headers;
         return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 
     /**
@@ -149,7 +161,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @param string $lineTerminator
      *
-     * @return CsvFormat
+     * @return static
      */
     public function setLineTerminator($lineTerminator)
     {
@@ -158,6 +170,8 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
+     * @note Csv Rfc spec defines escaping of quotes to be done using double quotes `""`
+     *
      * @return string
      */
     public function getQuoteCharacter()
@@ -168,7 +182,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @param string $quoteCharacter
      *
-     * @return CsvFormat
+     * @return static
      */
     public function setQuoteCharacter($quoteCharacter)
     {
@@ -184,5 +198,74 @@ class CsvFormat implements CsvFormatInterface
     public function getType()
     {
         return 'csv';
+    }
+
+    /**
+     * @return string
+     */
+    public function getEscapeCharacter()
+    {
+        return $this->escape;
+    }
+
+    /**
+     * @param string $escape
+     *
+     * @return static
+     */
+    public function setEscapeCharacter($escape)
+    {
+        $this->escape = $escape;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEscapeCharacter()
+    {
+        return $this->escape !== '';
+    }
+
+    /**
+     * Get the limit that should be returned (-1 for no limit)
+     *
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Set the limit of the number of items to be returned (-1 for not limit)
+     *
+     * @param int $limit
+     *
+     * @return static
+     */
+    public function setLimit($limit)
+    {
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDoubleQuote()
+    {
+        return $this->doubleQuote;
+    }
+
+    /**
+     * @param bool $doubleQuote
+     *
+     * @return static
+     */
+    public function setDoubleQuote($doubleQuote)
+    {
+        $this->doubleQuote = $doubleQuote;
+        return $this;
     }
 }

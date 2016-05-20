@@ -27,13 +27,17 @@
         "psr/log": "^1.0",
         "symfony/process": "^3.0",
         "graze/data-node": "^1.0",
-        "graze/array-filter": "^1.0"
+        "graze/array-filter": "^1.0",
+        "guzzlehttp/psr7": "^1.3",
+        "graze/csv-token": "^0.2"
     },
     "require-dev": {
         "phpunit/phpunit": "5.*",
         "mockery/mockery": "^0.9.4",
         "squizlabs/php_codesniffer": "^2.5",
-        "league/flysystem-memory": "^1.0"
+        "league/flysystem-memory": "^1.0",
+        "graze/standards": "^1.0",
+        "akamon/mockery-callable-mock": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -46,33 +50,5 @@
             "Graze\\DataFile\\Test\\Unit\\": "tests/unit",
             "Graze\\DataFile\\Test\\Integration\\": "tests/integration"
         }
-    },
-    "scripts": {
-        "test": [
-            "composer lint --quiet",
-            "composer test:unit --quiet",
-            "composer test:integration --quiet"
-        ],
-        "test:unit": [
-            "vendor/bin/phpunit --colors=always --testsuite unit"
-        ],
-        "test:integration": [
-            "vendor/bin/phpunit --colors=always --testsuite integration"
-        ],
-        "test:coverage": [
-            "vendor/bin/phpunit --coverage-text"
-        ],
-        "test:coverage-html": [
-            "vendor/bin/phpunit --coverage-html=./tests/report/html"
-        ],
-        "test:coverage-clover": [
-            "vendor/bin/phpunit --coverage-clover=./tests/report/coverage.clover"
-        ],
-        "lint": [
-            "vendor/bin/phpcs -p --standard=PSR2 --warning-severity=0 src/ tests/"
-        ],
-        "lint:auto-fix": [
-            "vendor/bin/phpcbf -p --standard=PSR2 src/ tests/"
-        ]
     }
 }
