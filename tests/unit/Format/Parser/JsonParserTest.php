@@ -235,7 +235,7 @@ JSON
         $parser = new JsonParser($format);
 
         static::expectException($exception);
-        if ($regex) {
+        if (!is_null($regex)) {
             static::expectExceptionMessageRegExp($regex);
         }
         $iterator = $parser->parse($this->createStream($json));

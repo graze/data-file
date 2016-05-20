@@ -21,10 +21,10 @@ class TransferFailedException extends Exception
     /**
      * MakeDirectoryFailedException constructor.
      *
-     * @param FileNode  $from
-     * @param FileNode  $to
-     * @param string    $message
-     * @param Exception $previous
+     * @param FileNode       $from
+     * @param FileNode       $to
+     * @param string         $message
+     * @param Exception|null $previous
      */
     public function __construct(FileNode $from, FileNode $to, $message = '', Exception $previous = null)
     {

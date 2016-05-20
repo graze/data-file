@@ -144,8 +144,9 @@ class LineStreamIterator implements Iterator
      */
     private function stripEnding(&$buffer)
     {
-        if (!$this->includeEnding && substr($buffer, strlen($this->ending) * -1) == $this->ending) {
-            array_splice($buffer, $len * -1);
+        $len = strlen($this->ending) * -1;
+        if (!$this->includeEnding && substr($buffer, $len) == $this->ending) {
+            $buffer = substr($buffer, 0, $len);
         }
     }
 

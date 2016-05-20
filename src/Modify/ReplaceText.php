@@ -93,10 +93,8 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
         $postfix = $this->getOption('postfix', 'replace');
         $output = $this->getTargetFile($file, $postfix);
 
-        if (is_array($fromText)) {
-            if (is_array($toText) &&
-                count($fromText) == count($toText)
-            ) {
+        if (is_array($fromText) && is_array($toText)) {
+            if (count($fromText) == count($toText)) {
                 $sedStrings = [];
                 $fromSize = count($fromText);
                 for ($i = 0; $i < $fromSize; $i++) {
@@ -106,6 +104,8 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Proces
             } else {
                 throw new InvalidArgumentException("Number of items in 'fromText' (" . count($fromText) . ") is different to 'toText' (" . count($toText) . ")");
             }
+        } elseif (is_array($fromText) || is_array($toText)) {
+            throw new InvalidArgumentException("Only one of fromText or toText in an array, both should be arrays or string");
         } else {
             $replacementString = $this->getReplacementCommand($fromText, $toText);
         }

@@ -20,7 +20,6 @@ use Graze\DataFile\Test\Helper\CreateStreamTrait;
 use Graze\DataFile\Test\TestCase;
 use Iterator;
 use Mockery as m;
-use Mockery\MockInterface;
 
 class StreamReaderTest extends TestCase
 {
@@ -35,7 +34,7 @@ class StreamReaderTest extends TestCase
     private function buildReader($string, Iterator $iterator)
     {
         $stream = $this->createStream($string);
-        /** @var ParserInterface|MockInterface $parser */
+        /** @var ParserInterface $parser */
         $parser = m::mock(ParserInterface::class);
 
         $parser->shouldReceive('parse')

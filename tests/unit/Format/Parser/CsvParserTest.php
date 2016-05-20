@@ -16,14 +16,15 @@ namespace Graze\DataFile\Test\Unit\Format\Parser;
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Format\CsvFormatInterface;
 use Graze\DataFile\Format\Parser\CsvParser;
+use Graze\DataFile\Test\Helper\CreateStreamTrait;
 use Graze\DataFile\Test\TestCase;
-use GuzzleHttp\Psr7\Stream;
 use Mockery as m;
-use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 class CsvParserTest extends TestCase
 {
+    use CreateStreamTrait;
+
     /**
      * @dataProvider parseLineData
      *
@@ -40,19 +41,6 @@ class CsvParserTest extends TestCase
         $actual = array_values(array_map('iterator_to_array', $actual));
 
         static::assertEquals($expected, $actual);
-    }
-
-    /**
-     * @param string $string
-     *
-     * @return StreamInterface
-     */
-    protected function createStream($string)
-    {
-        $stream = fopen('php://memory', 'r+');
-        fwrite($stream, $string);
-        rewind($stream);
-        return new Stream($stream);
     }
 
     /**
