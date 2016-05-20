@@ -46,26 +46,28 @@ class CsvFormatter implements FormatterInterface
     {
         $this->csvFormat = $csvFormat;
 
-        $this->escapeChars = [
-            $this->csvFormat->getEscapeCharacter(), // escape escape first so that it doesn't re-escape later on
-            $this->csvFormat->getDelimiter(),
-            "\n",
-            "\r",
-            "\t",
-        ];
-        if ($this->csvFormat->hasQuotes() && !$this->csvFormat->isDoubleQuote()) {
-            $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
+        if ($this->csvFormat->getEscapeCharacter()) {
+            $this->escapeChars = [
+                $this->csvFormat->getEscapeCharacter(), // escape escape first so that it doesn't re-escape later on
+                $this->csvFormat->getDelimiter(),
+                "\n",
+                "\r",
+                "\t",
+            ];
+            if ($this->csvFormat->hasQuotes() && !$this->csvFormat->isDoubleQuote()) {
+                $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
+            }
+
+            $this->escapeChars = array_unique($this->escapeChars);
+
+            $this->replaceChars = array_map(function ($char) {
+                return $this->csvFormat->getEscapeCharacter() . $char;
+            }, $this->escapeChars);
         }
 
-        $this->escapeChars = array_unique($this->escapeChars);
-
-        $this->replaceChars = array_map(function ($char) {
-            return $this->csvFormat->getEscapeCharacter() . $char;
-        }, $this->escapeChars);
-
         if ($this->csvFormat->hasQuotes() && $this->csvFormat->isDoubleQuote()) {
-            $this->escapeChars[] = '"';
-            $this->replaceChars[] = '""';
+            $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
+            $this->replaceChars[] = str_repeat($this->csvFormat->getQuoteCharacter(), 2);
         }
 
         $this->addProcessor(new DateTimeProcessor());

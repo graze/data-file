@@ -220,6 +220,14 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
+     * @return bool
+     */
+    public function hasEscapeCharacter()
+    {
+        return $this->escape !== '';
+    }
+
+    /**
      * Get the limit that should be returned (-1 for no limit)
      *
      * @return int

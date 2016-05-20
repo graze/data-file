@@ -98,6 +98,11 @@ interface CsvFormatInterface extends FormatInterface
     public function setEscapeCharacter($escape);
 
     /**
+     * @return bool
+     */
+    public function hasEscapeCharacter();
+
+    /**
      * Get the limit that should be returned (-1 for no limit)
      *
      * @return int

@@ -106,6 +106,24 @@ class CsvFormatterTest extends TestCase
                 '"text""","1","2.5","0",\\N,"\\' . "\n" . ' \\' . "\r" . ' a","\\' . "\t" . '","""""foo"""""',
                 'double quotes failed',
             ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_ESCAPE       => '',
+                    CsvFormat::OPTION_DOUBLE_QUOTE => true,
+                ]),
+                ['text', '"test', ','],
+                '"text","""test",","',
+                'no escape failed',
+            ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_QUOTE_CHARACTER => '',
+                    CsvFormat::OPTION_DOUBLE_QUOTE    => true,
+                ]),
+                ['text', 'things,', '"here"'],
+                'text,things\,,"here"',
+                'blank quote character failed and double quote should do nothing',
+            ],
         ];
     }
 

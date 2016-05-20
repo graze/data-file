@@ -39,6 +39,7 @@ class CsvFormatTest extends TestCase
         static::assertEquals(1, $definition->getHeaders(), "Headers should be 1 by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('\\', $definition->getEscapeCharacter(), "Default escape character should be '\\'");
+        static::assertTrue($definition->hasEscapeCharacter());
         static::assertEquals(-1, $definition->getLimit(), "Default limit should be -1");
         static::assertEquals(false, $definition->isDoubleQuote(), "Double quote should be off by default");
     }
@@ -51,7 +52,7 @@ class CsvFormatTest extends TestCase
             'nullOutput'     => '',
             'headers'        => 0,
             'lineTerminator' => "----",
-            'escape'         => '"',
+            'escape'         => '',
             'limit'          => 2,
             'doubleQuote'    => true,
         ]);
@@ -62,7 +63,8 @@ class CsvFormatTest extends TestCase
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
         static::assertFalse($definition->hasHeaders(), "Headers should be off");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
-        static::assertEquals('"', $definition->getEscapeCharacter(), 'Escape Character should be "');
+        static::assertEquals('', $definition->getEscapeCharacter(), "Escape Character should be '' (blank)");
+        static::assertFalse($definition->hasEscapeCharacter(), "Format should not be marked as not having escape");
         static::assertEquals(2, $definition->getLimit(), 'Limit should be 2');
         static::assertEquals(true, $definition->isDoubleQuote(), 'double quote should be on');
     }
@@ -78,6 +80,7 @@ class CsvFormatTest extends TestCase
         static::assertTrue($definition->hasHeaders(), "Headers should be on by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('\\', $definition->getEscapeCharacter(), "Default escape character should be '\\'");
+        static::assertTrue($definition->hasEscapeCharacter());
         static::assertEquals(-1, $definition->getLimit(), "Default limit should be -1");
         static::assertEquals(false, $definition->isDoubleQuote(), "Double quote should be off by default");
 
@@ -95,6 +98,10 @@ class CsvFormatTest extends TestCase
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
         static::assertSame($definition, $definition->setEscapeCharacter('"'), "Set escape character should be fluent");
         static::assertEquals('"', $definition->getEscapeCharacter(), "Escape character should be modified");
+        static::assertTrue($definition->hasEscapeCharacter(), "Format should have an escape character");
+        static::assertSame($definition, $definition->setEscapeCharacter(''), "Set escape character should be fluent");
+        static::assertEquals('', $definition->getEscapeCharacter(), "Escape character should be modified");
+        static::assertFalse($definition->hasEscapeCharacter(), "Format should not have an escape character");
         static::assertSame($definition, $definition->setLimit(3), "setLimit should be fluent");
         static::assertEquals(3, $definition->getLimit(), "Limit should be modified");
         static::assertSame($definition, $definition->setDoubleQuote(true), 'setDoubleQuote should be fluent');
