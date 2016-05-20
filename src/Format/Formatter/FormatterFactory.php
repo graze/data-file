@@ -36,8 +36,6 @@ class FormatterFactory implements FormatterFactoryInterface
                         "Format indicates it is csv but does not implement CsvFormatInterface"
                     );
                 }
-
-                // this will never be called but phpcf doesn't understand the concept of exceptions
                 break;
 
             case 'json':
@@ -48,9 +46,8 @@ class FormatterFactory implements FormatterFactoryInterface
                         "Format indicates it is json but does not implement JsonFormatInterface"
                     );
                 }
-
-                // this will never be called but phpcf doesn't understand the concept of exceptions
                 break;
+
             default:
                 throw new InvalidArgumentException("Supplied format: {$format->getType()} is unknown");
         }

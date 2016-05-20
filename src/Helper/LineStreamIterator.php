@@ -32,7 +32,7 @@ class LineStreamIterator implements Iterator
     private $ending;
     /** @var int */
     private $position = 0;
-    /** @var string */
+    /** @var string|bool */
     private $current;
     /** @var bool */
     private $ignoreBlank = true;
@@ -87,7 +87,7 @@ class LineStreamIterator implements Iterator
      */
     public function next()
     {
-        if ($this->readStreamTill($this->ending)) {
+        if ($this->readStream()) {
             $this->position++;
         }
     }
@@ -95,30 +95,57 @@ class LineStreamIterator implements Iterator
     /**
      * @param string $ending
      *
-     * @return bool
+     * @return string
      */
     private function readStreamTill($ending)
+    {
+        $buffer = '';
+        $len = strlen($ending);
+        do {
+            $char = $this->stream->read(1);
+            $buffer .= $char;
+        } while ($char && substr($buffer, $len * -1) != $ending && !$this->stream->eof());
+        return $buffer;
+    }
+
+    /**
+     * @return bool
+     */
+    private function readStream()
     {
         if ($this->stream->eof()) {
             $this->current = false;
             return false;
         } else {
-            $len = strlen($ending);
-            $buffer = '';
-            do {
-                $char = $this->stream->read(1);
-                $buffer .= $char;
-            } while ($char && substr($buffer, $len * -1) != $ending && !$this->stream->eof());
+            $buffer = $this->readStreamTill($this->ending);
 
-            if (($buffer == '' || $buffer == $ending) && $this->ignoreBlank) {
-                return $this->readStreamTill($ending);
+            if ($this->isBlankBuffer($buffer)) {
+                return $this->readStream();
             } else {
-                if (!$this->includeEnding && substr($buffer, $len * -1) == $ending) {
-                    $buffer = substr($buffer, 0, $len * -1);
-                }
+                $this->stripEnding($buffer);
                 $this->current = $buffer;
                 return true;
             }
+        }
+    }
+
+    /**
+     * @param string $buffer Reference as we want speed here!
+     *
+     * @return bool
+     */
+    private function isBlankBuffer(&$buffer)
+    {
+        return (($buffer == '' || $buffer == $this->ending) && $this->ignoreBlank);
+    }
+
+    /**
+     * @param string $buffer Reference as we want speed here!
+     */
+    private function stripEnding(&$buffer)
+    {
+        if (!$this->includeEnding && substr($buffer, strlen($this->ending) * -1) == $this->ending) {
+            array_splice($buffer, $len * -1);
         }
     }
 
@@ -154,7 +181,7 @@ class LineStreamIterator implements Iterator
     {
         $this->position = 0;
         $this->stream->seek(0);
-        $this->readStreamTill($this->ending);
+        $this->readStream();
     }
 
     /**
