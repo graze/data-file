@@ -36,8 +36,8 @@ class FormatterFactory implements FormatterFactoryInterface
                         "Format indicates it is csv but does not implement CsvFormatInterface"
                     );
                 }
-                break;
 
+                // fallthrough
             case 'json':
                 if ($format instanceof JsonFormatInterface) {
                     return new JsonFormatter($format);
@@ -46,8 +46,8 @@ class FormatterFactory implements FormatterFactoryInterface
                         "Format indicates it is json but does not implement JsonFormatInterface"
                     );
                 }
-                break;
 
+                // fallthrough
             default:
                 throw new InvalidArgumentException("Supplied format: {$format->getType()} is unknown");
         }
