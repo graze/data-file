@@ -59,19 +59,31 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @return bool
      */
-    public function hasHeaders();
+    public function hasHeaderRow();
 
     /**
-     * @param int $headers
+     * @param int $headerRow
      *
      * @return static
      */
-    public function setHeaders($headers);
+    public function setHeaderRow($headerRow);
 
     /**
      * @return int
      */
-    public function getHeaders();
+    public function getHeaderRow();
+
+    /**
+     * @param int $row
+     *
+     * @return static
+     */
+    public function setDataStart($row);
+
+    /**
+     * @return int
+     */
+    public function getDataStart();
 
     /**
      * @return string

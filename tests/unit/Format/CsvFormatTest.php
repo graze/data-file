@@ -35,8 +35,9 @@ class CsvFormatTest extends TestCase
         static::assertEquals('"', $definition->getQuoteCharacter(), "Default quote character should be \"");
         static::assertTrue($definition->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $definition->getNullOutput(), "Null character should be '\\N'");
-        static::assertTrue($definition->hasHeaders(), "Headers should be on by default");
-        static::assertEquals(1, $definition->getHeaders(), "Headers should be 1 by default");
+        static::assertFalse($definition->hasHeaderRow(), "Headers should be on by default");
+        static::assertEquals(-1, $definition->getHeaderRow(), "Header row should be -1 by default");
+        static::assertEquals(1, $definition->getDataStart(), "Get data start should be 1 by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('\\', $definition->getEscapeCharacter(), "Default escape character should be '\\'");
         static::assertTrue($definition->hasEscapeCharacter());
@@ -50,7 +51,8 @@ class CsvFormatTest extends TestCase
             'delimiter'      => "\t",
             'quoteCharacter' => '',
             'nullOutput'     => '',
-            'headers'        => 0,
+            'headerRow'      => 1,
+            'dataStart'      => 5,
             'lineTerminator' => "----",
             'escape'         => '',
             'limit'          => 2,
@@ -61,7 +63,9 @@ class CsvFormatTest extends TestCase
         static::assertEquals('', $definition->getQuoteCharacter(), "Quote character should be blank");
         static::assertFalse($definition->hasQuotes(), "Quoting should be off");
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertFalse($definition->hasHeaders(), "Headers should be off");
+        static::assertTrue($definition->hasHeaderRow(), "Headers should be on");
+        static::assertEquals(1, $definition->getHeaderRow(), "Header row should be set to 1");
+        static::assertEquals(5, $definition->getDataStart(), "Data Start should be set to 5");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
         static::assertEquals('', $definition->getEscapeCharacter(), "Escape Character should be '' (blank)");
         static::assertFalse($definition->hasEscapeCharacter(), "Format should not be marked as not having escape");
@@ -77,7 +81,8 @@ class CsvFormatTest extends TestCase
         static::assertEquals('"', $definition->getQuoteCharacter(), "Default quote character should be \"");
         static::assertTrue($definition->hasQuotes(), "Quoting should be on by default");
         static::assertEquals('\\N', $definition->getNullOutput(), "Null character should be '\\N'");
-        static::assertTrue($definition->hasHeaders(), "Headers should be on by default");
+        static::assertFalse($definition->hasHeaderRow(), "Headers should be off by default");
+        static::assertEquals(1, $definition->getDataStart(), "Data start should be 1 by default");
         static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
         static::assertEquals('\\', $definition->getEscapeCharacter(), "Default escape character should be '\\'");
         static::assertTrue($definition->hasEscapeCharacter());
@@ -91,9 +96,11 @@ class CsvFormatTest extends TestCase
         static::assertFalse($definition->hasQuotes(), "Quoting should be off");
         static::assertSame($definition, $definition->setNullOutput(''), "setNullOutput should be fluent");
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
-        static::assertSame($definition, $definition->setHeaders(0), "setHeaders should be fluent");
-        static::assertFalse($definition->hasHeaders(), "Headers should be off");
-        static::assertEquals(0, $definition->getHeaders(), "Headers should be set to 0");
+        static::assertSame($definition, $definition->setHeaderRow(1), "setHeaders should be fluent");
+        static::assertTrue($definition->hasHeaderRow(), "Headers should be on");
+        static::assertEquals(1, $definition->getHeaderRow(), "Headers should be set to 1");
+        static::assertSame($definition, $definition->setDataStart(2), "setDataStart should be fluent");
+        static::assertEquals(2, $definition->getDataStart(), "Data Start should be 2");
         static::assertSame($definition, $definition->setLineTerminator('----'), "setLineTerminator should be fluent");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
         static::assertSame($definition, $definition->setEscapeCharacter('"'), "Set escape character should be fluent");
@@ -106,5 +113,29 @@ class CsvFormatTest extends TestCase
         static::assertEquals(3, $definition->getLimit(), "Limit should be modified");
         static::assertSame($definition, $definition->setDoubleQuote(true), 'setDoubleQuote should be fluent');
         static::assertTrue($definition->isDoubleQuote(), 'isDoubleQuote should be true');
+    }
+
+    public function testSettingHeaderRowToLargerThanDataStartWillModifyDataStart()
+    {
+        $definition = new CsvFormat();
+        static::assertEquals(-1, $definition->getHeaderRow());
+        static::assertEquals(1, $definition->getDataStart());
+
+        $definition->setHeaderRow(2);
+        static::assertEquals(2, $definition->getHeaderRow());
+        static::assertEquals(3, $definition->getDataStart());
+
+        $definition->setDataStart(5);
+        static::assertEquals(2, $definition->getHeaderRow());
+        static::assertEquals(5, $definition->getDataStart());
+
+        $definition->setDataStart(1);
+        static::assertEquals(2, $definition->getHeaderRow());
+        static::assertEquals(3, $definition->getDataStart());
+
+        $definition->setHeaderRow(-1);
+        $definition->setDataStart(-1);
+        static::assertEquals(-1, $definition->getHeaderRow());
+        static::assertEquals(1, $definition->getDataStart());
     }
 }

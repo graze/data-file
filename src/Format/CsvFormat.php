@@ -21,7 +21,8 @@ class CsvFormat implements CsvFormatInterface
 
     const DEFAULT_DELIMITER       = ',';
     const DEFAULT_NULL_OUTPUT     = '\\N';
-    const DEFAULT_HEADERS         = 1;
+    const DEFAULT_HEADER_ROW      = -1;
+    const DEFAULT_DATA_START      = 1;
     const DEFAULT_LINE_TERMINATOR = "\n";
     const DEFAULT_QUOTE_CHARACTER = '"';
     const DEFAULT_ESCAPE          = '\\';
@@ -30,7 +31,8 @@ class CsvFormat implements CsvFormatInterface
 
     const OPTION_DELIMITER       = 'delimiter';
     const OPTION_NULL_OUTPUT     = 'nullOutput';
-    const OPTION_HEADERS         = 'headers';
+    const OPTION_HEADER_ROW      = 'headerRow';
+    const OPTION_DATA_START      = 'dataStart';
     const OPTION_LINE_TERMINATOR = 'lineTerminator';
     const OPTION_QUOTE_CHARACTER = 'quoteCharacter';
     const OPTION_ESCAPE          = 'escape';
@@ -44,7 +46,7 @@ class CsvFormat implements CsvFormatInterface
     /** @var string */
     protected $nullOutput;
     /** @var int */
-    protected $headers;
+    protected $headerRow;
     /** @var string */
     protected $lineTerminator;
     /** @var bool */
@@ -55,14 +57,20 @@ class CsvFormat implements CsvFormatInterface
     protected $limit;
     /** @var bool */
     protected $doubleQuote;
+    /** @var int */
+    protected $dataStart;
 
     /**
      * @param array $options -delimiter <string> (Default: ,) Character to use between fields
      *                       -quoteCharacter <string> (Default: ")
      *                       -nullOutput <string> (Default: \N)
-     *                       -headers <int> (Default: 1)
+     *                       -headerRow <int> (Default: -1) -1 for no header row. (1 is the first line of the file)
+     *                       -dataStart <int> (Default: 1) The line where the data starts (1 is the first list of the
+     *                       file)
      *                       -lineTerminator <string> (Default: \n)
-     *
+     *                       -escape <string> (Default: \\) Character to use for escaping
+     *                       -limit <int> Total number of data rows to return
+     *                       -doubleQuote <bool> instances of quote in fields are indicated by a double quote
      */
     public function __construct(array $options = [])
     {
@@ -70,7 +78,8 @@ class CsvFormat implements CsvFormatInterface
         $this->delimiter = $this->getOption(static::OPTION_DELIMITER, static::DEFAULT_DELIMITER);
         $this->quoteCharacter = $this->getOption(static::OPTION_QUOTE_CHARACTER, static::DEFAULT_QUOTE_CHARACTER);
         $this->nullOutput = $this->getOption(static::OPTION_NULL_OUTPUT, static::DEFAULT_NULL_OUTPUT);
-        $this->headers = $this->getOption(static::OPTION_HEADERS, static::DEFAULT_HEADERS);
+        $this->headerRow = $this->getOption(static::OPTION_HEADER_ROW, static::DEFAULT_HEADER_ROW);
+        $this->dataStart = $this->getOption(static::OPTION_DATA_START, static::DEFAULT_DATA_START);
         $this->lineTerminator = $this->getOption(static::OPTION_LINE_TERMINATOR, static::DEFAULT_LINE_TERMINATOR);
         $this->escape = $this->getOption(static::OPTION_ESCAPE, static::DEFAULT_ESCAPE);
         $this->limit = $this->getOption(static::OPTION_LIMIT, static::DEFAULT_LIMIT);
@@ -126,28 +135,50 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return bool
      */
-    public function hasHeaders()
+    public function hasHeaderRow()
     {
-        return $this->headers > 0;
+        return $this->headerRow > 0;
     }
 
     /**
-     * @param int $headers
+     * @param int $headerRow
      *
      * @return static
      */
-    public function setHeaders($headers)
+    public function setHeaderRow($headerRow)
     {
-        $this->headers = $headers;
+        $this->headerRow = $headerRow;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getHeaders()
+    public function getHeaderRow()
     {
-        return $this->headers;
+        return $this->headerRow;
+    }
+
+    /**
+     * @param int $row
+     *
+     * @return static
+     */
+    public function setDataStart($row)
+    {
+        $this->dataStart = $row;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDataStart()
+    {
+        if ($this->hasHeaderRow() && $this->getHeaderRow() >= $this->dataStart) {
+            return max(1, $this->getHeaderRow() + 1);
+        }
+        return max(1, $this->dataStart);
     }
 
     /**
