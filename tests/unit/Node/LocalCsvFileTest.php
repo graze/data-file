@@ -28,7 +28,6 @@ class LocalCsvFileTest extends TestCase
             ->setFormat(new CsvFormat());
         $clone = $file->getClone();
 
-        /** @var CsvFormat $format */
         $format = $clone->getFormat();
         static::assertInstanceOf(CsvFormatInterface::class, $format);
         static::assertInstanceOf(CsvFormat::class, $format);

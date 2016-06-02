@@ -35,7 +35,6 @@ class StreamReaderTest extends TestCase
     private function buildReader($string, Iterator $iterator)
     {
         $stream = $this->createStream($string);
-        /** @var ParserInterface|MockInterface $parser */
         $parser = m::mock(ParserInterface::class);
 
         $parser->shouldReceive('parse')

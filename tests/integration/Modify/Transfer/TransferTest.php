@@ -106,7 +106,6 @@ class TransferTest extends AbstractFileTestCase
 
     public function testCopyWhenFilesystemDoesNotReadStreamThrowsAnException()
     {
-        /** @var FilesystemInterface|MockInterface $filesystem */
         $filesystem = m::mock(FilesystemInterface::class)->makePartial();
 
         $fromFile = new FileNode($filesystem, 'some/file');
@@ -122,7 +121,6 @@ class TransferTest extends AbstractFileTestCase
 
     public function testMoveWhenFilesystemDoesNotReadStreamThrowsAnException()
     {
-        /** @var FilesystemInterface|MockInterface $filesystem */
         $filesystem = m::mock(FilesystemInterface::class)->makePartial();
 
         $fromFile = new FileNode($filesystem, 'some/file');

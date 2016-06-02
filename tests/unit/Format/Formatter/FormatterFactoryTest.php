@@ -44,7 +44,6 @@ class FormatterFactoryTest extends TestCase
 
     public function testCsvFormatter()
     {
-        /** @var CsvFormat $csvFormat */
         $csvFormat = m::mock(CsvFormat::class)->makePartial();
 
         $formatter = $this->factory->getFormatter($csvFormat);
@@ -54,7 +53,6 @@ class FormatterFactoryTest extends TestCase
 
     public function testACsvFormatPretendingToBeCsvWillThrowAnException()
     {
-        /** @var CsvFormat|MockInterface $csvFormat */
         $csvFormat = m::mock(FormatInterface::class);
         $csvFormat->shouldReceive('getType')
                   ->andReturn('csv');
@@ -66,7 +64,6 @@ class FormatterFactoryTest extends TestCase
 
     public function testJsonFormatter()
     {
-        /** @var JsonFormat|MockInterface $jsonFormat */
         $jsonFormat = m::mock(JsonFormat::class);
         $jsonFormat->shouldReceive('getType')
                    ->andReturn('json');
@@ -83,7 +80,6 @@ class FormatterFactoryTest extends TestCase
 
     public function testAJsonFormatPretendingToBeCsvWillThrowAnException()
     {
-        /** @var CsvFormat|MockInterface $csvFormat */
         $csvFormat = m::mock(FormatInterface::class);
         $csvFormat->shouldReceive('getType')
                   ->andReturn('json');
@@ -95,7 +91,6 @@ class FormatterFactoryTest extends TestCase
 
     public function testGetFormatterWithUnknownTypeWillThrowException()
     {
-        /** @var FormatInterface $format */
         $format = m::mock(FormatInterface::class);
         $format->shouldReceive('getType')
                ->andReturn('random');
