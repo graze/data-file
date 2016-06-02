@@ -28,11 +28,15 @@ class LocalCsvFileTest extends TestCase
             ->setFormat(new CsvFormat());
         $clone = $file->getClone();
 
+        $format = $clone->getFormat();
+        static::assertInstanceOf(CsvFormatInterface::class, $format);
+        static::assertInstanceOf(CsvFormat::class, $format);
+
         static::assertNotSame($file, $clone);
 
-        $clone->getFormat()->setDelimiter('--');
+        $format->setDelimiter('--');
 
-        static::assertNotEquals($file->getFormat()->getDelimiter(), $clone->getFormat()->getDelimiter());
+        static::assertNotEquals($file->getFormat()->getDelimiter(), $format->getDelimiter());
     }
 
     public function testImplementsInterface()

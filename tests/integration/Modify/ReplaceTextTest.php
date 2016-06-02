@@ -108,6 +108,15 @@ class ReplaceTextTest extends AbstractFileTestCase
         $this->replacer->replaceText($file, ['text', 'pants that'], ['pants']);
     }
 
+    public function testCallingReplaceTextWithAnArrayAndStringThrowsAnException()
+    {
+        $file = new LocalFile(static::$dir . 'multiple_replace_failure.test');
+        $file->put('some text that text should be replaced');
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->replacer->replaceText($file, ['text', 'pants that'], 'pants');
+    }
+
     public function testAddingAPostfixToTheEndOfTheFile()
     {
         $file = new LocalFile(static::$dir . 'postfix_test.test');

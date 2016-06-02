@@ -33,5 +33,5 @@ trait InvokeProcessor
      *
      * @return array
      */
-    abstract function process(array $row);
+    abstract public function process(array $row);
 }

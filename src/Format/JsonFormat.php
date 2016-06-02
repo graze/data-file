@@ -25,7 +25,7 @@ class JsonFormat implements FormatInterface, JsonFormatInterface
     const OPTION_DECODE_ASSOC       = 'decodeAssoc';
     const OPTION_IGNORE_BLANK_LINES = 'ignoreBlankLines';
 
-    const DEFAULT_TYPE               = JsonFormat::JSON_FILE_TYPE_SINGLE_BLOCK;
+    const DEFAULT_TYPE               = JsonFormatInterface::JSON_FILE_TYPE_SINGLE_BLOCK;
     const DEFAULT_ENCODE_OPTIONS     = 0;
     const DEFAULT_DECODE_OPTIONS     = 0;
     const DEFAULT_DECODE_ASSOC       = false;
@@ -36,7 +36,7 @@ class JsonFormat implements FormatInterface, JsonFormatInterface
      *
      * @var int
      */
-    private $fileType = JsonFormat::JSON_FILE_TYPE_SINGLE_BLOCK;
+    private $fileType = JsonFormatInterface::JSON_FILE_TYPE_SINGLE_BLOCK;
     /** @var int */
     private $encodeOptions = 0;
     /** @var int */

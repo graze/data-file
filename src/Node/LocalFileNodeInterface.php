@@ -21,7 +21,7 @@ interface LocalFileNodeInterface extends FileNodeInterface
     public function getCompression();
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getEncoding();
 

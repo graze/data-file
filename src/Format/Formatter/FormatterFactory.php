@@ -37,9 +37,7 @@ class FormatterFactory implements FormatterFactoryInterface
                     );
                 }
 
-                // this will never be called but phpcf doesn't understand the concept of exceptions
-                break;
-
+                // fallthrough
             case 'json':
                 if ($format instanceof JsonFormatInterface) {
                     return new JsonFormatter($format);
@@ -49,8 +47,7 @@ class FormatterFactory implements FormatterFactoryInterface
                     );
                 }
 
-                // this will never be called but phpcf doesn't understand the concept of exceptions
-                break;
+                // fallthrough
             default:
                 throw new InvalidArgumentException("Supplied format: {$format->getType()} is unknown");
         }

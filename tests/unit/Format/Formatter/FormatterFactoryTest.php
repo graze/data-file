@@ -23,6 +23,7 @@ use Graze\DataFile\Format\JsonFormat;
 use Graze\DataFile\Test\TestCase;
 use InvalidArgumentException;
 use Mockery as m;
+use Mockery\MockInterface;
 
 class FormatterFactoryTest extends TestCase
 {

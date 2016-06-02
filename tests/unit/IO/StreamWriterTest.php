@@ -96,7 +96,6 @@ CSV;
 
     public function testFormatterBlocks()
     {
-        /** @var FormatterInterface|MockInterface $formatter */
         $formatter = m::mock(FormatterInterface::class);
 
         $writer = new StreamWriter($this->stream, $formatter);

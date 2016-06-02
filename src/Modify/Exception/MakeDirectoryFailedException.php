@@ -23,7 +23,7 @@ class MakeDirectoryFailedException extends Exception
      *
      * @param FileNodeInterface $file
      * @param string            $message
-     * @param Exception         $previous
+     * @param Exception|null    $previous
      */
     public function __construct(FileNodeInterface $file, $message = '', Exception $previous = null)
     {

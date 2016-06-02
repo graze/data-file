@@ -25,8 +25,8 @@ class MakeDirectory
     /**
      * Create the directory specified by the $file if it does not exist
      *
-     * @param FileNode $file
-     * @param string   $visibility public or private visibility
+     * @param FileNode    $file
+     * @param string|null $visibility public or private visibility
      *
      * @return LocalFile The original file inputted
      * @throws MakeDirectoryFailedException

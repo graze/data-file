@@ -42,7 +42,7 @@ class StreamReader implements ReaderInterface, LoggerAwareInterface
     /**
      * Create an Iterator based on
      *
-     * @param callable $callable
+     * @param callable|null $callable
      *
      * @return Iterator
      */

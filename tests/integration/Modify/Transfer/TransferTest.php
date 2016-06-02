@@ -21,8 +21,10 @@ use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\AbstractFileTestCase;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\Filesystem;
+use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Memory\MemoryAdapter;
 use Mockery as m;
+use Mockery\MockInterface;
 
 class TransferTest extends AbstractFileTestCase
 {
@@ -104,7 +106,7 @@ class TransferTest extends AbstractFileTestCase
 
     public function testCopyWhenFilesystemDoesNotReadStreamThrowsAnException()
     {
-        $filesystem = m::mock('League\Flysystem\FileSystemInterface')->makePartial();
+        $filesystem = m::mock(FilesystemInterface::class)->makePartial();
 
         $fromFile = new FileNode($filesystem, 'some/file');
 
@@ -119,7 +121,7 @@ class TransferTest extends AbstractFileTestCase
 
     public function testMoveWhenFilesystemDoesNotReadStreamThrowsAnException()
     {
-        $filesystem = m::mock('League\Flysystem\FileSystemInterface')->makePartial();
+        $filesystem = m::mock(FilesystemInterface::class)->makePartial();
 
         $fromFile = new FileNode($filesystem, 'some/file');
 
