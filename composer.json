@@ -29,7 +29,7 @@
         "graze/data-node": "^1.0",
         "graze/array-filter": "^1.0",
         "guzzlehttp/psr7": "^1.3",
-        "graze/csv-token": "^0.2"
+        "graze/csv-token": "^0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "5.*",

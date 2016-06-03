@@ -13,6 +13,7 @@
 
 namespace Graze\DataFile\Format;
 
+use Graze\CsvToken\Csv\Bom;
 use Graze\DataFile\Helper\GetOptionTrait;
 
 class CsvFormat implements CsvFormatInterface
@@ -28,6 +29,8 @@ class CsvFormat implements CsvFormatInterface
     const DEFAULT_ESCAPE          = '\\';
     const DEFAULT_LIMIT           = -1;
     const DEFAULT_DOUBLE_QUOTE    = false;
+    const DEFAULT_BOM             = null;
+    const DEFAULT_ENCODING        = 'UTF-8';
 
     const OPTION_DELIMITER       = 'delimiter';
     const OPTION_NULL_OUTPUT     = 'nullOutput';
@@ -38,6 +41,8 @@ class CsvFormat implements CsvFormatInterface
     const OPTION_ESCAPE          = 'escape';
     const OPTION_LIMIT           = 'limit';
     const OPTION_DOUBLE_QUOTE    = 'doubleQuote';
+    const OPTION_BOM             = 'bom';
+    const OPTION_ENCODING        = 'encoding';
 
     /** @var string */
     protected $delimiter;
@@ -59,6 +64,10 @@ class CsvFormat implements CsvFormatInterface
     protected $doubleQuote;
     /** @var int */
     protected $dataStart;
+    /** @var string|null */
+    protected $bom;
+    /** @var string */
+    protected $encoding;
 
     /**
      * @param array $options -delimiter <string> (Default: ,) Character to use between fields
@@ -71,6 +80,8 @@ class CsvFormat implements CsvFormatInterface
      *                       -escape <string> (Default: \\) Character to use for escaping
      *                       -limit <int> Total number of data rows to return
      *                       -doubleQuote <bool> instances of quote in fields are indicated by a double quote
+     *                       -bom <string> (Default: null) Specify a ByteOrderMark for this file
+     *                       -encoding <string> (Default: UTF-8) Specify the encoding of the csv file
      */
     public function __construct(array $options = [])
     {
@@ -84,6 +95,8 @@ class CsvFormat implements CsvFormatInterface
         $this->escape = $this->getOption(static::OPTION_ESCAPE, static::DEFAULT_ESCAPE);
         $this->limit = $this->getOption(static::OPTION_LIMIT, static::DEFAULT_LIMIT);
         $this->doubleQuote = $this->getOption(static::OPTION_DOUBLE_QUOTE, static::DEFAULT_DOUBLE_QUOTE);
+        $this->setBom($this->getOption(static::OPTION_BOM, static::DEFAULT_BOM));
+        $this->encoding = $this->getOption(static::OPTION_ENCODING, static::DEFAULT_ENCODING);
     }
 
     /**
@@ -297,6 +310,50 @@ class CsvFormat implements CsvFormatInterface
     public function setDoubleQuote($doubleQuote)
     {
         $this->doubleQuote = $doubleQuote;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getBom()
+    {
+        return $this->bom;
+    }
+
+    /**
+     * @param null|string $bom
+     *
+     * @return static
+     */
+    public function setBom($bom)
+    {
+        $this->bom = $bom;
+        if (!is_null($bom)) {
+            Bom::getEncoding($bom);
+        }
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEncoding()
+    {
+        if (!is_null($this->bom)) {
+            return Bom::getEncoding($this->bom);
+        }
+        return $this->encoding;
+    }
+
+    /**
+     * @param string $encoding
+     *
+     * @return static
+     */
+    public function setEncoding($encoding)
+    {
+        $this->encoding = $encoding;
         return $this;
     }
 }

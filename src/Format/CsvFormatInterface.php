@@ -141,4 +141,28 @@ interface CsvFormatInterface extends FormatInterface
      * @return static
      */
     public function setDoubleQuote($doubleQuote);
+
+    /**
+     * @param string $bom
+     *
+     * @return static
+     */
+    public function setBom($bom);
+
+    /**
+     * @return string
+     */
+    public function getBom();
+
+    /**
+     * @param string $encoding
+     *
+     * @return static
+     */
+    public function setEncoding($encoding);
+
+    /**
+     * @return string
+     */
+    public function getEncoding();
 }

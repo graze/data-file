@@ -13,6 +13,7 @@
 
 namespace Graze\DataFile\Test\Unit\Format\Parser;
 
+use Graze\CsvToken\Csv\Bom;
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Format\CsvFormatInterface;
 use Graze\DataFile\Format\Parser\CsvParser;
@@ -127,13 +128,19 @@ class CsvParserTest extends TestCase
             ],
             [
                 new CsvFormat([
-                    CsvFormat::OPTION_HEADER_ROW   => 1,
-                    CsvFormat::OPTION_DOUBLE_QUOTE => true,
+                    CsvFormat::OPTION_HEADER_ROW => 1,
                 ]),
                 "\n" . '"1","2","3","4","5"',
                 [
                     ['1', '2', '3', '4', '5'],
                 ],
+            ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_BOM => Bom::BOM_UTF8,
+                ]),
+                Bom::BOM_UTF8 . '"text","here",",there"',
+                [['text', 'here', ',there']],
             ],
         ];
     }
