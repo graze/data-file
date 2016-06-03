@@ -51,6 +51,20 @@ class CsvFormatter implements FormatterInterface
     {
         $this->csvFormat = $csvFormat;
 
+        $this->buildReplacements();
+
+        $this->initial = (!is_null($this->csvFormat->getBom())) ? $this->csvFormat->getBom() : '';
+
+        $this->addProcessor(new DateTimeProcessor());
+        $this->addProcessor(new BoolProcessor());
+        $this->addProcessor(new ObjectToStringProcessor());
+    }
+
+    /**
+     * Build replacements to perform for each entry
+     */
+    private function buildReplacements()
+    {
         if ($this->csvFormat->getEscapeCharacter()) {
             $this->escapeChars = [
                 $this->csvFormat->getEscapeCharacter(), // escape escape first so that it doesn't re-escape later on
@@ -74,12 +88,6 @@ class CsvFormatter implements FormatterInterface
             $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
             $this->replaceChars[] = str_repeat($this->csvFormat->getQuoteCharacter(), 2);
         }
-
-        $this->initial = (!is_null($this->csvFormat->getBom())) ? $this->csvFormat->getBom() : '';
-
-        $this->addProcessor(new DateTimeProcessor());
-        $this->addProcessor(new BoolProcessor());
-        $this->addProcessor(new ObjectToStringProcessor());
     }
 
     /**
