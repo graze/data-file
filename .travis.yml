@@ -18,5 +18,4 @@ script:
   - vendor/bin/phpunit --coverage-clover=./tests/report/coverage.clover
 
 after_script:
-  - wget https://scrutinizer-ci.com/ocular.phar
-  - php ocular.phar code-coverage:upload --format=php-clover ./tests/report/coverage.clover
+  - ./build/coverage_to_scruitinizer.sh
