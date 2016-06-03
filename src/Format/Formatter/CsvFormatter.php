@@ -40,12 +40,31 @@ class CsvFormatter implements FormatterInterface
     private $replaceChars;
 
     /**
+     * @var string
+     */
+    private $initial;
+
+    /**
      * @param CsvFormatInterface $csvFormat
      */
     public function __construct(CsvFormatInterface $csvFormat)
     {
         $this->csvFormat = $csvFormat;
 
+        $this->buildReplacements();
+
+        $this->initial = (!is_null($this->csvFormat->getBom())) ? $this->csvFormat->getBom() : '';
+
+        $this->addProcessor(new DateTimeProcessor());
+        $this->addProcessor(new BoolProcessor());
+        $this->addProcessor(new ObjectToStringProcessor());
+    }
+
+    /**
+     * Build replacements to perform for each entry
+     */
+    private function buildReplacements()
+    {
         if ($this->csvFormat->getEscapeCharacter()) {
             $this->escapeChars = [
                 $this->csvFormat->getEscapeCharacter(), // escape escape first so that it doesn't re-escape later on
@@ -69,10 +88,6 @@ class CsvFormatter implements FormatterInterface
             $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
             $this->replaceChars[] = str_repeat($this->csvFormat->getQuoteCharacter(), 2);
         }
-
-        $this->addProcessor(new DateTimeProcessor());
-        $this->addProcessor(new BoolProcessor());
-        $this->addProcessor(new ObjectToStringProcessor());
     }
 
     /**
@@ -92,7 +107,7 @@ class CsvFormatter implements FormatterInterface
             }
         }
 
-        return implode($this->csvFormat->getDelimiter(), $data);
+        return $this->encode(implode($this->csvFormat->getDelimiter(), $data));
     }
 
     /**
@@ -106,13 +121,23 @@ class CsvFormatter implements FormatterInterface
     }
 
     /**
+     * @param string $string
+     *
+     * @return string
+     */
+    private function encode($string)
+    {
+        return mb_convert_encoding($string, $this->csvFormat->getEncoding());
+    }
+
+    /**
      * Return an initial block if required
      *
      * @return string
      */
     public function getInitialBlock()
     {
-        return '';
+        return $this->initial;
     }
 
     /**
@@ -122,7 +147,7 @@ class CsvFormatter implements FormatterInterface
      */
     public function getRowSeparator()
     {
-        return $this->csvFormat->getLineTerminator();
+        return $this->encode($this->csvFormat->getLineTerminator());
     }
 
     /**

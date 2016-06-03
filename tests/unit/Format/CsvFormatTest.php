@@ -13,8 +13,10 @@
 
 namespace Graze\DataFile\Test\Unit\Format;
 
+use Graze\CsvToken\Csv\Bom;
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Test\TestCase;
+use InvalidArgumentException;
 
 class CsvFormatTest extends TestCase
 {
@@ -43,6 +45,8 @@ class CsvFormatTest extends TestCase
         static::assertTrue($definition->hasEscapeCharacter());
         static::assertEquals(-1, $definition->getLimit(), "Default limit should be -1");
         static::assertEquals(false, $definition->isDoubleQuote(), "Double quote should be off by default");
+        static::assertNull($definition->getBom(), "Bom should be null by default");
+        static::assertEquals('UTF-8', $definition->getEncoding(), 'Encoding should be set to UTF-8 by default');
     }
 
     public function testAssigningOptionsModifiesTheDefinition()
@@ -57,6 +61,8 @@ class CsvFormatTest extends TestCase
             'escape'         => '',
             'limit'          => 2,
             'doubleQuote'    => true,
+            'bom'            => Bom::BOM_UTF16_BE,
+            'encoding'       => 'UTF-16BE',
         ]);
 
         static::assertEquals("\t", $definition->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
@@ -71,48 +77,66 @@ class CsvFormatTest extends TestCase
         static::assertFalse($definition->hasEscapeCharacter(), "Format should not be marked as not having escape");
         static::assertEquals(2, $definition->getLimit(), 'Limit should be 2');
         static::assertEquals(true, $definition->isDoubleQuote(), 'double quote should be on');
+        static::assertEquals(Bom::BOM_UTF16_BE, $definition->getBom(), 'bom should be set to UTF-16BE');
+        static::assertEquals('UTF-16BE', $definition->getEncoding(), 'Encoding should be set to UTF-16BE');
     }
 
     public function testSettingProperties()
     {
         $definition = new CsvFormat();
 
-        static::assertEquals(',', $definition->getDelimiter(), "Default Delimiter should be ','");
-        static::assertEquals('"', $definition->getQuoteCharacter(), "Default quote character should be \"");
-        static::assertTrue($definition->hasQuotes(), "Quoting should be on by default");
-        static::assertEquals('\\N', $definition->getNullOutput(), "Null character should be '\\N'");
-        static::assertFalse($definition->hasHeaderRow(), "Headers should be off by default");
-        static::assertEquals(1, $definition->getDataStart(), "Data start should be 1 by default");
-        static::assertEquals("\n", $definition->getLineTerminator(), "Line terminator should be '\\n'");
-        static::assertEquals('\\', $definition->getEscapeCharacter(), "Default escape character should be '\\'");
-        static::assertTrue($definition->hasEscapeCharacter());
-        static::assertEquals(-1, $definition->getLimit(), "Default limit should be -1");
-        static::assertEquals(false, $definition->isDoubleQuote(), "Double quote should be off by default");
-
         static::assertSame($definition, $definition->setDelimiter("\t"), "SetDelimiter should be fluent");
         static::assertEquals("\t", $definition->getDelimiter(), "Delimiter should be set to '\\t' (tab)");
+
         static::assertSame($definition, $definition->setQuoteCharacter(''), "setQuoteCharacter should be fluent");
         static::assertEquals('', $definition->getQuoteCharacter(), "Quote character should be blank");
         static::assertFalse($definition->hasQuotes(), "Quoting should be off");
+
         static::assertSame($definition, $definition->setNullOutput(''), "setNullOutput should be fluent");
         static::assertEquals('', $definition->getNullOutput(), "Null character should be '' (blank)'");
+
         static::assertSame($definition, $definition->setHeaderRow(1), "setHeaders should be fluent");
         static::assertTrue($definition->hasHeaderRow(), "Headers should be on");
         static::assertEquals(1, $definition->getHeaderRow(), "Headers should be set to 1");
+
         static::assertSame($definition, $definition->setDataStart(2), "setDataStart should be fluent");
         static::assertEquals(2, $definition->getDataStart(), "Data Start should be 2");
+
         static::assertSame($definition, $definition->setLineTerminator('----'), "setLineTerminator should be fluent");
         static::assertEquals("----", $definition->getLineTerminator(), "Line terminator should be '----'");
+
         static::assertSame($definition, $definition->setEscapeCharacter('"'), "Set escape character should be fluent");
         static::assertEquals('"', $definition->getEscapeCharacter(), "Escape character should be modified");
         static::assertTrue($definition->hasEscapeCharacter(), "Format should have an escape character");
+
         static::assertSame($definition, $definition->setEscapeCharacter(''), "Set escape character should be fluent");
         static::assertEquals('', $definition->getEscapeCharacter(), "Escape character should be modified");
         static::assertFalse($definition->hasEscapeCharacter(), "Format should not have an escape character");
+
         static::assertSame($definition, $definition->setLimit(3), "setLimit should be fluent");
         static::assertEquals(3, $definition->getLimit(), "Limit should be modified");
+
         static::assertSame($definition, $definition->setDoubleQuote(true), 'setDoubleQuote should be fluent');
         static::assertTrue($definition->isDoubleQuote(), 'isDoubleQuote should be true');
+
+        static::assertSame($definition, $definition->setBom(Bom::BOM_UTF32_BE), 'setBom should be fluent');
+        static::assertEquals(Bom::BOM_UTF32_BE, $definition->getBom(), 'Bom should be set to the UTF32BE BOM');
+        static::assertEquals(
+            'UTF-32BE',
+            $definition->getEncoding(),
+            'getEncoding should be modified after setting the BOM'
+        );
+        // reset
+        $definition->setBom(null);
+        static::assertEquals(null, $definition->getBom(), 'Bom should be reset to null');
+
+        static::assertEquals(
+            'UTF-8',
+            $definition->getEncoding(),
+            'The encoding should be reset when no BOM is present'
+        );
+        static::assertSame($definition, $definition->setEncoding('UTF-16'), 'setEncoding should be fluent');
+        static::assertEquals('UTF-16', $definition->getEncoding(), 'The encoding should be set to UTF-16');
     }
 
     public function testSettingHeaderRowToLargerThanDataStartWillModifyDataStart()
@@ -137,5 +161,13 @@ class CsvFormatTest extends TestCase
         $definition->setDataStart(-1);
         static::assertEquals(-1, $definition->getHeaderRow());
         static::assertEquals(1, $definition->getDataStart());
+    }
+
+    public function testSettingAnInvalidBomWillThrowAnException()
+    {
+        $definition = new CsvFormat();
+
+        static::expectException(InvalidArgumentException::class);
+        $definition->setBom('INVALID');
     }
 }

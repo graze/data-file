@@ -14,6 +14,7 @@
 namespace Graze\DataFile\Test\Unit\Format\Formatter;
 
 use DateTime;
+use Graze\CsvToken\Csv\Bom;
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Format\CsvFormatInterface;
 use Graze\DataFile\Format\Formatter\CsvFormatter;
@@ -161,6 +162,16 @@ class CsvFormatterTest extends TestCase
         $formatter = new CsvFormatter(new CsvFormat());
 
         static::assertEmpty($formatter->getInitialBlock());
+        static::assertEmpty($formatter->getClosingBlock());
+    }
+
+    public function testStartBlockContainsABom()
+    {
+        $formatter = new CsvFormatter(new CsvFormat([
+            CsvFormat::OPTION_BOM => Bom::BOM_UTF16_BE,
+        ]));
+
+        static::assertEquals(Bom::BOM_UTF16_BE, $formatter->getInitialBlock());
         static::assertEmpty($formatter->getClosingBlock());
     }
 }

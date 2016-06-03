@@ -20,7 +20,6 @@ use Graze\DataFile\Test\Helper\CreateStreamTrait;
 use Graze\DataFile\Test\TestCase;
 use Iterator;
 use Mockery as m;
-use Mockery\MockInterface;
 
 class StreamReaderTest extends TestCase
 {
