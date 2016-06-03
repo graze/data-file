@@ -24,7 +24,6 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use League\Flysystem\Memory\MemoryAdapter;
 use Mockery as m;
-use Mockery\MockInterface;
 
 class TransferTest extends AbstractFileTestCase
 {
