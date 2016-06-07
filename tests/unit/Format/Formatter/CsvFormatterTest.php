@@ -125,6 +125,33 @@ class CsvFormatterTest extends TestCase
                 'text,things\,,"here"',
                 'blank quote character failed and double quote should do nothing',
             ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_HEADER_ROW => 2,
+                ]),
+                ['name' => 'text', 'stuff' => 'things', 'cake' => 'pants'],
+                '"name","stuff","cake"' . "\n" .
+                '"text","things","pants"',
+                'header row should print the array keys',
+            ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_HEADER_ROW => 3,
+                    CsvFormat::OPTION_DATA_START => 6,
+                ]),
+                ['name' => 'text', 'stuff' => 'things', 'cake' => 'pants'],
+                '"name","stuff","cake"' . "\n\n\n" .
+                '"text","things","pants"',
+                'having a sparse start should add spaces before and after the header row',
+            ],
+            [
+                new CsvFormat([
+                    CsvFormat::OPTION_HEADER_ROW => 1,
+                ]),
+                ['text', 'things,', '"here"'],
+                '"0","1","2"' . "\n" . '"text","things\,","\"here\""',
+                'should out put numbers when no keys are provided',
+            ],
         ];
     }
 
@@ -172,6 +199,24 @@ class CsvFormatterTest extends TestCase
         ]));
 
         static::assertEquals(Bom::BOM_UTF16_BE, $formatter->getInitialBlock());
+        static::assertEmpty($formatter->getClosingBlock());
+    }
+
+    public function testStartBlockContainsSpacingWhenUsingHeaders()
+    {
+        $formatter = new CsvFormatter(new CsvFormat([
+            CsvFormat::OPTION_HEADER_ROW => 3,
+        ]));
+
+        static::assertEquals("\n\n", $formatter->getInitialBlock());
+        static::assertEmpty($formatter->getClosingBlock());
+
+        $formatter = new CsvFormatter(new CsvFormat([
+            CsvFormat::OPTION_DATA_START => 4,
+            CsvFormat::OPTION_BOM        => Bom::BOM_UTF8,
+        ]));
+
+        static::assertEquals(Bom::BOM_UTF8 . "\n\n\n", $formatter->getInitialBlock());
         static::assertEmpty($formatter->getClosingBlock());
     }
 }
