@@ -24,25 +24,16 @@ class CsvFormatter implements FormatterInterface
     use RowProcessor;
     use InvokeFormatter;
 
-    /**
-     * @var CsvFormatInterface
-     */
+    /** @var CsvFormatInterface */
     private $csvFormat;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $escapeChars;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $replaceChars;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $initial;
+    /** @var bool */
+    private $first = true;
 
     /**
      * @param CsvFormatInterface $csvFormat
@@ -97,6 +88,13 @@ class CsvFormatter implements FormatterInterface
      */
     public function format(array $data)
     {
+        $prefix = '';
+        if ($this->first && $this->csvFormat->hasHeaderRow()) {
+            $this->first = false;
+            $postHeaderPad = $this->csvFormat->getDataStart() - $this->csvFormat->getHeaderRow();
+            $prefix = $this->format(array_keys($data)) . str_repeat($this->getRowSeparator(), $postHeaderPad);
+        }
+
         $data = $this->process($data);
 
         foreach ($data as &$element) {
@@ -107,7 +105,7 @@ class CsvFormatter implements FormatterInterface
             }
         }
 
-        return $this->encode(implode($this->csvFormat->getDelimiter(), $data));
+        return $prefix . $this->encode(implode($this->csvFormat->getDelimiter(), $data));
     }
 
     /**
@@ -137,7 +135,11 @@ class CsvFormatter implements FormatterInterface
      */
     public function getInitialBlock()
     {
-        return $this->initial;
+        $linePad = $this->csvFormat->hasHeaderRow() ?
+            $this->csvFormat->getHeaderRow() - 1 :
+            $this->csvFormat->getDataStart() - 1;
+
+        return $this->initial . str_repeat($this->getRowSeparator(), $linePad);
     }
 
     /**
