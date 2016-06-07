@@ -15,7 +15,6 @@ namespace Graze\DataFile\Format\Parser;
 
 use ArrayIterator;
 use CallbackFilterIterator;
-use Graze\CsvToken\Csv\CsvConfiguration;
 use Graze\CsvToken\Parser;
 use Graze\CsvToken\Tokeniser\StreamTokeniser;
 use Graze\DataFile\Format\CsvFormatInterface;
@@ -47,21 +46,7 @@ class CsvParser implements ParserInterface
      */
     public function parse(StreamInterface $stream)
     {
-        $config = [
-            CsvConfiguration::OPTION_DELIMITER    => $this->csvFormat->getDelimiter(),
-            CsvConfiguration::OPTION_QUOTE        => $this->csvFormat->getQuoteCharacter(),
-            CsvConfiguration::OPTION_ESCAPE       => $this->csvFormat->getEscapeCharacter(),
-            CsvConfiguration::OPTION_DOUBLE_QUOTE => $this->csvFormat->isDoubleQuote(),
-            CsvConfiguration::OPTION_NEW_LINES    => [$this->csvFormat->getLineTerminator()],
-            CsvConfiguration::OPTION_NULL         => $this->csvFormat->getNullOutput(),
-            CsvConfiguration::OPTION_ENCODING     => $this->csvFormat->getEncoding(),
-        ];
-        if (!is_null($this->csvFormat->getBom())) {
-            $config[CsvConfiguration::OPTION_BOMS] = [$this->csvFormat->getBom()];
-        }
-
-        $configuration = new CsvConfiguration($config);
-        $tokeniser = new StreamTokeniser($configuration, $stream);
+        $tokeniser = new StreamTokeniser($this->csvFormat, $stream);
         $parser = new Parser();
         return $this->parseIterator(
             $parser->parse($tokeniser->getTokens())

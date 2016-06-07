@@ -65,28 +65,28 @@ class CsvFormatter implements FormatterInterface
      */
     private function buildReplacements()
     {
-        if ($this->csvFormat->getEscapeCharacter()) {
+        if ($this->csvFormat->getEscape()) {
             $this->escapeChars = [
-                $this->csvFormat->getEscapeCharacter(), // escape escape first so that it doesn't re-escape later on
+                $this->csvFormat->getEscape(), // escape escape first so that it doesn't re-escape later on
                 $this->csvFormat->getDelimiter(),
                 "\n",
                 "\r",
                 "\t",
             ];
-            if ($this->csvFormat->hasQuotes() && !$this->csvFormat->isDoubleQuote()) {
-                $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
+            if ($this->csvFormat->hasQuote() && !$this->csvFormat->useDoubleQuotes()) {
+                $this->escapeChars[] = $this->csvFormat->getQuote();
             }
 
             $this->escapeChars = array_unique($this->escapeChars);
 
             $this->replaceChars = array_map(function ($char) {
-                return $this->csvFormat->getEscapeCharacter() . $char;
+                return $this->csvFormat->getEscape() . $char;
             }, $this->escapeChars);
         }
 
-        if ($this->csvFormat->hasQuotes() && $this->csvFormat->isDoubleQuote()) {
-            $this->escapeChars[] = $this->csvFormat->getQuoteCharacter();
-            $this->replaceChars[] = str_repeat($this->csvFormat->getQuoteCharacter(), 2);
+        if ($this->csvFormat->hasQuote() && $this->csvFormat->useDoubleQuotes()) {
+            $this->escapeChars[] = $this->csvFormat->getQuote();
+            $this->replaceChars[] = str_repeat($this->csvFormat->getQuote(), 2);
         }
     }
 
@@ -101,9 +101,9 @@ class CsvFormatter implements FormatterInterface
 
         foreach ($data as &$element) {
             if (is_null($element)) {
-                $element = $this->csvFormat->getNullOutput();
+                $element = $this->csvFormat->getNullValue();
             } else {
-                $element = $this->csvFormat->getQuoteCharacter() . $this->escape($element) . $this->csvFormat->getQuoteCharacter();
+                $element = $this->csvFormat->getQuote() . $this->escape($element) . $this->csvFormat->getQuote();
             }
         }
 
@@ -147,7 +147,7 @@ class CsvFormatter implements FormatterInterface
      */
     public function getRowSeparator()
     {
-        return $this->encode($this->csvFormat->getLineTerminator());
+        return $this->encode($this->csvFormat->getNewLine());
     }
 
     /**
