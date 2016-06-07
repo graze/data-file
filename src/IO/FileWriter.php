@@ -32,15 +32,15 @@ class FileWriter implements WriterInterface, LoggerAwareInterface
     private $file;
     /** @var FormatInterface */
     private $format;
-    /** @var StreamReader */
+    /** @var StreamWriter */
     private $writer;
 
     /**
      * FileReader constructor.
      *
-     * @param FileNodeInterface         $file
-     * @param FormatInterface|null      $format
-     * @param FormatterFactoryInterface $formatterFactory
+     * @param FileNodeInterface              $file
+     * @param FormatInterface|null           $format
+     * @param FormatterFactoryInterface|null $formatterFactory
      */
     public function __construct(
         FileNodeInterface $file,

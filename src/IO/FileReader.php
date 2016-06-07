@@ -28,9 +28,9 @@ class FileReader implements ReaderInterface, LoggerAwareInterface
     /**
      * FileReader constructor.
      *
-     * @param FileNodeInterface      $file
-     * @param FormatInterface|null   $format
-     * @param ParserFactoryInterface $parserFactory
+     * @param FileNodeInterface           $file
+     * @param FormatInterface|null        $format
+     * @param ParserFactoryInterface|null $parserFactory
      */
     public function __construct(
         FileNodeInterface $file,

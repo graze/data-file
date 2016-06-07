@@ -52,7 +52,7 @@ class CsvFormat implements CsvFormatInterface
     protected $nullValue;
     /** @var int */
     protected $headerRow;
-    /** @var string */
+    /** @var string[] */
     protected $newLines;
     /** @var string */
     protected $escape;
@@ -62,7 +62,7 @@ class CsvFormat implements CsvFormatInterface
     protected $doubleQuote;
     /** @var int */
     protected $dataStart;
-    /** @var string */
+    /** @var string[]|string|null */
     protected $boms;
     /** @var string */
     protected $encoding;
@@ -291,20 +291,6 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
-     * @param null|string[]|string $bom
-     *
-     * @return static
-     */
-    public function setBom($bom)
-    {
-        $this->boms = $bom;
-        if (!is_null($bom) && !is_array($bom)) {
-            Bom::getEncoding($bom);
-        }
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getEncoding()
@@ -347,6 +333,31 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
+     * Get a new line for writing
+     *
+     * @return string
+     */
+    public function getNewLine()
+    {
+        return is_array($this->newLines) ? reset($this->newLines) : $this->newLines;
+    }
+
+    /**
+     * @param null|string[]|string $bom
+     *
+     * @return static
+     */
+    public function setBom($bom)
+    {
+        $this->boms = $bom;
+        if (!is_null($bom)) {
+            $testBom = is_array($bom) ? reset($bom) : $bom;
+            Bom::getEncoding($testBom);
+        }
+        return $this;
+    }
+
+    /**
      * @return string[]
      */
     public function getBoms()
@@ -361,24 +372,6 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
-     * @return string[]
-     */
-    private function getDefaultBoms()
-    {
-        return [Bom::BOM_UTF8, Bom::BOM_UTF16_BE, Bom::BOM_UTF16_LE, Bom::BOM_UTF32_BE, Bom::BOM_UTF32_LE];
-    }
-
-    /**
-     * Get a new line for writing
-     *
-     * @return string
-     */
-    public function getNewLine()
-    {
-        return is_array($this->newLines) ? reset($this->newLines) : $this->newLines;
-    }
-
-    /**
      * Get a ByteOrderMark for writing if applicable
      *
      * @return string|null
@@ -386,5 +379,13 @@ class CsvFormat implements CsvFormatInterface
     public function getBom()
     {
         return is_array($this->boms) ? reset($this->boms) : $this->boms;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultBoms()
+    {
+        return [Bom::BOM_UTF8, Bom::BOM_UTF16_BE, Bom::BOM_UTF16_LE, Bom::BOM_UTF32_BE, Bom::BOM_UTF32_LE];
     }
 }
