@@ -20,42 +20,40 @@ class CsvFormat implements CsvFormatInterface
 {
     use GetOptionTrait;
 
-    const DEFAULT_DELIMITER       = ',';
-    const DEFAULT_NULL_OUTPUT     = '\\N';
-    const DEFAULT_HEADER_ROW      = -1;
-    const DEFAULT_DATA_START      = 1;
-    const DEFAULT_LINE_TERMINATOR = "\n";
-    const DEFAULT_QUOTE_CHARACTER = '"';
-    const DEFAULT_ESCAPE          = '\\';
-    const DEFAULT_LIMIT           = -1;
-    const DEFAULT_DOUBLE_QUOTE    = false;
-    const DEFAULT_BOM             = null;
-    const DEFAULT_ENCODING        = 'UTF-8';
+    const DEFAULT_DELIMITER    = ',';
+    const DEFAULT_NULL         = '\\N';
+    const DEFAULT_HEADER_ROW   = -1;
+    const DEFAULT_DATA_START   = 1;
+    const DEFAULT_QUOTE        = '"';
+    const DEFAULT_ESCAPE       = '\\';
+    const DEFAULT_LIMIT        = -1;
+    const DEFAULT_DOUBLE_QUOTE = false;
+    const DEFAULT_ENCODING     = 'UTF-8';
+    const DEFAULT_NEW_LINE     = "\n";
+    const DEFAULT_BOM          = null;
 
-    const OPTION_DELIMITER       = 'delimiter';
-    const OPTION_NULL_OUTPUT     = 'nullOutput';
-    const OPTION_HEADER_ROW      = 'headerRow';
-    const OPTION_DATA_START      = 'dataStart';
-    const OPTION_LINE_TERMINATOR = 'lineTerminator';
-    const OPTION_QUOTE_CHARACTER = 'quoteCharacter';
-    const OPTION_ESCAPE          = 'escape';
-    const OPTION_LIMIT           = 'limit';
-    const OPTION_DOUBLE_QUOTE    = 'doubleQuote';
-    const OPTION_BOM             = 'bom';
-    const OPTION_ENCODING        = 'encoding';
+    const OPTION_DELIMITER    = 'delimiter';
+    const OPTION_NULL         = 'null';
+    const OPTION_HEADER_ROW   = 'headerRow';
+    const OPTION_DATA_START   = 'dataStart';
+    const OPTION_NEW_LINE     = 'newLine';
+    const OPTION_QUOTE        = 'quote';
+    const OPTION_ESCAPE       = 'escape';
+    const OPTION_LIMIT        = 'limit';
+    const OPTION_DOUBLE_QUOTE = 'doubleQuote';
+    const OPTION_BOM          = 'bom';
+    const OPTION_ENCODING     = 'encoding';
 
     /** @var string */
     protected $delimiter;
     /** @var string */
-    protected $quoteCharacter;
+    protected $quote;
     /** @var string */
-    protected $nullOutput;
+    protected $nullValue;
     /** @var int */
     protected $headerRow;
-    /** @var string */
-    protected $lineTerminator;
-    /** @var bool */
-    protected $nullQuotes;
+    /** @var string[] */
+    protected $newLines;
     /** @var string */
     protected $escape;
     /** @var int */
@@ -64,8 +62,8 @@ class CsvFormat implements CsvFormatInterface
     protected $doubleQuote;
     /** @var int */
     protected $dataStart;
-    /** @var string|null */
-    protected $bom;
+    /** @var string[]|string|null */
+    protected $boms;
     /** @var string */
     protected $encoding;
 
@@ -76,27 +74,27 @@ class CsvFormat implements CsvFormatInterface
      *                       -headerRow <int> (Default: -1) -1 for no header row. (1 is the first line of the file)
      *                       -dataStart <int> (Default: 1) The line where the data starts (1 is the first list of the
      *                       file)
-     *                       -lineTerminator <string> (Default: \n)
+     *                       -lineTerminator <array> (Default: ["\n","\r","\r\n"])
      *                       -escape <string> (Default: \\) Character to use for escaping
      *                       -limit <int> Total number of data rows to return
      *                       -doubleQuote <bool> instances of quote in fields are indicated by a double quote
-     *                       -bom <string> (Default: null) Specify a ByteOrderMark for this file
+     *                       -bom <array> (Default: BOM_ALL) Specify a ByteOrderMark for this file (see Bom::BOM_*)
      *                       -encoding <string> (Default: UTF-8) Specify the encoding of the csv file
      */
     public function __construct(array $options = [])
     {
         $this->options = $options;
         $this->delimiter = $this->getOption(static::OPTION_DELIMITER, static::DEFAULT_DELIMITER);
-        $this->quoteCharacter = $this->getOption(static::OPTION_QUOTE_CHARACTER, static::DEFAULT_QUOTE_CHARACTER);
-        $this->nullOutput = $this->getOption(static::OPTION_NULL_OUTPUT, static::DEFAULT_NULL_OUTPUT);
+        $this->quote = $this->getOption(static::OPTION_QUOTE, static::DEFAULT_QUOTE);
+        $this->nullValue = $this->getOption(static::OPTION_NULL, static::DEFAULT_NULL);
         $this->headerRow = $this->getOption(static::OPTION_HEADER_ROW, static::DEFAULT_HEADER_ROW);
         $this->dataStart = $this->getOption(static::OPTION_DATA_START, static::DEFAULT_DATA_START);
-        $this->lineTerminator = $this->getOption(static::OPTION_LINE_TERMINATOR, static::DEFAULT_LINE_TERMINATOR);
         $this->escape = $this->getOption(static::OPTION_ESCAPE, static::DEFAULT_ESCAPE);
         $this->limit = $this->getOption(static::OPTION_LIMIT, static::DEFAULT_LIMIT);
         $this->doubleQuote = $this->getOption(static::OPTION_DOUBLE_QUOTE, static::DEFAULT_DOUBLE_QUOTE);
-        $this->setBom($this->getOption(static::OPTION_BOM, static::DEFAULT_BOM));
         $this->encoding = $this->getOption(static::OPTION_ENCODING, static::DEFAULT_ENCODING);
+        $this->setBom($this->getOption(static::OPTION_BOM, static::DEFAULT_BOM));
+        $this->setNewLine($this->getOption(static::OPTION_NEW_LINE, ["\n", "\r", "\r\n"]));
     }
 
     /**
@@ -119,29 +117,48 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
+     * @return string
+     */
+    public function getQuote()
+    {
+        return $this->quote;
+    }
+
+    /**
      * @return bool
      */
-    public function hasQuotes()
+    public function hasQuote()
     {
-        return $this->quoteCharacter <> '';
+        return $this->quote <> '';
+    }
+
+    /**
+     * @param string $quote
+     *
+     * @return static
+     */
+    public function setQuote($quote)
+    {
+        $this->quote = $quote;
+        return $this;
     }
 
     /**
      * @return string
      */
-    public function getNullOutput()
+    public function getNullValue()
     {
-        return $this->nullOutput;
+        return $this->nullValue;
     }
 
     /**
-     * @param string $nullOutput
+     * @param string $nullValue
      *
      * @return static
      */
-    public function setNullOutput($nullOutput)
+    public function setNullValue($nullValue)
     {
-        $this->nullOutput = $nullOutput;
+        $this->nullValue = $nullValue;
         return $this;
     }
 
@@ -173,17 +190,6 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
-     * @param int $row
-     *
-     * @return static
-     */
-    public function setDataStart($row)
-    {
-        $this->dataStart = $row;
-        return $this;
-    }
-
-    /**
      * @return int
      */
     public function getDataStart()
@@ -195,42 +201,13 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
-     * @return string
-     */
-    public function getLineTerminator()
-    {
-        return $this->lineTerminator;
-    }
-
-    /**
-     * @param string $lineTerminator
+     * @param int $row
      *
      * @return static
      */
-    public function setLineTerminator($lineTerminator)
+    public function setDataStart($row)
     {
-        $this->lineTerminator = $lineTerminator;
-        return $this;
-    }
-
-    /**
-     * @note Csv Rfc spec defines escaping of quotes to be done using double quotes `""`
-     *
-     * @return string
-     */
-    public function getQuoteCharacter()
-    {
-        return $this->quoteCharacter;
-    }
-
-    /**
-     * @param string $quoteCharacter
-     *
-     * @return static
-     */
-    public function setQuoteCharacter($quoteCharacter)
-    {
-        $this->quoteCharacter = $quoteCharacter;
+        $this->dataStart = $row;
         return $this;
     }
 
@@ -247,7 +224,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return string
      */
-    public function getEscapeCharacter()
+    public function getEscape()
     {
         return $this->escape;
     }
@@ -257,7 +234,7 @@ class CsvFormat implements CsvFormatInterface
      *
      * @return static
      */
-    public function setEscapeCharacter($escape)
+    public function setEscape($escape)
     {
         $this->escape = $escape;
         return $this;
@@ -266,7 +243,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return bool
      */
-    public function hasEscapeCharacter()
+    public function hasEscape()
     {
         return $this->escape !== '';
     }
@@ -297,7 +274,7 @@ class CsvFormat implements CsvFormatInterface
     /**
      * @return bool
      */
-    public function isDoubleQuote()
+    public function useDoubleQuotes()
     {
         return $this->doubleQuote;
     }
@@ -314,34 +291,13 @@ class CsvFormat implements CsvFormatInterface
     }
 
     /**
-     * @return null|string
-     */
-    public function getBom()
-    {
-        return $this->bom;
-    }
-
-    /**
-     * @param null|string $bom
-     *
-     * @return static
-     */
-    public function setBom($bom)
-    {
-        $this->bom = $bom;
-        if (!is_null($bom)) {
-            Bom::getEncoding($bom);
-        }
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getEncoding()
     {
-        if (!is_null($this->bom)) {
-            return Bom::getEncoding($this->bom);
+        if (!is_null($this->boms)) {
+            $bom = is_array($this->boms) ? reset($this->boms) : $this->boms;
+            return Bom::getEncoding($bom);
         }
         return $this->encoding;
     }
@@ -355,5 +311,81 @@ class CsvFormat implements CsvFormatInterface
     {
         $this->encoding = $encoding;
         return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getNewLines()
+    {
+        return $this->newLines;
+    }
+
+    /**
+     * @param string|string[] $newLine
+     *
+     * @return static
+     */
+    public function setNewLine($newLine)
+    {
+        $this->newLines = is_array($newLine) ? $newLine : [$newLine];
+        return $this;
+    }
+
+    /**
+     * Get a new line for writing
+     *
+     * @return string
+     */
+    public function getNewLine()
+    {
+        return is_array($this->newLines) ? reset($this->newLines) : $this->newLines;
+    }
+
+    /**
+     * @param null|string[]|string $bom
+     *
+     * @return static
+     */
+    public function setBom($bom)
+    {
+        $this->boms = $bom;
+        if (!is_null($bom)) {
+            $testBom = is_array($bom) ? reset($bom) : $bom;
+            Bom::getEncoding($testBom);
+        }
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getBoms()
+    {
+        if (is_null($this->boms)) {
+            return $this->getDefaultBoms();
+        } elseif (is_array($this->boms)) {
+            return $this->boms;
+        } else {
+            return [$this->boms];
+        }
+    }
+
+    /**
+     * Get a ByteOrderMark for writing if applicable
+     *
+     * @return string|null
+     */
+    public function getBom()
+    {
+        return is_array($this->boms) ? reset($this->boms) : $this->boms;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getDefaultBoms()
+    {
+        return [Bom::BOM_UTF8, Bom::BOM_UTF16_BE, Bom::BOM_UTF16_LE, Bom::BOM_UTF32_BE, Bom::BOM_UTF32_LE];
     }
 }

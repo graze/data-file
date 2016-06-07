@@ -13,12 +13,49 @@
 
 namespace Graze\DataFile\Format;
 
-interface CsvFormatInterface extends FormatInterface
+use Graze\CsvToken\Csv\CsvConfigurationInterface;
+
+interface CsvFormatInterface extends FormatInterface, CsvConfigurationInterface
 {
     /**
      * @return string
      */
     public function getDelimiter();
+
+    /**
+     * @return string
+     */
+    public function getQuote();
+
+    /**
+     * @return string
+     */
+    public function getEscape();
+
+    /**
+     * @return string[]
+     */
+    public function getNewLines();
+
+    /**
+     * @return bool
+     */
+    public function useDoubleQuotes();
+
+    /**
+     * @return string
+     */
+    public function getNullValue();
+
+    /**
+     * @return string[]
+     */
+    public function getBoms();
+
+    /**
+     * @return string
+     */
+    public function getEncoding();
 
     /**
      * @param string $delimiter
@@ -30,31 +67,21 @@ interface CsvFormatInterface extends FormatInterface
     /**
      * @return bool
      */
-    public function hasQuotes();
+    public function hasQuote();
 
     /**
-     * @return string
-     */
-    public function getQuoteCharacter();
-
-    /**
-     * @param string $quoteCharacter
+     * @param string $quote
      *
      * @return static
      */
-    public function setQuoteCharacter($quoteCharacter);
+    public function setQuote($quote);
 
     /**
-     * @return string
-     */
-    public function getNullOutput();
-
-    /**
-     * @param string $nullOutput
+     * @param string $nullValue
      *
      * @return static
      */
-    public function setNullOutput($nullOutput);
+    public function setNullValue($nullValue);
 
     /**
      * @return bool
@@ -86,33 +113,30 @@ interface CsvFormatInterface extends FormatInterface
     public function getDataStart();
 
     /**
-     * @return string
-     */
-    public function getLineTerminator();
-
-    /**
-     * @param string $lineTerminator
+     * @param string|string[] $newLine
      *
      * @return static
      */
-    public function setLineTerminator($lineTerminator);
+    public function setNewLine($newLine);
 
     /**
+     * Get a new line for writing
+     *
      * @return string
      */
-    public function getEscapeCharacter();
+    public function getNewLine();
 
     /**
      * @param string $escape
      *
      * @return static
      */
-    public function setEscapeCharacter($escape);
+    public function setEscape($escape);
 
     /**
      * @return bool
      */
-    public function hasEscapeCharacter();
+    public function hasEscape();
 
     /**
      * Get the limit that should be returned (-1 for no limit)
@@ -131,11 +155,6 @@ interface CsvFormatInterface extends FormatInterface
     public function setLimit($limit);
 
     /**
-     * @return bool
-     */
-    public function isDoubleQuote();
-
-    /**
      * @param bool $doubleQuote
      *
      * @return static
@@ -143,13 +162,15 @@ interface CsvFormatInterface extends FormatInterface
     public function setDoubleQuote($doubleQuote);
 
     /**
-     * @param string $bom
+     * @param string|string[] $bom
      *
      * @return static
      */
     public function setBom($bom);
 
     /**
+     * Get a ByteOrderMark for writing if applicable
+     *
      * @return string
      */
     public function getBom();
@@ -160,9 +181,4 @@ interface CsvFormatInterface extends FormatInterface
      * @return static
      */
     public function setEncoding($encoding);
-
-    /**
-     * @return string
-     */
-    public function getEncoding();
 }

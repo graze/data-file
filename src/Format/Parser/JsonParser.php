@@ -25,9 +25,7 @@ class JsonParser implements ParserInterface
 {
     const JSON_DEFAULT_DEPTH = 512;
 
-    /**
-     * @var JsonFormatInterface
-     */
+    /** @var JsonFormatInterface */
     private $format;
 
     /**

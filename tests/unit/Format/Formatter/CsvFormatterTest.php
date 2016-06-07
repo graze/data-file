@@ -78,11 +78,11 @@ class CsvFormatterTest extends TestCase
             ],
             [
                 new CsvFormat([
-                    CsvFormat::OPTION_DELIMITER       => '|',
-                    CsvFormat::OPTION_NULL_OUTPUT     => "NULL",
-                    CsvFormat::OPTION_QUOTE_CHARACTER => "'",
-                    CsvFormat::OPTION_LINE_TERMINATOR => '---',
-                    CsvFormat::OPTION_ESCAPE          => '"',
+                    CsvFormat::OPTION_DELIMITER => '|',
+                    CsvFormat::OPTION_NULL      => "NULL",
+                    CsvFormat::OPTION_QUOTE     => "'",
+                    CsvFormat::OPTION_NEW_LINE  => '---',
+                    CsvFormat::OPTION_ESCAPE    => '"',
                 ]),
                 ['text', 1, 2.5, false, null, '|-', "'", '"'],
                 "'text'|'1'|'2.5'|'0'|NULL|'\"|-'|'\"''|'\"\"'",
@@ -90,10 +90,10 @@ class CsvFormatterTest extends TestCase
             ],
             [
                 new CsvFormat([
-                    CsvFormat::OPTION_DELIMITER       => "\t",
-                    CsvFormat::OPTION_NULL_OUTPUT     => 'null',
-                    CsvFormat::OPTION_QUOTE_CHARACTER => '',
-                    CsvFormat::OPTION_LINE_TERMINATOR => "\n",
+                    CsvFormat::OPTION_DELIMITER => "\t",
+                    CsvFormat::OPTION_NULL      => 'null',
+                    CsvFormat::OPTION_QUOTE     => '',
+                    CsvFormat::OPTION_NEW_LINE  => "\n",
                 ]),
                 ['text', 1, 2.5, false, null, "\t a", ",", "\n"],
                 "text\t1\t2.5\t0\tnull\t" . '\\' . "\t a\t,\t" . '\\' . "\n",
@@ -118,8 +118,8 @@ class CsvFormatterTest extends TestCase
             ],
             [
                 new CsvFormat([
-                    CsvFormat::OPTION_QUOTE_CHARACTER => '',
-                    CsvFormat::OPTION_DOUBLE_QUOTE    => true,
+                    CsvFormat::OPTION_QUOTE        => '',
+                    CsvFormat::OPTION_DOUBLE_QUOTE => true,
                 ]),
                 ['text', 'things,', '"here"'],
                 'text,things\,,"here"',
@@ -152,7 +152,7 @@ class CsvFormatterTest extends TestCase
 
         static::assertEquals("\n", $formatter->getRowSeparator());
 
-        $formatter = new CsvFormatter(new CsvFormat([CsvFormat::OPTION_LINE_TERMINATOR => '---']));
+        $formatter = new CsvFormatter(new CsvFormat([CsvFormat::OPTION_NEW_LINE => '---']));
 
         static::assertEquals('---', $formatter->getRowSeparator());
     }
