@@ -98,6 +98,9 @@ class ReFormatTest extends TestCase
         $file = m::mock(FileNodeInterface::class, FormatAwareInterface::class);
         $target = m::mock(LocalFile::class);
 
+        $file->shouldReceive('exists')
+             ->andReturn(true);
+
         $this->builder->shouldReceive('build')
                       ->with(LocalFile::class, m::type('string'))
                       ->andReturn($target);
@@ -139,6 +142,8 @@ class ReFormatTest extends TestCase
 
         $file->shouldReceive('getPath')
              ->andReturn('/tmp/file.txt');
+        $file->shouldReceive('exists')
+             ->andReturn(true);
 
         $file->shouldReceive('getClone')
              ->andReturn($target);
@@ -181,6 +186,9 @@ class ReFormatTest extends TestCase
         $file = m::mock(FileNodeInterface::class, FormatAwareInterface::class);
         $target = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
 
+        $file->shouldReceive('exists')
+             ->andReturn(true);
+
         $reader = m::mock(FileReader::class);
         $this->builder->shouldReceive('build')
                       ->with(FileReader::class, $file, null, $this->parserFactory)
@@ -211,6 +219,9 @@ class ReFormatTest extends TestCase
         $output = m::mock(FileNodeInterface::class);
         $inputFormat = m::mock(FormatInterface::class);
         $outputFormat = m::mock(FormatInterface::class);
+
+        $input->shouldReceive('exists')
+              ->andReturn(true);
 
         $reader = m::mock(FileReader::class);
         $this->builder->shouldReceive('build')
@@ -250,6 +261,9 @@ class ReFormatTest extends TestCase
         $file = m::mock(FileNodeInterface::class, FormatAwareInterface::class);
         $target = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
 
+        $file->shouldReceive('exists')
+             ->andReturn(true);
+
         $reader = m::mock(FileReader::class);
         $this->builder->shouldReceive('build')
                       ->with(FileReader::class, $file, null, $this->parserFactory)
@@ -281,6 +295,8 @@ class ReFormatTest extends TestCase
 
         $file->shouldReceive('getPath')
              ->andReturn('/tmp/file.txt');
+        $file->shouldReceive('exists')
+             ->andReturn(true);
 
         $file->shouldReceive('getClone')
              ->andReturn($target);
@@ -316,5 +332,39 @@ class ReFormatTest extends TestCase
                ->once();
 
         static::assertSame($target, $this->reFormatter->modify($file, ['format' => $format]));
+    }
+
+    public function testReFormatWithDeleteOldFile()
+    {
+        $file = m::mock(FileNodeInterface::class, FormatAwareInterface::class);
+        $target = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
+
+        $reader = m::mock(FileReader::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileReader::class, $file, null, $this->parserFactory)
+                      ->andReturn($reader);
+        $writer = m::mock(FileWriter::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileWriter::Class, $target, null, $this->formatterFactory)
+                      ->andReturn($writer);
+
+        $iterator = new ArrayIterator(['first', 'second']);
+
+        $reader->shouldReceive('fetch')
+               ->andReturn($iterator);
+
+        $writer->shouldReceive('insertOne')
+               ->with('first')
+               ->once();
+        $writer->shouldReceive('insertOne')
+               ->with('second')
+               ->once();
+
+        $file->shouldReceive('exists')
+             ->andReturn(true);
+        $file->shouldReceive('delete')
+             ->once();
+
+        static::assertSame($target, $this->reFormatter->reFormat($file, null, $target, null, ['keepOldFile' => false]));
     }
 }

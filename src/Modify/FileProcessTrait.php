@@ -26,7 +26,7 @@ trait FileProcessTrait
      * @param LocalFileNodeInterface $file
      * @param LocalFileNodeInterface $output
      * @param string                 $cmd
-     * @param bool                   $deleteOld
+     * @param bool                   $keepOld
      *
      * @return LocalFileNodeInterface
      */
@@ -34,7 +34,7 @@ trait FileProcessTrait
         LocalFileNodeInterface $file,
         LocalFileNodeInterface $output,
         $cmd,
-        $deleteOld = true
+        $keepOld = true
     ) {
         $process = $this->getProcess($cmd);
         $process->run();
@@ -43,7 +43,7 @@ trait FileProcessTrait
             throw new ProcessFailedException($process);
         }
 
-        if ($file->exists() && !$deleteOld) {
+        if ($file->exists() && !$keepOld) {
             $this->log(LogLevel::DEBUG, "Deleting old file: '{file}'", ['file' => $file]);
             $file->delete();
         }

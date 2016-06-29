@@ -30,6 +30,7 @@ use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFileNodeInterface;
 use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LogLevel;
 
 class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAwareInterface
 {
@@ -79,7 +80,11 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
      * Modify the file
      *
      * @param FileNodeInterface $file
-     * @param array             $options
+     * @param array             $options -output <LocalFileNodeInterface> Output file to write to
+     *                                   -format <FormatInterface> Format to use for the output
+     *                                   -postfix <string> (Default: 'format') string to use when creating a copied
+     *                                   field (if applicable)
+     *                                   -keepOldFile <bool> (Default: true) keep or delete the input file
      *
      * @return FileNodeInterface
      */
@@ -90,11 +95,12 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
         $format = $this->getOption('format', null);
         $output = $this->getOption('output', null);
         if ((is_null($format) || (!$format instanceof FormatInterface))
-            && (is_null($output) || (!$output instanceof LocalFileNodeInterface))) {
+            && (is_null($output) || (!$output instanceof LocalFileNodeInterface))
+        ) {
             throw new InvalidArgumentException("Missing a Required option: 'format' or 'output'");
         }
 
-        return $this->reFormat($file, $format, $output);
+        return $this->reFormat($file, $format, $output, null, $options);
     }
 
     /**
@@ -102,6 +108,9 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
      * @param FormatInterface|null   $outputFormat
      * @param FileNodeInterface|null $output
      * @param FormatInterface|null   $inputFormat
+     * @param array                  $options -postfix <string> (Default: 'format') string to use when creating a
+     *                                        copied field (if applicable)
+     *                                        -keepOldFile <bool> (Default: true) keep or delete the input file
      *
      * @return FileNodeInterface
      */
@@ -109,8 +118,11 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
         FileNodeInterface $file,
         FormatInterface $outputFormat = null,
         FileNodeInterface $output = null,
-        FormatInterface $inputFormat = null
+        FormatInterface $inputFormat = null,
+        array $options = []
     ) {
+        $this->options = $options;
+
         if (is_null($output)) {
             if ($file instanceof LocalFileNodeInterface) {
                 $output = $this->getTargetFile($file, $this->getOption('postfix', 'format'));
@@ -132,6 +144,11 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
 
         foreach ($reader->fetch() as $row) {
             $writer->insertOne($row);
+        }
+
+        if ($file->exists() && !$this->getOption('keepOldFile', true)) {
+            $this->log(LogLevel::DEBUG, "Deleting old file: '{file}'", ['file' => $file]);
+            $file->delete();
         }
 
         return $output;

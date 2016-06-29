@@ -74,8 +74,6 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Builde
     }
 
     /**
-     * @extend Graze\DataFile\Node\File\LocalFile
-     *
      * @param LocalFile       $file
      * @param string|string[] $fromText
      * @param string|string[] $toText
@@ -94,22 +92,7 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Builde
         $postfix = $this->getOption('postfix', 'replace');
         $output = $this->getTargetFile($file, $postfix);
 
-        if (is_array($fromText) && is_array($toText)) {
-            if (count($fromText) == count($toText)) {
-                $sedStrings = [];
-                $fromSize = count($fromText);
-                for ($i = 0; $i < $fromSize; $i++) {
-                    $sedStrings[] = $this->getReplacementCommand($fromText[$i], $toText[$i]);
-                }
-                $replacementString = implode(';', $sedStrings);
-            } else {
-                throw new InvalidArgumentException("Number of items in 'fromText' (" . count($fromText) . ") is different to 'toText' (" . count($toText) . ")");
-            }
-        } elseif (is_array($fromText) || is_array($toText)) {
-            throw new InvalidArgumentException("Only one of fromText or toText in an array, both should be arrays or string");
-        } else {
-            $replacementString = $this->getReplacementCommand($fromText, $toText);
-        }
+        $replacementString = $this->getReplacementString($fromText, $toText);
 
         if ($file->getFilename() == $output->getFilename()) {
             $cmd = sprintf(
@@ -136,6 +119,32 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Builde
     }
 
     /**
+     * @param string|string[] $from
+     * @param string|string[] $to
+     *
+     * @return string
+     */
+    private function getReplacementString($from, $to)
+    {
+        if (is_array($from) && is_array($to)) {
+            if (count($from) == count($to)) {
+                $sedStrings = [];
+                $fromSize = count($from);
+                for ($i = 0; $i < $fromSize; $i++) {
+                    $sedStrings[] = $this->getReplacementCommand($from[$i], $to[$i]);
+                }
+                return implode(';', $sedStrings);
+            } else {
+                throw new InvalidArgumentException("Number of items in 'fromText' (" . count($from) . ") is different to 'toText' (" . count($to) . ")");
+            }
+        } elseif (is_array($from) || is_array($to)) {
+            throw new InvalidArgumentException("Only one of fromText or toText is an array, both should be arrays or string");
+        } else {
+            return $this->getReplacementCommand($from, $to);
+        }
+    }
+
+    /**
      * Get the string replacement command for a single item
      *
      * @param string $fromText
@@ -145,10 +154,12 @@ class ReplaceText implements FileModifierInterface, LoggerAwareInterface, Builde
      */
     private function getReplacementCommand($fromText, $toText)
     {
+        $characters = ["'", ";", "\\", "/"];
+        $escaped = ["\\'", "\\;", "\\\\", "\\/"];
         return sprintf(
             's/%s/%s/g',
-            str_replace(["'", ";", "\\"], ["\\'", "\\;", "\\\\"], $fromText),
-            str_replace(["'", ";", "\\"], ["\\'", "\\;", "\\\\"], $toText)
+            str_replace($characters, $escaped, $fromText),
+            str_replace($characters, $escaped, $toText)
         );
     }
 }
