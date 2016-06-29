@@ -219,4 +219,15 @@ class CsvFormatterTest extends TestCase
         static::assertEquals(Bom::BOM_UTF8 . "\n\n\n", $formatter->getInitialBlock());
         static::assertEmpty($formatter->getClosingBlock());
     }
+
+    public function testFormatWithInvalidInputWillThrowAnException()
+    {
+        $formatter = new CsvFormatter(new CsvFormat());
+
+        static::expectException(InvalidArgumentException::class);
+
+        $stuff = (object)['cake'];
+
+        $formatter->format($stuff);
+    }
 }

@@ -13,9 +13,9 @@
 
 namespace Graze\DataFile\Modify\Encoding;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\FileNodeInterface;
@@ -33,7 +33,7 @@ use Psr\Log\LogLevel;
  * iconv -l
  * ```
  */
-class ConvertEncoding implements FileModifierInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
+class ConvertEncoding implements FileModifierInterface, LoggerAwareInterface, BuilderAwareInterface
 {
     use OptionalLoggerTrait;
     use FileProcessTrait;
@@ -58,8 +58,8 @@ class ConvertEncoding implements FileModifierInterface, LoggerAwareInterface, Pr
                        ->setEncoding($encoding);
 
         $cmd = "iconv " .
-            ($file->getEncoding() ? "--from-code={$file->getEncoding()} " : '') .
-            "--to-code={$encoding} " .
+            ($file->getEncoding() ? "-f {$file->getEncoding()} " : '') .
+            "-t {$encoding} " .
             "{$file->getPath()} " .
             "> {$output->getPath()}";
 

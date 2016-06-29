@@ -16,15 +16,17 @@ namespace Graze\DataFile\Format\Formatter;
 use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Format\Processor\DateTimeProcessor;
 use Graze\DataFile\Format\Processor\RowProcessor;
+use Traversable;
 
 class JsonFormatter implements FormatterInterface
 {
+    use RowProcessor;
+    use InvokeFormatter;
+    use TraversableTrait;
+
     const JSON_ARRAY_START     = '[';
     const JSON_ARRAY_END       = ']' . PHP_EOL;
     const JSON_ARRAY_SEPARATOR = ',' . PHP_EOL;
-
-    use RowProcessor;
-    use InvokeFormatter;
 
     /**
      * @var JsonFormatInterface
@@ -60,15 +62,16 @@ class JsonFormatter implements FormatterInterface
     }
 
     /**
-     * @param array $row
+     * @param array|Traversable $row
      *
      * @return string
      */
-    public function format(array $row)
+    public function format($row)
     {
-        $row = $this->process($row);
+        $data = $this->getArray($row);
+        $data = $this->process($data);
 
-        return json_encode($row, $this->encodeOptions);
+        return json_encode($data, $this->encodeOptions);
     }
 
     /**

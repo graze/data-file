@@ -13,6 +13,7 @@
 
 namespace Graze\DataFile\Test\Integration\Modify\Compress;
 
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressorInterface;
@@ -103,10 +104,10 @@ class GzipTest extends AbstractFileTestCase
     public function testWhenTheProcessFailsAnExceptionIsThrownOnGzip()
     {
         $process = m::mock(Process::class)->makePartial();
-        $processFactory = m::mock(ProcessFactory::class);
-        $processFactory->shouldReceive('createProcess')
-                       ->andReturn($process);
-        $this->gzip->setProcessFactory($processFactory);
+        $builder = m::mock(BuilderInterface::class);
+        $builder->shouldReceive('build')
+                ->andReturn($process);
+        $this->gzip->setBuilder($builder);
         $process->shouldReceive('run')->once();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');
@@ -127,10 +128,10 @@ class GzipTest extends AbstractFileTestCase
     public function testWhenTheProcessFailsAnExceptionIsThrownOnGunzip()
     {
         $process = m::mock(Process::class)->makePartial();
-        $processFactory = m::mock(ProcessFactory::class);
-        $processFactory->shouldReceive('createProcess')
-                       ->andReturn($process);
-        $this->gzip->setProcessFactory($processFactory);
+        $builder = m::mock(BuilderInterface::class);
+        $builder->shouldReceive('build')
+                ->andReturn($process);
+        $this->gzip->setBuilder($builder);
         $process->shouldReceive('run')->once();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');

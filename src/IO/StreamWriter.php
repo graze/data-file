@@ -54,9 +54,21 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
      */
     public function insertAll($rows)
     {
+        $this->writeBlock($rows);
+
+        $this->stream->close();
+
+        return $this;
+    }
+
+    /**
+     * @param Traversable|array $rows
+     */
+    private function writeBlock($rows)
+    {
         $this->log(LogLevel::INFO, 'Writing {count} rows to file', ['count' => count($rows)]);
 
-        $this->initialiseForWriting($this->stream);
+        $this->initialiseForWriting();
 
         $first = true;
         foreach ($rows as $row) {
@@ -67,10 +79,6 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
             $first = false;
         }
         $this->stream->write($this->formatter->getClosingBlock());
-
-        $this->stream->close();
-
-        return $this;
     }
 
     /**
@@ -79,22 +87,20 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
      * If we are at 0, then write initial block, otherwise, remove closing block and add a row separator
      *
      * This is so we can append a file with special characters at the beginning and end
-     *
-     * @param StreamInterface $stream
      */
-    private function initialiseForWriting(StreamInterface $stream)
+    private function initialiseForWriting()
     {
         // move to the end of the file to always append
-        $stream->seek(0, SEEK_END);
+        $this->stream->seek(0, SEEK_END);
 
-        if ($stream->tell() === 0) {
-            $stream->write($this->formatter->getInitialBlock());
+        if ($this->stream->tell() === 0) {
+            $this->stream->write($this->formatter->getInitialBlock());
         } elseif (strlen($this->formatter->getClosingBlock()) > 0) {
             $endBlock = $this->formatter->getClosingBlock();
-            $stream->seek(strlen($endBlock) * -1, SEEK_CUR);
-            $stream->write($this->formatter->getRowSeparator());
+            $this->stream->seek(strlen($endBlock) * -1, SEEK_CUR);
+            $this->stream->write($this->formatter->getRowSeparator());
         } elseif (strlen($this->formatter->getRowSeparator()) > 0) {
-            $stream->write($this->formatter->getRowSeparator());
+            $this->stream->write($this->formatter->getRowSeparator());
         }
     }
 
@@ -107,6 +113,7 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
      */
     public function insertOne($row)
     {
-        return $this->insertAll([$row]);
+        $this->writeBlock([$row]);
+        return $this;
     }
 }

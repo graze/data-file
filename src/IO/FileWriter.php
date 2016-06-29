@@ -51,7 +51,7 @@ class FileWriter implements WriterInterface, LoggerAwareInterface
         $this->format = $format;
 
         if ($this->file instanceof NodeStreamInterface) {
-            $stream = $this->file->getStream('a+');
+            $stream = $this->file->getStream('c+b');
         } else {
             throw new InvalidArgumentException(
                 "Only files that implement " . NodeStreamInterface::class . "can be written to"

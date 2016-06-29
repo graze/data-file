@@ -1,10 +1,13 @@
-FROM php:5.6-cli
+FROM graze/stats:7.0
 
-RUN apt-get update && apt-get install -y zip unzip gzip libc6 php5-xdebug --no-install-recommends && rm -r /var/lib/apt/lists/*
-
-RUN docker-php-ext-install mbstring \
-    && curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && echo "zend_extension=$(find / -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini
+RUN apk add --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
+    php7-mbstring \
+    php7-xdebug \
+    perl \
+    file \
+    musl-utils \
+    zip \
+    gzip
 
 ADD . /opt/graze/data-file
 

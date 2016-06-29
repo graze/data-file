@@ -13,8 +13,6 @@
 
 namespace Graze\DataFile\Format\Formatter;
 
-use Iterator;
-
 /**
  * Format data from one form into another
  */
@@ -42,9 +40,9 @@ interface FormatterInterface
     public function getClosingBlock();
 
     /**
-     * @param array $row
+     * @param array|\Traversable $row
      *
      * @return string
      */
-    public function format(array $row);
+    public function format($row);
 }

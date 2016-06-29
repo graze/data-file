@@ -13,7 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify\Encoding;
 
-use Graze\DataFile\Helper\Process\ProcessFactory;
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Encoding\FindEncoding;
 use Graze\DataFile\Node\FileNodeInterface;
@@ -33,15 +34,15 @@ class FindEncodingTest extends AbstractFileTestCase
     protected $findEncoding;
 
     /**
-     * @var ProcessFactory|MockInterface
+     * @var BuilderInterface|MockInterface
      */
-    protected $processFactory;
+    protected $builder;
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->findEncoding = new FindEncoding();
-        $this->findEncoding->setProcessFactory($this->processFactory);
+        $this->findEncoding->setBuilder($this->builder);
     }
 
     public function testGetFileEncodingForASCIIFile()
@@ -96,8 +97,8 @@ class FindEncodingTest extends AbstractFileTestCase
         $process->shouldReceive('isOutputDisabled')->andReturn(true);
         $process->shouldReceive('mustRun')->andThrow(new ProcessFailedException($process));
 
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'failed_find_encoding_process.test');
         $file->put('random stuff and things 2!');
@@ -113,8 +114,8 @@ class FindEncodingTest extends AbstractFileTestCase
         $process->shouldReceive('mustRun');
         $process->shouldReceive('getOutput')->andReturn('some random stuff with no charset');
 
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'unknown_compression.test');
         $file->put('random stuff and things 2!');

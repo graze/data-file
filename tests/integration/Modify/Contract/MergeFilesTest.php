@@ -13,6 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify\Contract;
 
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\Gzip;
@@ -27,13 +29,14 @@ use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 class MergeFilesTest extends AbstractFileTestCase
 {
     /**
-     * @var ProcessFactory|m\MockInterface
+     * @var BuilderInterface|m\MockInterface
      */
-    protected $processFactory;
+    protected $builder;
 
     /**
      * @var MergeFiles
@@ -42,9 +45,9 @@ class MergeFilesTest extends AbstractFileTestCase
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->merge = new MergeFiles();
-        $this->merge->setProcessFactory($this->processFactory);
+        $this->merge->setBuilder($this->builder);
     }
 
     public function testInstanceOf()
@@ -252,8 +255,8 @@ class MergeFilesTest extends AbstractFileTestCase
     public function testProcessFailedThrowException()
     {
         $process = m::mock('Symfony\Component\Process\Process')->makePartial();
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $process->shouldReceive('isSuccessful')->andReturn(false);
 

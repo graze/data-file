@@ -18,11 +18,14 @@ use Graze\DataFile\Format\Processor\BoolProcessor;
 use Graze\DataFile\Format\Processor\DateTimeProcessor;
 use Graze\DataFile\Format\Processor\ObjectToStringProcessor;
 use Graze\DataFile\Format\Processor\RowProcessor;
+use InvalidArgumentException;
+use Traversable;
 
 class CsvFormatter implements FormatterInterface
 {
     use RowProcessor;
     use InvokeFormatter;
+    use TraversableTrait;
 
     /** @var CsvFormatInterface */
     private $csvFormat;
@@ -82,19 +85,31 @@ class CsvFormatter implements FormatterInterface
     }
 
     /**
+     * Gets a prefix for headers if required
+     *
      * @param array $data
      *
      * @return string
      */
-    public function format(array $data)
+    private function getHeaderPrefix(array $data)
     {
-        $prefix = '';
         if ($this->first && $this->csvFormat->hasHeaderRow()) {
             $this->first = false;
             $postHeaderPad = $this->csvFormat->getDataStart() - $this->csvFormat->getHeaderRow();
-            $prefix = $this->format(array_keys($data)) . str_repeat($this->getRowSeparator(), $postHeaderPad);
+            return $this->format(array_keys($data)) . str_repeat($this->getRowSeparator(), $postHeaderPad);
         }
+        return '';
+    }
 
+    /**
+     * @param array|Traversable $row
+     *
+     * @return string
+     */
+    public function format($row)
+    {
+        $data = $this->getArray($row);
+        $prefix = $this->getHeaderPrefix($data);
         $data = $this->process($data);
 
         foreach ($data as &$element) {

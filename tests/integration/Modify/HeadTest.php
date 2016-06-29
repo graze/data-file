@@ -13,6 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify;
 
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Modify\Head;
@@ -33,15 +35,15 @@ class HeadTest extends AbstractFileTestCase
     protected $head;
 
     /**
-     * @var ProcessFactory|MockInterface
+     * @var BuilderInterface|MockInterface
      */
-    protected $processFactory;
+    protected $builder;
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->head = new Head();
-        $this->head->setProcessFactory($this->processFactory);
+        $this->head->setBuilder($this->builder);
     }
 
     public function testInstanceOf()
@@ -229,8 +231,8 @@ Line 10
     {
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'failed_tail.test');
         $file->put('nothing interesting here');

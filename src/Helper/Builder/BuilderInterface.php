@@ -11,26 +11,15 @@
  * @link    https://github.com/graze/data-file
  */
 
-namespace Graze\DataFile\Format\Formatter;
+namespace Graze\DataFile\Helper\Builder;
 
-use Traversable;
-
-trait InvokeFormatter
+interface BuilderInterface
 {
     /**
-     * @param array|Traversable $row
+     * @param string|object $class
+     * @param mixed         ...$arguments
      *
-     * @return string
+     * @return mixed
      */
-    public function __invoke($row)
-    {
-        return $this->format($row);
-    }
-
-    /**
-     * @param array|Traversable $row
-     *
-     * @return string
-     */
-    abstract public function format($row);
+    public function build($class, ...$arguments);
 }

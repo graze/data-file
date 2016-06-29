@@ -36,7 +36,7 @@ class FileWriterTest extends TestCase
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         $format = m::mock(CsvFormat::class)
@@ -61,7 +61,7 @@ class FileWriterTest extends TestCase
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         static::expectException(InvalidArgumentException::class);
@@ -74,7 +74,7 @@ class FileWriterTest extends TestCase
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class, FormatAwareInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         $format = m::mock(CsvFormat::class)
@@ -94,7 +94,7 @@ class FileWriterTest extends TestCase
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         $format = m::mock(JsonFormat::class)
@@ -132,7 +132,7 @@ class FileWriterTest extends TestCase
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         $format = m::mock(CsvFormat::class)->makePartial();
@@ -175,7 +175,7 @@ CSV;
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
-             ->with('a+')
+             ->with('c+b')
              ->andReturn($stream);
 
         $format = m::mock(CsvFormat::class)->makePartial();

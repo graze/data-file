@@ -13,7 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify\Compress;
 
-use Graze\DataFile\Helper\Process\ProcessFactory;
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\CompressorInterface;
 use Graze\DataFile\Modify\Compress\DeCompressorInterface;
@@ -35,15 +36,15 @@ class ZipTest extends AbstractFileTestCase
     protected $zip;
 
     /**
-     * @var ProcessFactory|MockInterface
+     * @var BuilderInterface|MockInterface
      */
-    private $processFactory;
+    private $builder;
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->zip = new Zip();
-        $this->zip->setProcessFactory($this->processFactory);
+        $this->zip->setBuilder($this->builder);
     }
 
     public function testInstanceOfCompressorInterface()
@@ -113,8 +114,8 @@ class ZipTest extends AbstractFileTestCase
     public function testWhenTheProcessFailsAnExceptionIsthrownOnZip()
     {
         $process = m::mock(Process::class)->makePartial();
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
         $process->shouldReceive('run')->once();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');
@@ -135,8 +136,8 @@ class ZipTest extends AbstractFileTestCase
     public function testWhenTheProcessFailsAnExceptionIsthrownOnUnzip()
     {
         $process = m::mock(Process::class)->makePartial();
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
         $process->shouldReceive('run')->once();
         $process->shouldReceive('isSuccessful')->andReturn(false);
         $process->shouldReceive('getCommandLine')->andReturn('');

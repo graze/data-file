@@ -13,8 +13,8 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Node\FileNodeInterface;
@@ -23,7 +23,7 @@ use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 
-class FindCompression implements ProcessFactoryAwareInterface, LoggerAwareInterface, FileModifierInterface
+class FindCompression implements BuilderAwareInterface, LoggerAwareInterface, FileModifierInterface
 {
     use ProcessTrait;
     use OptionalLoggerTrait;

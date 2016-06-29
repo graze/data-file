@@ -13,6 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify;
 
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Modify\ReplaceText;
@@ -33,15 +35,15 @@ class ReplaceTextTest extends AbstractFileTestCase
     protected $replacer;
 
     /**
-     * @var ProcessFactory|MockInterface
+     * @var BuilderInterface|MockInterface
      */
-    protected $processFactory;
+    protected $builder;
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->replacer = new ReplaceText();
-        $this->replacer->setProcessFactory($this->processFactory);
+        $this->replacer->setBuilder($this->builder);
     }
 
     public function testInstanceOf()
@@ -229,8 +231,8 @@ class ReplaceTextTest extends AbstractFileTestCase
     {
         $process = m::mock(Process::class)->makePartial();
         $process->shouldReceive('isSuccessful')->andReturn(false);
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'failed_replace_text.test');
         $file->put('some text that text should be replaced');

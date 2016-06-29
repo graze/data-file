@@ -13,6 +13,8 @@
 
 namespace Graze\DataFile\Test\Integration\Modify\Compress;
 
+use Graze\DataFile\Helper\Builder\Builder;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\FindCompression;
@@ -35,9 +37,9 @@ class FindCompressionTest extends AbstractFileTestCase
     protected $findCompression;
 
     /**
-     * @var ProcessFactory|MockInterface
+     * @var BuilderInterface|MockInterface
      */
-    protected $processFactory;
+    protected $builder;
 
     /**
      * @var CompressionFactory|MockInterface
@@ -46,7 +48,7 @@ class FindCompressionTest extends AbstractFileTestCase
 
     public function setUp()
     {
-        $this->processFactory = m::mock(ProcessFactory::class)->makePartial();
+        $this->builder = m::mock(Builder::class)->makePartial();
         $this->compressionFactory = m::mock(CompressionFactory::class);
         $this->compressionFactory->shouldReceive('isCompression')
                                  ->with('gzip')
@@ -57,7 +59,7 @@ class FindCompressionTest extends AbstractFileTestCase
         $this->compressionFactory->shouldReceive('isCompression')
                                  ->andReturn(false);
         $this->findCompression = new FindCompression($this->compressionFactory);
-        $this->findCompression->setProcessFactory($this->processFactory);
+        $this->findCompression->setBuilder($this->builder);
     }
 
     public function testGetFileCompressionForNonCompressedFile()
@@ -109,8 +111,8 @@ class FindCompressionTest extends AbstractFileTestCase
                     'text/plain; charset=utf-8 compressed-encoding=application/lzop; charset=binary; charset=binary'
                 );
 
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'unknown_compression.test');
         $file->put('random stuff and things 2!');
@@ -129,8 +131,8 @@ class FindCompressionTest extends AbstractFileTestCase
         $process->shouldReceive('isOutputDisabled')->andReturn(true);
         $process->shouldReceive('mustRun')->andThrow(new ProcessFailedException($process));
 
-        $this->processFactory->shouldReceive('createProcess')
-                             ->andReturn($process);
+        $this->builder->shouldReceive('build')
+                      ->andReturn($process);
 
         $file = new LocalFile(static::$dir . 'failed_find_encoding_process.test');
         $file->put('random stuff and things 2!');

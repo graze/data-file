@@ -13,40 +13,14 @@
 
 namespace Graze\DataFile\Helper\Process;
 
+use Graze\DataFile\Helper\Builder\BuilderTrait;
 use Psr\Log\LogLevel;
 use RuntimeException;
 use Symfony\Component\Process\Process;
 
 trait ProcessTrait
 {
-    /**
-     * @var ProcessFactory
-     */
-    private $processFactory;
-
-    /**
-     * @param ProcessFactory $processFactory
-     *
-     * @return $this
-     */
-    public function setProcessFactory(ProcessFactory $processFactory)
-    {
-        $this->processFactory = $processFactory;
-
-        return $this;
-    }
-
-    /**
-     * @return ProcessFactory
-     */
-    public function getProcessFactory()
-    {
-        if (!$this->processFactory) {
-            $this->processFactory = new ProcessFactory();
-        }
-
-        return $this->processFactory;
-    }
+    use BuilderTrait;
 
     /**
      * @param string         $commandline The command line to run
@@ -69,7 +43,7 @@ trait ProcessTrait
         array $options = []
     ) {
         $this->log(LogLevel::DEBUG, "Running command: {cmd}", ['cmd' => $commandline]);
-        return $this->getProcessFactory()->createProcess($commandline, $cwd, $env, $input, $timeout, $options);
+        return $this->getBuilder()->build(Process::class, $commandline, $cwd, $env, $input, $timeout, $options);
     }
 
     /**
