@@ -14,9 +14,9 @@
 namespace Graze\DataFile\Modify\Contract;
 
 use DirectoryIterator;
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\MakeDirectory;
@@ -28,7 +28,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class MergeFiles implements FileContractorInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
+class MergeFiles implements FileContractorInterface, LoggerAwareInterface, BuilderAwareInterface
 {
     use GetOptionTrait;
     use OptionalLoggerTrait;

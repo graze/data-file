@@ -16,6 +16,8 @@ namespace Graze\DataFile\Format\Formatter;
 use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Format\Processor\DateTimeProcessor;
 use Graze\DataFile\Format\Processor\RowProcessor;
+use InvalidArgumentException;
+use Traversable;
 
 class JsonFormatter implements FormatterInterface
 {
@@ -60,15 +62,19 @@ class JsonFormatter implements FormatterInterface
     }
 
     /**
-     * @param array $row
+     * @param array|Traversable $row
      *
      * @return string
      */
-    public function format(array $row)
+    public function format($row)
     {
-        $row = $this->process($row);
+        if (!$row instanceof Traversable && !is_array($row)) {
+            throw new InvalidArgumentException("The input is not an array or traversable");
+        }
+        $data = ($row instanceof Traversable) ? iterator_to_array($row, true) : $row;
+        $data = $this->process($data);
 
-        return json_encode($row, $this->encodeOptions);
+        return json_encode($data, $this->encodeOptions);
     }
 
     /**

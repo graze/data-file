@@ -18,6 +18,7 @@ use Graze\DataFile\Format\Formatter\JsonFormatter;
 use Graze\DataFile\Format\JsonFormat;
 use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Test\TestCase;
+use InvalidArgumentException;
 
 class JsonFormatterTest extends TestCase
 {
@@ -143,5 +144,16 @@ JSON
                 '',
             ],
         ];
+    }
+
+    public function testFormatWithANonTraversableObjectWillThrowAnException()
+    {
+        $formatter = new JsonFormatter(new JsonFormat());
+
+        static::expectException(InvalidArgumentException::class);
+
+        $stuff = (object) ['cake'];
+
+        $formatter->format($stuff);
     }
 }

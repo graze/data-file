@@ -18,6 +18,8 @@ use Graze\DataFile\Format\Processor\BoolProcessor;
 use Graze\DataFile\Format\Processor\DateTimeProcessor;
 use Graze\DataFile\Format\Processor\ObjectToStringProcessor;
 use Graze\DataFile\Format\Processor\RowProcessor;
+use InvalidArgumentException;
+use Traversable;
 
 class CsvFormatter implements FormatterInterface
 {
@@ -82,12 +84,17 @@ class CsvFormatter implements FormatterInterface
     }
 
     /**
-     * @param array $data
+     * @param array|Traversable $row
      *
      * @return string
      */
-    public function format(array $data)
+    public function format($row)
     {
+        if (!$row instanceof Traversable && !is_array($row)) {
+            throw new InvalidArgumentException("The input is not an array or traversable");
+        }
+        $data = ($row instanceof Traversable) ? iterator_to_array($row, true) : $row;
+
         $prefix = '';
         if ($this->first && $this->csvFormat->hasHeaderRow()) {
             $this->first = false;

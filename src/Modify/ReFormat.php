@@ -16,7 +16,11 @@ namespace Graze\DataFile\Modify;
 use Graze\DataFile\Format\FormatAwareInterface;
 use Graze\DataFile\Format\FormatInterface;
 use Graze\DataFile\Format\Formatter\FormatterFactory;
+use Graze\DataFile\Format\Formatter\FormatterFactoryInterface;
 use Graze\DataFile\Format\Parser\ParserFactory;
+use Graze\DataFile\Format\Parser\ParserFactoryInterface;
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
+use Graze\DataFile\Helper\Builder\BuilderInterface;
 use Graze\DataFile\Helper\FileHelper;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
@@ -24,30 +28,36 @@ use Graze\DataFile\IO\FileReader;
 use Graze\DataFile\IO\FileWriter;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFileNodeInterface;
+use InvalidArgumentException;
 use Psr\Log\LoggerAwareInterface;
 
-class ReFormat implements FileModifierInterface, LoggerAwareInterface
+class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAwareInterface
 {
     use OptionalLoggerTrait;
     use GetOptionTrait;
     use FileProcessTrait;
     use FileHelper;
 
-    /** @var FormatterFactory */
+    /** @var FormatterFactoryInterface */
     private $formatterFactory;
-    /** @var ParserFactory */
+    /** @var ParserFactoryInterface */
     private $parserFactory;
 
     /**
      * ReFormat constructor.
      *
-     * @param FormatterFactory|null $formatterFactory
-     * @param ParserFactory|null    $parserFactory
+     * @param FormatterFactoryInterface|null $formatterFactory
+     * @param ParserFactoryInterface|null    $parserFactory
+     * @param BuilderInterface               $builder
      */
-    public function __construct(FormatterFactory $formatterFactory = null, ParserFactory $parserFactory = null)
-    {
-        $this->formatterFactory = $formatterFactory ?: new FormatterFactory();
-        $this->parserFactory = $parserFactory = new ParserFactory();
+    public function __construct(
+        FormatterFactoryInterface $formatterFactory = null,
+        ParserFactoryInterface $parserFactory = null,
+        BuilderInterface $builder = null
+    ) {
+        $this->builder = $builder;
+        $this->formatterFactory = $formatterFactory ?: $this->getBuilder()->build(FormatterFactory::class);
+        $this->parserFactory = $parserFactory ?: $this->getBuilder()->build(ParserFactory::class);
     }
 
     /**
@@ -77,16 +87,22 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface
     {
         $this->options = $options;
 
-        $format = $this->requireOption('format');
+        $format = $this->getOption('format', null);
+        $output = $this->getOption('output', null);
+        if ((is_null($format) && is_null($output)
+            || ($format instanceof FormatInterface || $output instanceof LocalFileNodeInterface))
+        ) {
+            throw new InvalidArgumentException("Missing a Required option: 'format' or 'output'");
+        }
 
         return $this->reFormat($file, $format);
     }
 
     /**
      * @param FileNodeInterface $file
+     * @param FormatInterface   $outputFormat
      * @param FileNodeInterface $output
      * @param FormatInterface   $inputFormat
-     * @param FormatInterface   $outputFormat
      *
      * @return FileNodeInterface
      */
@@ -104,15 +120,16 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface
             }
         }
 
-        if (
-            $output instanceof FormatAwareInterface
+        if ($output instanceof FormatAwareInterface
             && $outputFormat != null
         ) {
             $output->setFormat($outputFormat);
         }
 
-        $reader = new FileReader($file, $inputFormat, $this->parserFactory);
-        $writer = new FileWriter($output, $outputFormat, $this->formatterFactory);
+        /** @var FileReader $reader */
+        $reader = $this->getBuilder()->build(FileReader::class, $file, $inputFormat, $this->parserFactory);
+        /** @var FileWriter $writer */
+        $writer = $this->getBuilder()->build(FileWriter::class, $output, $outputFormat, $this->formatterFactory);
 
         foreach ($reader->fetch() as $row) {
             $writer->insertOne($row);

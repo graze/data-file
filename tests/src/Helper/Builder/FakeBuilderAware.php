@@ -11,14 +11,12 @@
  * @link    https://github.com/graze/data-file
  */
 
-namespace Graze\DataFile\Helper\Process;
+namespace Graze\DataFile\Test\Helper\Builder;
 
-interface ProcessFactoryAwareInterface
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
+use Graze\DataFile\Helper\Builder\BuilderTrait;
+
+class FakeBuilderAware implements BuilderAwareInterface
 {
-    /**
-     * @param ProcessFactory $processFactory
-     *
-     * @return $this
-     */
-    public function setProcessFactory(ProcessFactory $processFactory);
+    use BuilderTrait;
 }

@@ -13,8 +13,8 @@
 
 namespace Graze\DataFile\Modify\Encoding;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Helper\Process\ProcessTrait;
 use Graze\DataFile\Modify\FileModifierInterface;
 use Graze\DataFile\Node\FileNodeInterface;
@@ -24,7 +24,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class FindEncoding implements ProcessFactoryAwareInterface, LoggerAwareInterface, FileModifierInterface
+class FindEncoding implements BuilderAwareInterface, LoggerAwareInterface, FileModifierInterface
 {
     use ProcessTrait;
     use OptionalLoggerTrait;

@@ -13,6 +13,7 @@
 
 namespace Graze\DataFile\Modify;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
@@ -23,7 +24,7 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-class Tail implements FileModifierInterface, LoggerAwareInterface, ProcessFactoryAwareInterface
+class Tail implements FileModifierInterface, LoggerAwareInterface, BuilderAwareInterface
 {
     use OptionalLoggerTrait;
     use FileProcessTrait;

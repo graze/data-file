@@ -13,9 +13,9 @@
 
 namespace Graze\DataFile\Modify\Compress;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\GetOptionTrait;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Graze\DataFile\Helper\Process\ProcessFactoryAwareInterface;
 use Graze\DataFile\Modify\FileProcessTrait;
 use Graze\DataFile\Node\LocalFileNodeInterface;
 use Psr\Log\LoggerAwareInterface;
@@ -25,7 +25,7 @@ class Gzip implements
     CompressorInterface,
     DeCompressorInterface,
     LoggerAwareInterface,
-    ProcessFactoryAwareInterface
+    BuilderAwareInterface
 {
     use GetOptionTrait;
     use FileProcessTrait;
