@@ -16,47 +16,47 @@ namespace Graze\DataFile\Test\Helper\Builder;
 class FakeConstructable
 {
     /** @var mixed|null */
-    private $a;
+    private $first;
     /** @var mixed|null */
-    private $b;
+    private $second;
     /** @var mixed|null */
-    private $c;
+    private $third;
 
     /**
      * FakeConstructable constructor.
      *
-     * @param mixed|null $a
-     * @param mixed|null $b
-     * @param mixed|null $c
+     * @param mixed|null $first
+     * @param mixed|null $second
+     * @param mixed|null $third
      */
-    public function __construct($a = null, $b = null, $c = null)
+    public function __construct($first = null, $second = null, $third = null)
     {
-        $this->a = $a;
-        $this->b = $b;
-        $this->c = $c;
+        $this->first = $first;
+        $this->second = $second;
+        $this->third = $third;
     }
 
     /**
      * @return mixed|null
      */
-    public function getA()
+    public function getFirst()
     {
-        return $this->a;
+        return $this->first;
     }
 
     /**
      * @return mixed|null
      */
-    public function getB()
+    public function getSecond()
     {
-        return $this->b;
+        return $this->second;
     }
 
     /**
      * @return mixed|null
      */
-    public function getC()
+    public function getThird()
     {
-        return $this->c;
+        return $this->third;
     }
 }

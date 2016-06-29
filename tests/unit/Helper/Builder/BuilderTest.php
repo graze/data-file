@@ -82,8 +82,8 @@ class BuilderTest extends TestCase
         /** @var FakeConstructable $object */
         $object = $this->builder->build(FakeConstructable::class, 'first', 'second');
 
-        static::assertEquals('first', $object->getA());
-        static::assertEquals('second', $object->getB());
-        static::assertEquals(null, $object->getC());
+        static::assertEquals('first', $object->getFirst());
+        static::assertEquals('second', $object->getSecond());
+        static::assertEquals(null, $object->getThird());
     }
 }

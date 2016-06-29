@@ -48,7 +48,7 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
      *
      * @param FormatterFactoryInterface|null $formatterFactory
      * @param ParserFactoryInterface|null    $parserFactory
-     * @param BuilderInterface               $builder
+     * @param BuilderInterface|null          $builder
      */
     public function __construct(
         FormatterFactoryInterface $formatterFactory = null,
@@ -89,10 +89,8 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
 
         $format = $this->getOption('format', null);
         $output = $this->getOption('output', null);
-        if (
-            (is_null($format) || (!$format instanceof FormatInterface))
-            && (is_null($output) || (!$output instanceof LocalFileNodeInterface))
-        ) {
+        if ((is_null($format) || (!$format instanceof FormatInterface))
+            && (is_null($output) || (!$output instanceof LocalFileNodeInterface))) {
             throw new InvalidArgumentException("Missing a Required option: 'format' or 'output'");
         }
 
@@ -100,10 +98,10 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
     }
 
     /**
-     * @param FileNodeInterface $file
-     * @param FormatInterface   $outputFormat
-     * @param FileNodeInterface $output
-     * @param FormatInterface   $inputFormat
+     * @param FileNodeInterface      $file
+     * @param FormatInterface|null   $outputFormat
+     * @param FileNodeInterface|null $output
+     * @param FormatInterface|null   $inputFormat
      *
      * @return FileNodeInterface
      */

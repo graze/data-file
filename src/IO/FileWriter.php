@@ -50,7 +50,6 @@ class FileWriter implements WriterInterface, LoggerAwareInterface
         $this->file = $file;
         $this->format = $format;
 
-        $stream = null;
         if ($this->file instanceof NodeStreamInterface) {
             $stream = $this->file->getStream('c+b');
         } else {

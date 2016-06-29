@@ -25,6 +25,7 @@ class CsvFormatter implements FormatterInterface
 {
     use RowProcessor;
     use InvokeFormatter;
+    use TraversableTrait;
 
     /** @var CsvFormatInterface */
     private $csvFormat;
@@ -84,24 +85,31 @@ class CsvFormatter implements FormatterInterface
     }
 
     /**
+     * Gets a prefix for headers if required
+     *
+     * @param array $data
+     *
+     * @return string
+     */
+    private function getHeaderPrefix(array $data)
+    {
+        if ($this->first && $this->csvFormat->hasHeaderRow()) {
+            $this->first = false;
+            $postHeaderPad = $this->csvFormat->getDataStart() - $this->csvFormat->getHeaderRow();
+            return $this->format(array_keys($data)) . str_repeat($this->getRowSeparator(), $postHeaderPad);
+        }
+        return '';
+    }
+
+    /**
      * @param array|Traversable $row
      *
      * @return string
      */
     public function format($row)
     {
-        if (!$row instanceof Traversable && !is_array($row)) {
-            throw new InvalidArgumentException("The input is not an array or traversable");
-        }
-        $data = ($row instanceof Traversable) ? iterator_to_array($row, true) : $row;
-
-        $prefix = '';
-        if ($this->first && $this->csvFormat->hasHeaderRow()) {
-            $this->first = false;
-            $postHeaderPad = $this->csvFormat->getDataStart() - $this->csvFormat->getHeaderRow();
-            $prefix = $this->format(array_keys($data)) . str_repeat($this->getRowSeparator(), $postHeaderPad);
-        }
-
+        $data = $this->getArray($row);
+        $prefix = $this->getHeaderPrefix($data);
         $data = $this->process($data);
 
         foreach ($data as &$element) {
