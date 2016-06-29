@@ -28,6 +28,7 @@ use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Node\LocalFileNodeInterface;
 use Graze\DataFile\Test\TestCase;
+use InvalidArgumentException;
 use Mockery as m;
 use Mockery\MockInterface;
 
@@ -233,5 +234,87 @@ class ReFormatTest extends TestCase
                ->once();
 
         static::assertSame($output, $this->reFormatter->reFormat($input, $outputFormat, $output, $inputFormat));
+    }
+
+    public function testModifyWithOutOutputOrFormatSpecified()
+    {
+        $file = m::mock(FileNodeInterface::class);
+
+        static::expectException(InvalidArgumentException::class);
+
+        $this->reFormatter->modify($file);
+    }
+
+    public function testModifyWithOutputFileSet()
+    {
+        $file = m::mock(FileNodeInterface::class, FormatAwareInterface::class);
+        $target = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
+
+        $reader = m::mock(FileReader::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileReader::class, $file, null, $this->parserFactory)
+                      ->andReturn($reader);
+        $writer = m::mock(FileWriter::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileWriter::Class, $target, null, $this->formatterFactory)
+                      ->andReturn($writer);
+
+        $iterator = new ArrayIterator(['first', 'second']);
+
+        $reader->shouldReceive('fetch')
+               ->andReturn($iterator);
+
+        $writer->shouldReceive('insertOne')
+               ->with('first')
+               ->once();
+        $writer->shouldReceive('insertOne')
+               ->with('second')
+               ->once();
+
+        static::assertSame($target, $this->reFormatter->modify($file, ['output' => $target]));
+    }
+
+    public function testModifyWithFormatOption()
+    {
+        $file = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
+        $target = m::mock(LocalFileNodeInterface::class, FormatAwareInterface::class);
+
+        $file->shouldReceive('getPath')
+             ->andReturn('/tmp/file.txt');
+
+        $file->shouldReceive('getClone')
+             ->andReturn($target);
+        $target->shouldReceive('setPath')
+               ->with('/tmp/file-format.txt')
+               ->andReturn($target);
+
+        $format = m::mock(FormatInterface::class);
+
+        $target->shouldReceive('setFormat')
+               ->with($format)
+               ->andReturn($target);
+
+        $reader = m::mock(FileReader::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileReader::class, $file, null, $this->parserFactory)
+                      ->andReturn($reader);
+        $writer = m::mock(FileWriter::class);
+        $this->builder->shouldReceive('build')
+                      ->with(FileWriter::Class, $target, $format, $this->formatterFactory)
+                      ->andReturn($writer);
+
+        $iterator = new ArrayIterator(['first', 'second']);
+
+        $reader->shouldReceive('fetch')
+               ->andReturn($iterator);
+
+        $writer->shouldReceive('insertOne')
+               ->with('first')
+               ->once();
+        $writer->shouldReceive('insertOne')
+               ->with('second')
+               ->once();
+
+        static::assertSame($target, $this->reFormatter->modify($file, ['format' => $format]));
     }
 }

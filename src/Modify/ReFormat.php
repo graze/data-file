@@ -89,13 +89,14 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
 
         $format = $this->getOption('format', null);
         $output = $this->getOption('output', null);
-        if ((is_null($format) && is_null($output)
-            || ($format instanceof FormatInterface || $output instanceof LocalFileNodeInterface))
+        if (
+            (is_null($format) || (!$format instanceof FormatInterface))
+            && (is_null($output) || (!$output instanceof LocalFileNodeInterface))
         ) {
             throw new InvalidArgumentException("Missing a Required option: 'format' or 'output'");
         }
 
-        return $this->reFormat($file, $format);
+        return $this->reFormat($file, $format, $output);
     }
 
     /**
