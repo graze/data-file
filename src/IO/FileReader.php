@@ -25,8 +25,6 @@ use InvalidArgumentException;
 
 class FileReader extends StreamReader
 {
-    use OptionalLoggerTrait;
-
     /**
      * FileReader constructor.
      *

@@ -24,8 +24,6 @@ use InvalidArgumentException;
 
 class FileWriter extends StreamWriter
 {
-    use OptionalLoggerTrait;
-
     /**
      * FileReader constructor.
      *
