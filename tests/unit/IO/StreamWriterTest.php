@@ -82,8 +82,8 @@ CSV;
     {
         $writer = new StreamWriter($this->stream, new CsvFormatter(new CsvFormat()));
 
-        $writer->insertOne(['a', 'b', 'c', 'd']);
-        $writer->insertOne(['e', 'f', 'g', 'h']);
+        $writer->insert(['a', 'b', 'c', 'd']);
+        $writer->insert(['e', 'f', 'g', 'h']);
 
         $expected = <<<CSV
 "a","b","c","d"
@@ -116,7 +116,7 @@ CSV;
         $formatter->shouldReceive('getRowSeparator')
                   ->andReturn("EOL");
 
-        $writer->insertOne(['a', 'b', 'c', 'd']);
+        $writer->insert(['a', 'b', 'c', 'd']);
         $writer->insertAll([
             ['e', 'f', 'g', 'h'],
             ['i', 'j', 'k', 'l'],
@@ -133,7 +133,7 @@ CSV;
                   ->with(['m', 'n', 'o', 'p'])
                   ->andReturn('"m","n","o","p"');
 
-        $writer->insertOne(['m', 'n', 'o', 'p']);
+        $writer->insert(['m', 'n', 'o', 'p']);
 
         $expected = <<<CSV
 --init--"a","b","c","d"EOL"e","f","g","h"EOL"i","j","k","l"EOL"m","n","o","p"--end--

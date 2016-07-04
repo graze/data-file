@@ -14,6 +14,7 @@
 namespace Graze\DataFile\Node;
 
 use Graze\DataNode\NodeInterface;
+use League\Flysystem\FilesystemInterface;
 
 interface FileNodeInterface extends NodeInterface
 {
@@ -116,4 +117,9 @@ interface FileNodeInterface extends NodeInterface
      * @return bool
      */
     public function delete();
+
+    /**
+     * @return FilesystemInterface
+     */
+    public function getFilesystem();
 }

@@ -15,11 +15,8 @@ namespace Graze\DataFile\Test\Unit\IO;
 
 use ArrayIterator;
 use Graze\DataFile\Format\CsvFormat;
-use Graze\DataFile\Format\CsvFormatInterface;
 use Graze\DataFile\Format\FormatAwareInterface;
-use Graze\DataFile\Format\FormatInterface;
 use Graze\DataFile\Format\JsonFormat;
-use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Format\Parser\ParserFactoryInterface;
 use Graze\DataFile\Format\Parser\ParserInterface;
 use Graze\DataFile\IO\FileReader;
@@ -29,6 +26,7 @@ use Graze\DataFile\Node\NodeStreamInterface;
 use Graze\DataFile\Test\Helper\CreateStreamTrait;
 use Graze\DataFile\Test\TestCase;
 use InvalidArgumentException;
+use Iterator;
 use Mockery as m;
 use Psr\Http\Message\StreamInterface;
 
@@ -68,7 +66,7 @@ class FileReaderTest extends TestCase
              ->with('r')
              ->andReturn($stream);
 
-        $format = m::mock(CsvFormat::class)->makePartial();
+        $format = new CsvFormat();
         $reader = new FileReader($file, $format);
 
         static::assertInstanceOf(ReaderInterface::class, $reader);
@@ -83,9 +81,7 @@ class FileReaderTest extends TestCase
             $file->shouldReceive('readStream')
                  ->andReturn($stream);
 
-            $format = m::mock(FormatInterface::class, CsvFormatInterface::class);
-            $format->shouldReceive('getType')
-                   ->andReturn('csv');
+            $format = new CsvFormat();
 
             $reader = new FileReader($file, $format);
 
@@ -117,9 +113,7 @@ class FileReaderTest extends TestCase
              ->with('r')
              ->andReturn($stream);
 
-        $format = m::mock(FormatInterface::class, JsonFormatInterface::class);
-        $format->shouldReceive('getType')
-               ->andReturn('json');
+        $format = new JsonFormat(['fileType' => JsonFormat::JSON_FILE_TYPE_EACH_LINE]);
 
         $file->shouldReceive('getFormat')
              ->andReturn($format);
@@ -132,7 +126,10 @@ class FileReaderTest extends TestCase
     public function testProvidingAParserFactoryWillUseTheFactory()
     {
         $stream = m::mock(StreamInterface::class);
+        $iterator = m::mock(Iterator::class);
         $parser = m::mock(ParserInterface::class);
+        $parser->shouldReceive('parse')
+               ->andReturn($iterator);
 
         $reader = $this->buildFactoryReader($stream, $parser);
 
@@ -152,7 +149,8 @@ class FileReaderTest extends TestCase
         $reader = $this->buildFactoryReader($stream, $parser);
 
         $actual = $reader->fetch();
-        static::assertSame($iterator, $actual);
+        static::assertSame($reader, $actual);
+        static::assertEquals(['some', 'text'], iterator_to_array($actual));
     }
 
     public function testFetchAll()

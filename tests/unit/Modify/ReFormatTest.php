@@ -125,11 +125,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($target, $this->reFormatter->reFormat($file, $format));
@@ -171,11 +168,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($target, $this->reFormatter->reFormat($file, $format));
@@ -203,11 +197,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($target, $this->reFormatter->reFormat($file, null, $target));
@@ -237,11 +228,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($output, $this->reFormatter->reFormat($input, $outputFormat, $output, $inputFormat));
@@ -278,11 +266,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($target, $this->reFormatter->modify($file, ['output' => $target]));
@@ -324,11 +309,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         static::assertSame($target, $this->reFormatter->modify($file, ['format' => $format]));
@@ -353,11 +335,8 @@ class ReFormatTest extends TestCase
         $reader->shouldReceive('fetch')
                ->andReturn($iterator);
 
-        $writer->shouldReceive('insertOne')
-               ->with('first')
-               ->once();
-        $writer->shouldReceive('insertOne')
-               ->with('second')
+        $writer->shouldReceive('insertAll')
+               ->with($iterator)
                ->once();
 
         $file->shouldReceive('exists')

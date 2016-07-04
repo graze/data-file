@@ -22,20 +22,9 @@ use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\NodeStreamInterface;
 use GuzzleHttp\Psr7\Stream;
 use InvalidArgumentException;
-use Iterator;
-use Psr\Log\LoggerAwareInterface;
 
-class FileReader implements ReaderInterface, LoggerAwareInterface
+class FileReader extends StreamReader
 {
-    use OptionalLoggerTrait;
-
-    /** @var FileNodeInterface */
-    private $file;
-    /** @var FormatInterface */
-    private $format;
-    /** @var StreamReader */
-    private $reader;
-
     /**
      * FileReader constructor.
      *
@@ -48,54 +37,25 @@ class FileReader implements ReaderInterface, LoggerAwareInterface
         FormatInterface $format = null,
         ParserFactoryInterface $parserFactory = null
     ) {
-        $this->file = $file;
-        $this->format = $format;
-
-        if ($this->file instanceof NodeStreamInterface) {
-            $stream = $this->file->getStream('r');
+        if ($file instanceof NodeStreamInterface) {
+            $stream = $file->getStream('r');
         } else {
-            $stream = new Stream($this->file->readStream());
+            $stream = new Stream($file->readStream());
         }
 
-        if (is_null($this->format)
+        if (is_null($format)
             && $file instanceof FormatAwareInterface
         ) {
-            $this->format = $file->getFormat();
+            $format = $file->getFormat();
         }
 
-        if (is_null($this->format)) {
+        if (is_null($format)) {
             throw new InvalidArgumentException("No format could be determined from \$file or \$format");
         }
 
         $factory = $parserFactory ?: new ParserFactory();
-        $parser = $factory->getParser($this->format);
+        $parser = $factory->getParser($format);
 
-        $this->reader = new StreamReader($stream, $parser);
-    }
-
-    /**
-     * Fetch the next row from a result set
-     *
-     * @param callable|null $callable a callable function to be applied to each Iterator item
-     *
-     * @return Iterator
-     */
-    public function fetch(callable $callable = null)
-    {
-        return $this->reader->fetch($callable);
-    }
-
-    /**
-     * Returns a sequential array of all items
-     *
-     * The callable function will be applied to each Iterator item
-     *
-     * @param callable|null $callable a callable function
-     *
-     * @return array
-     */
-    public function fetchAll(callable $callable = null)
-    {
-        return $this->reader->fetchAll($callable);
+        parent::__construct($stream, $parser);
     }
 }

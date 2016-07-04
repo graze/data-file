@@ -206,8 +206,8 @@ second line
 close
 CSV;
 
-        $writer->insertOne(['a', 'b', 'c', 'd']);
-        $writer->insertOne(['e', 'f', 'g', 'h']);
+        $writer->insert(['a', 'b', 'c', 'd']);
+        $writer->insert(['e', 'f', 'g', 'h']);
 
         $stream->rewind();
         static::assertEquals($expected, $stream->getContents());
