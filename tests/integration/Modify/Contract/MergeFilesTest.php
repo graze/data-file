@@ -15,7 +15,6 @@ namespace Graze\DataFile\Test\Integration\Modify\Contract;
 
 use Graze\DataFile\Helper\Builder\Builder;
 use Graze\DataFile\Helper\Builder\BuilderInterface;
-use Graze\DataFile\Helper\Process\ProcessFactory;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Modify\Contract\FileContractorInterface;
@@ -29,7 +28,6 @@ use Graze\DataFile\Test\AbstractFileTestCase;
 use InvalidArgumentException;
 use Mockery as m;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class MergeFilesTest extends AbstractFileTestCase
 {

@@ -41,7 +41,7 @@ lint: ## Run phpcs against the code.
 	$(DOCKER_RUN) vendor/bin/phpcs -p --warning-severity=0 src/ tests/
 
 lint-fix: ## Run phpcsf and fix possible lint errors.
-	$(DOCKER_RUN) vendor/bin/phpcbf -p --standard=PSR2 src/ tests/
+	$(DOCKER_RUN) vendor/bin/phpcbf -p src/ tests/
 
 test-unit: ## Run the unit testsuite.
 	$(DOCKER_RUN) vendor/bin/phpunit --colors=always --testsuite unit

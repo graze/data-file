@@ -36,5 +36,5 @@ interface WriterInterface
      *
      * @return static
      */
-    public function insertOne($row);
+    public function insert($row);
 }

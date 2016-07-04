@@ -21,19 +21,10 @@ use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\NodeStreamInterface;
 use InvalidArgumentException;
-use Psr\Log\LoggerAwareInterface;
-use Traversable;
 
-class FileWriter implements WriterInterface, LoggerAwareInterface
+class FileWriter extends StreamWriter
 {
     use OptionalLoggerTrait;
-
-    /** @var FileNodeInterface */
-    private $file;
-    /** @var FormatInterface */
-    private $format;
-    /** @var StreamWriter */
-    private $writer;
 
     /**
      * FileReader constructor.
@@ -47,58 +38,27 @@ class FileWriter implements WriterInterface, LoggerAwareInterface
         FormatInterface $format = null,
         FormatterFactoryInterface $formatterFactory = null
     ) {
-        $this->file = $file;
-        $this->format = $format;
-
-        if ($this->file instanceof NodeStreamInterface) {
-            $stream = $this->file->getStream('c+b');
+        if ($file instanceof NodeStreamInterface) {
+            $stream = $file->getStream('c+b');
         } else {
             throw new InvalidArgumentException(
                 "Only files that implement " . NodeStreamInterface::class . "can be written to"
             );
         }
 
-        if (is_null($this->format)
+        if (is_null($format)
             && $file instanceof FormatAwareInterface
         ) {
-            $this->format = $file->getFormat();
+            $format = $file->getFormat();
         }
 
-        if (is_null($this->format)) {
+        if (is_null($format)) {
             throw new InvalidArgumentException("No format could be determined from \$file or \$format");
         }
 
         $factory = $formatterFactory ?: new FormatterFactory();
-        $formatter = $factory->getFormatter($this->format);
+        $formatter = $factory->getFormatter($format);
 
-        $this->writer = new StreamWriter($stream, $formatter);
-    }
-
-    /**
-     * Adds multiple items to the file
-     *
-     * @param Traversable|array $rows a multidimensional array or a Traversable object
-     *
-     * @throws InvalidArgumentException If the given rows format is invalid
-     *
-     * @return static
-     */
-    public function insertAll($rows)
-    {
-        $this->writer->insertAll($rows);
-        return $this;
-    }
-
-    /**
-     * Adds a single item
-     *
-     * @param mixed $row an item to insert
-     *
-     * @return static
-     */
-    public function insertOne($row)
-    {
-        $this->writer->insertOne($row);
-        return $this;
+        parent::__construct($stream, $formatter);
     }
 }

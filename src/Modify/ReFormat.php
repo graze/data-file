@@ -142,9 +142,7 @@ class ReFormat implements FileModifierInterface, LoggerAwareInterface, BuilderAw
         /** @var FileWriter $writer */
         $writer = $this->getBuilder()->build(FileWriter::class, $output, $outputFormat, $this->formatterFactory);
 
-        foreach ($reader->fetch() as $row) {
-            $writer->insertOne($row);
-        }
+        $writer->insertAll($reader->fetch());
 
         if ($file->exists() && !$this->getOption('keepOldFile', true)) {
             $this->log(LogLevel::DEBUG, "Deleting old file: '{file}'", ['file' => $file]);

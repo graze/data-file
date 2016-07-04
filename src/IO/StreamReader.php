@@ -13,21 +13,16 @@
 
 namespace Graze\DataFile\IO;
 
-use CallbackFilterIterator;
 use Graze\DataFile\Format\Parser\ParserInterface;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
-use Iterator;
+use Graze\DataNode\IteratorNode;
+use Graze\DataNode\IteratorNodeInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerAwareInterface;
 
-class StreamReader implements ReaderInterface, LoggerAwareInterface
+class StreamReader extends IteratorNode implements ReaderInterface, LoggerAwareInterface, IteratorNodeInterface
 {
     use OptionalLoggerTrait;
-
-    /** @var StreamInterface */
-    private $stream;
-    /** @var ParserInterface */
-    private $parser;
 
     /**
      * @param StreamInterface $stream
@@ -35,24 +30,7 @@ class StreamReader implements ReaderInterface, LoggerAwareInterface
      */
     public function __construct(StreamInterface $stream, ParserInterface $parser)
     {
-        $this->stream = $stream;
-        $this->parser = $parser;
-    }
-
-    /**
-     * Create an Iterator based on
-     *
-     * @param callable|null $callable
-     *
-     * @return Iterator
-     */
-    public function fetch(callable $callable = null)
-    {
-        $iterator = $this->parser->parse($this->stream);
-        if ($callable) {
-            $iterator = new CallbackFilterIterator($iterator, $callable);
-        }
-        return $iterator;
+        parent::__construct($parser->parse($stream));
     }
 
     /**

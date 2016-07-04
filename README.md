@@ -45,9 +45,10 @@ $ composer require graze/data-file
   - Encoding: `ConvertEncoding`, `FindEncoding` - Change or find the encoding of a file
   - Line manipulation: `Head`,`Tail` - Retrieve a segment of a file
   - Replace Text: `ReplaceText` - Replace all instances of a string with another string
+  - ReFormat: `ReFormat` - Read a file in 1 format and convert to another
 - IO
-  - Read: `StreamReader` - Read a file in a specified format
-  - Write: `StreamWriter` - Write a file in a specified format
+  - Read: `FileReader`,`StreamReader` - Read a file/stream in a specified format
+  - Write: `FileWriter`,`StreamWriter` - Write a file/stream in a specified format
 
 ## Testing
 

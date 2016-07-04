@@ -66,13 +66,13 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
      */
     private function writeBlock($rows)
     {
-        $this->log(LogLevel::INFO, 'Writing {count} rows to file', ['count' => count($rows)]);
+        $this->log(LogLevel::INFO, 'Writing rows to file');
 
         $this->initialiseForWriting();
 
         $first = true;
         foreach ($rows as $row) {
-            if (!$first) {
+            if ($first === false) {
                 $this->stream->write($this->formatter->getRowSeparator());
             }
             $this->stream->write($this->formatter->format($row));
@@ -111,7 +111,7 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
      *
      * @return static
      */
-    public function insertOne($row)
+    public function insert($row)
     {
         $this->writeBlock([$row]);
         return $this;

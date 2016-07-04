@@ -49,7 +49,8 @@ class StreamReaderTest extends TestCase
         $reader = $this->buildReader("some text in a stream", $iterator);
 
         $actual = $reader->fetch();
-        static::assertSame($iterator, $actual);
+        static::assertInstanceOf(Iterator::class, $actual);
+        static::assertEquals(['some', 'text'], iterator_to_array($actual));
     }
 
     public function testFetchAllWithNoCallable()
