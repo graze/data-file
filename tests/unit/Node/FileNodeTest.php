@@ -11,16 +11,31 @@
  * @link    https://github.com/graze/data-file
  */
 
-namespace Graze\DataFile\Test\Integration\Node;
+namespace Graze\DataFile\Test\Unit\Node;
 
+use Graze\DataFile\Format\FormatAwareInterface;
+use Graze\DataFile\Modify\Compress\CompressionAwareInterface;
+use Graze\DataFile\Modify\Encoding\EncodingAwareInterface;
 use Graze\DataFile\Modify\Exception\CopyFailedException;
 use Graze\DataFile\Node\FileNode;
+use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Test\TestCase;
 use League\Flysystem\FilesystemInterface;
 use Mockery as m;
 
 class FileNodeTest extends TestCase
 {
+    public function testInstanceOf()
+    {
+        $fileSystem = m::mock(FilesystemInterface::class);
+        $file = new FileNode($fileSystem, 'not/nop');
+
+        static::assertInstanceOf(FileNodeInterface::class, $file);
+        static::assertInstanceOf(FormatAwareInterface::class, $file);
+        static::assertInstanceOf(CompressionAwareInterface::class, $file);
+        static::assertInstanceOf(EncodingAwareInterface::class, $file);
+    }
+
     public function testEmptyFileWillReturnEmptyArrayForGetContents()
     {
         $fileSystem = m::mock(FilesystemInterface::class);

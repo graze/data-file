@@ -13,29 +13,9 @@
 
 namespace Graze\DataFile\Node;
 
-interface LocalFileNodeInterface extends FileNodeInterface
+use Graze\DataFile\Modify\Compress\CompressionAwareInterface;
+use Graze\DataFile\Modify\Encoding\EncodingAwareInterface;
+
+interface LocalFileNodeInterface extends FileNodeInterface, CompressionAwareInterface, EncodingAwareInterface
 {
-    /**
-     * @return string
-     */
-    public function getCompression();
-
-    /**
-     * @return string|null
-     */
-    public function getEncoding();
-
-    /**
-     * @param string $compression - @see CompressionFactory
-     *
-     * @return static
-     */
-    public function setCompression($compression);
-
-    /**
-     * @param string $encoding
-     *
-     * @return static
-     */
-    public function setEncoding($encoding);
 }
