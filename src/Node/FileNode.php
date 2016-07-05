@@ -15,12 +15,18 @@ namespace Graze\DataFile\Node;
 
 use Graze\DataFile\Format\FormatAwareInterface;
 use Graze\DataFile\Format\FormatAwareTrait;
+use Graze\DataFile\Modify\Compress\CompressionAwareInterface;
+use Graze\DataFile\Modify\Compress\CompressionAwareTrait;
+use Graze\DataFile\Modify\Encoding\EncodingAwareInterface;
+use Graze\DataFile\Modify\Encoding\EncodingAwareTrait;
 use Graze\DataFile\Modify\Exception\CopyFailedException;
 use League\Flysystem\File;
 
-class FileNode extends File implements FileNodeInterface, FormatAwareInterface
+class FileNode extends File implements FileNodeInterface, FormatAwareInterface, CompressionAwareInterface, EncodingAwareInterface
 {
     use FormatAwareTrait;
+    use CompressionAwareTrait;
+    use EncodingAwareTrait;
 
     /**
      * @return string

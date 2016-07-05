@@ -15,7 +15,6 @@ namespace Graze\DataFile\Node;
 
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use GuzzleHttp\Psr7\LazyOpenStream;
-use GuzzleHttp\Psr7\Stream;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Http\Message\StreamInterface;
@@ -44,26 +43,6 @@ class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamIn
     }
 
     /**
-     * @return string|null
-     */
-    public function getEncoding()
-    {
-        return $this->encoding;
-    }
-
-    /**
-     * @param string $encoding
-     *
-     * @return $this
-     */
-    public function setEncoding($encoding)
-    {
-        $this->encoding = $encoding;
-
-        return $this;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getContents()
@@ -80,26 +59,6 @@ class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamIn
         } else {
             return parent::getContents();
         }
-    }
-
-    /**
-     * @return string - see CompressionFactory
-     */
-    public function getCompression()
-    {
-        return $this->compression;
-    }
-
-    /**
-     * @param string $compression - @see CompressionFactory
-     *
-     * @return $this
-     */
-    public function setCompression($compression)
-    {
-        $this->compression = $compression;
-
-        return $this;
     }
 
     /**
