@@ -22,13 +22,12 @@ use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Test\TestCase;
 use League\Flysystem\AdapterInterface;
 use League\Flysystem\Filesystem;
-use League\Flysystem\FilesystemInterface;
 use Mockery as m;
 
 class FileNodeTest extends TestCase
 {
     /**
-     * @return FileSystemInterface|m\MockInterface
+     * @return mixed Really a Filesystem|MockInterface but coding standards get confused
      */
     private function getFilesystem()
     {
