@@ -31,6 +31,9 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
     use CompressionAwareTrait;
     use EncodingAwareTrait;
 
+    /** @var FilesystemWrapper */
+    private $wrapper;
+
     /**
      * FileNode constructor.
      *
@@ -39,8 +42,8 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
      */
     public function __construct(FilesystemInterface $filesystem, $path)
     {
-        $wrapper = new FilesystemWrapper($filesystem);
-        parent::__construct($wrapper, $path);
+        $this->wrapper = new FilesystemWrapper($filesystem);
+        parent::__construct($this->wrapper, $path);
     }
 
     /**
@@ -106,7 +109,18 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
      */
     public function getFilesystem()
     {
-        return parent::getFilesystem();
+        return $this->wrapper;
+    }
+
+    /**
+     * @param FilesystemInterface $filesystem
+     *
+     * @return $this
+     */
+    public function setFilesystem(FilesystemInterface $filesystem)
+    {
+        $this->wrapper = new FilesystemWrapper($filesystem);
+        return parent::setFilesystem($this->wrapper);
     }
 
     /**

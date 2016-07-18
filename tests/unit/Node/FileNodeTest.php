@@ -77,4 +77,28 @@ class FileNodeTest extends TestCase
 
         $localFile->copy($newPath->getPath());
     }
+
+    public function testSetFileSystemUpdatesTheFileSystem()
+    {
+        $first = $this->getFilesystem();
+        $second = $this->getFilesystem();
+
+        $file = new FileNode($first, 'file/check');
+
+        $first->shouldReceive('has')
+              ->with('file/check')
+              ->once()
+              ->andReturn(true);
+
+        static::assertTrue($file->getFilesystem()->has('file/check'));
+
+        $second->shouldReceive('has')
+               ->with('file/check')
+               ->once()
+               ->andReturn(false);
+
+        static::assertSame($file, $file->setFilesystem($second));
+
+        static::assertFalse($file->getFilesystem()->has('file/check'));
+    }
 }
