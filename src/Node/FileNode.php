@@ -21,7 +21,7 @@ use Graze\DataFile\Modify\Encoding\EncodingAwareInterface;
 use Graze\DataFile\Modify\Encoding\EncodingAwareTrait;
 use Graze\DataFile\Modify\Exception\CopyFailedException;
 use Graze\DataFile\Node\FileSystem\FilesystemWrapper;
-use Graze\DataFile\Node\FileSystem\FileSystemWrapperInterface;
+use Graze\DataFile\Node\FileSystem\FilesystemWrapperInterface;
 use League\Flysystem\File;
 use League\Flysystem\FilesystemInterface;
 
