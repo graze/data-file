@@ -13,23 +13,17 @@
 
 namespace Graze\DataFile\Node;
 
+use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
+use Graze\DataFile\Helper\Builder\BuilderTrait;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
 use GuzzleHttp\Psr7\LazyOpenStream;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 use Psr\Http\Message\StreamInterface;
 
-class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamInterface
+class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamInterface, BuilderAwareInterface
 {
-    /**
-     * @var string
-     */
-    protected $compression;
-
-    /**
-     * @var string|null
-     */
-    protected $encoding;
+    use BuilderTrait;
 
     /**
      * @param string $path
@@ -37,9 +31,6 @@ class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamIn
     public function __construct($path)
     {
         parent::__construct(new FileSystem(new Local('/')), $path);
-
-        $this->compression = CompressionFactory::TYPE_NONE;
-        $this->encoding = null;
     }
 
     /**
@@ -48,9 +39,10 @@ class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamIn
     public function getContents()
     {
         if ($this->exists() &&
-            $this->getCompression() != CompressionFactory::TYPE_NONE
+            !in_array($this->getCompression(), [CompressionFactory::TYPE_NONE, CompressionFactory::TYPE_UNKNOWN])
         ) {
-            $factory = new CompressionFactory();
+            /** @var CompressionFactory $factory */
+            $factory = $this->getBuilder()->build(CompressionFactory::class);
             $compressor = $factory->getDeCompressor($this->getCompression());
             $uncompressed = $compressor->decompress($this);
             $content = $uncompressed->getContents();
