@@ -18,7 +18,6 @@ use Graze\DataFile\Format\Processor\BoolProcessor;
 use Graze\DataFile\Format\Processor\DateTimeProcessor;
 use Graze\DataFile\Format\Processor\ObjectToStringProcessor;
 use Graze\DataFile\Format\Processor\RowProcessor;
-use InvalidArgumentException;
 use Traversable;
 
 class CsvFormatter implements FormatterInterface

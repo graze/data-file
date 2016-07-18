@@ -15,8 +15,6 @@ namespace Graze\DataFile\Test\Unit\Format\Parser;
 
 use Graze\DataFile\Format\CsvFormat;
 use Graze\DataFile\Format\FormatInterface;
-use Graze\DataFile\Format\Formatter\CsvFormatter;
-use Graze\DataFile\Format\Formatter\JsonFormatter;
 use Graze\DataFile\Format\JsonFormat;
 use Graze\DataFile\Format\Parser\CsvParser;
 use Graze\DataFile\Format\Parser\JsonParser;

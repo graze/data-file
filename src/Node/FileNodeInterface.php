@@ -13,7 +13,7 @@
 
 namespace Graze\DataFile\Node;
 
-use Graze\DataFile\Node\FileSystem\FileSystemWrapperInterface;
+use Graze\DataFile\Node\FileSystem\FilesystemWrapperInterface;
 use Graze\DataNode\NodeInterface;
 
 interface FileNodeInterface extends NodeInterface

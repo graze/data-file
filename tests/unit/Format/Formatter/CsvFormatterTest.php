@@ -226,7 +226,7 @@ class CsvFormatterTest extends TestCase
 
         static::expectException(InvalidArgumentException::class);
 
-        $stuff = (object)['cake'];
+        $stuff = (object) ['cake'];
 
         $formatter->format($stuff);
     }

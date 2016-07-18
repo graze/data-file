@@ -31,7 +31,7 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
     use CompressionAwareTrait;
     use EncodingAwareTrait;
 
-    /** @var FilesystemWrapper */
+    /** @var FilesystemWrapperInterface */
     private $wrapper;
 
     /**

@@ -17,7 +17,6 @@ use Graze\DataFile\Format\FormatAwareInterface;
 use Graze\DataFile\Format\FormatInterface;
 use Graze\DataFile\Format\Parser\ParserFactory;
 use Graze\DataFile\Format\Parser\ParserFactoryInterface;
-use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\NodeStreamInterface;
 use GuzzleHttp\Psr7\Stream;
