@@ -17,7 +17,6 @@ use Graze\DataFile\Format\FormatAwareInterface;
 use Graze\DataFile\Format\FormatInterface;
 use Graze\DataFile\Format\Formatter\FormatterFactory;
 use Graze\DataFile\Format\Formatter\FormatterFactoryInterface;
-use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\NodeStreamInterface;
 use InvalidArgumentException;

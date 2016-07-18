@@ -11,19 +11,15 @@
  * @link    https://github.com/graze/data-file
  */
 
-namespace Graze\DataFile\Modify\Encoding;
+namespace Graze\DataFile\Node\FileSystem;
 
-interface EncodingAwareInterface
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemInterface;
+
+interface FilesystemWrapperInterface extends FilesystemInterface
 {
     /**
-     * @return string
+     * @return AdapterInterface
      */
-    public function getEncoding();
-
-    /**
-     * @param string $encoding
-     *
-     * @return static
-     */
-    public function setEncoding($encoding);
+    public function getAdapter();
 }

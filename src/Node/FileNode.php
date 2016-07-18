@@ -20,13 +20,31 @@ use Graze\DataFile\Modify\Compress\CompressionAwareTrait;
 use Graze\DataFile\Modify\Encoding\EncodingAwareInterface;
 use Graze\DataFile\Modify\Encoding\EncodingAwareTrait;
 use Graze\DataFile\Modify\Exception\CopyFailedException;
+use Graze\DataFile\Node\FileSystem\FilesystemWrapper;
+use Graze\DataFile\Node\FileSystem\FilesystemWrapperInterface;
 use League\Flysystem\File;
+use League\Flysystem\FilesystemInterface;
 
 class FileNode extends File implements FileNodeInterface, FormatAwareInterface, CompressionAwareInterface, EncodingAwareInterface
 {
     use FormatAwareTrait;
     use CompressionAwareTrait;
     use EncodingAwareTrait;
+
+    /** @var FilesystemWrapperInterface */
+    private $wrapper;
+
+    /**
+     * FileNode constructor.
+     *
+     * @param FilesystemInterface $filesystem
+     * @param null|string         $path
+     */
+    public function __construct(FilesystemInterface $filesystem, $path)
+    {
+        $this->wrapper = new FilesystemWrapper($filesystem);
+        parent::__construct($this->wrapper, $path);
+    }
 
     /**
      * @return string
@@ -84,6 +102,25 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
             $lastError = error_get_last();
             throw new CopyFailedException($this, $newPath, $lastError['message']);
         }
+    }
+
+    /**
+     * @return FilesystemWrapperInterface
+     */
+    public function getFilesystem()
+    {
+        return $this->wrapper;
+    }
+
+    /**
+     * @param FilesystemInterface $filesystem
+     *
+     * @return $this
+     */
+    public function setFilesystem(FilesystemInterface $filesystem)
+    {
+        $this->wrapper = new FilesystemWrapper($filesystem);
+        return parent::setFilesystem($this->wrapper);
     }
 
     /**

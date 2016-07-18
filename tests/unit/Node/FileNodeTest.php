@@ -20,14 +20,28 @@ use Graze\DataFile\Modify\Exception\CopyFailedException;
 use Graze\DataFile\Node\FileNode;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Test\TestCase;
-use League\Flysystem\FilesystemInterface;
+use League\Flysystem\AdapterInterface;
+use League\Flysystem\Filesystem;
 use Mockery as m;
 
 class FileNodeTest extends TestCase
 {
+    /**
+     * @return mixed Really a Filesystem|MockInterface but coding standards get confused
+     */
+    private function getFilesystem()
+    {
+        $fileSystem = m::mock(Filesystem::class);
+        $fileSystem->shouldReceive('getAdapter')
+                   ->andReturn(m::mock(AdapterInterface::class));
+        $fileSystem->shouldReceive('getConfig')
+                   ->andReturn(null);
+        return $fileSystem;
+    }
+
     public function testInstanceOf()
     {
-        $fileSystem = m::mock(FilesystemInterface::class);
+        $fileSystem = $this->getFilesystem();
         $file = new FileNode($fileSystem, 'not/nop');
 
         static::assertInstanceOf(FileNodeInterface::class, $file);
@@ -38,7 +52,7 @@ class FileNodeTest extends TestCase
 
     public function testEmptyFileWillReturnEmptyArrayForGetContents()
     {
-        $fileSystem = m::mock(FilesystemInterface::class);
+        $fileSystem = $this->getFilesystem();
         $file = new FileNode($fileSystem, 'not/exists');
 
         $fileSystem->shouldReceive('has')
@@ -50,7 +64,7 @@ class FileNodeTest extends TestCase
 
     public function testWhenCopyFailsItRaisesAnException()
     {
-        $fileSystem = m::mock(FilesystemInterface::class);
+        $fileSystem = $this->getFilesystem();
         $localFile = new FileNode($fileSystem, 'some/random');
 
         $newPath = new FileNode($fileSystem, 'some/target');
@@ -62,5 +76,29 @@ class FileNodeTest extends TestCase
         $this->expectException(CopyFailedException::class);
 
         $localFile->copy($newPath->getPath());
+    }
+
+    public function testSetFileSystemUpdatesTheFileSystem()
+    {
+        $first = $this->getFilesystem();
+        $second = $this->getFilesystem();
+
+        $file = new FileNode($first, 'file/check');
+
+        $first->shouldReceive('has')
+              ->with('file/check')
+              ->once()
+              ->andReturn(true);
+
+        static::assertTrue($file->getFilesystem()->has('file/check'));
+
+        $second->shouldReceive('has')
+               ->with('file/check')
+               ->once()
+               ->andReturn(false);
+
+        static::assertSame($file, $file->setFilesystem($second));
+
+        static::assertFalse($file->getFilesystem()->has('file/check'));
     }
 }

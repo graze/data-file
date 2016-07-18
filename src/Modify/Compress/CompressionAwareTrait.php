@@ -18,7 +18,7 @@ trait CompressionAwareTrait
     /**
      * @var string
      */
-    protected $compression = CompressionFactory::TYPE_UNKNOWN;
+    protected $compression = CompressionFactory::TYPE_NONE;
 
     /**
      * @return string

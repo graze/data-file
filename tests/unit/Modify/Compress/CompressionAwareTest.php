@@ -1,4 +1,15 @@
 <?php
+/**
+ * This file is part of graze/data-file
+ *
+ * Copyright (c) 2016 Nature Delivered Ltd. <https://www.graze.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license https://github.com/graze/data-file/blob/master/LICENSE.md
+ * @link    https://github.com/graze/data-file
+ */
 
 namespace Graze\DataFile\Test\Unit\Modify\Compress;
 
@@ -12,7 +23,7 @@ class CompressionAwareTest extends TestCase
     public function testDefaultCompressionIs()
     {
         $trait = new FakeCompressionAware();
-        static::assertEquals(CompressionFactory::TYPE_UNKNOWN, $trait->getCompression());
+        static::assertEquals(CompressionFactory::TYPE_NONE, $trait->getCompression());
     }
 
     public function testSetCompression()
