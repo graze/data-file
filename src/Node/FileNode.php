@@ -23,7 +23,6 @@ use Graze\DataFile\Modify\Exception\CopyFailedException;
 use Graze\DataFile\Node\FileSystem\FilesystemWrapper;
 use Graze\DataFile\Node\FileSystem\FileSystemWrapperInterface;
 use League\Flysystem\File;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 
 class FileNode extends File implements FileNodeInterface, FormatAwareInterface, CompressionAwareInterface, EncodingAwareInterface
@@ -35,10 +34,10 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
     /**
      * FileNode constructor.
      *
-     * @param Filesystem  $filesystem
-     * @param null|string $path
+     * @param FilesystemInterface $filesystem
+     * @param null|string         $path
      */
-    public function __construct(Filesystem $filesystem, $path)
+    public function __construct(FilesystemInterface $filesystem, $path)
     {
         $wrapper = new FilesystemWrapper($filesystem);
         parent::__construct($wrapper, $path);

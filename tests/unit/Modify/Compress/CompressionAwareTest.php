@@ -12,7 +12,7 @@ class CompressionAwareTest extends TestCase
     public function testDefaultCompressionIs()
     {
         $trait = new FakeCompressionAware();
-        static::assertEquals(CompressionFactory::TYPE_UNKNOWN, $trait->getCompression());
+        static::assertEquals(CompressionFactory::TYPE_NONE, $trait->getCompression());
     }
 
     public function testSetCompression()
