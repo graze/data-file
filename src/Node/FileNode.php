@@ -105,7 +105,7 @@ class FileNode extends File implements FileNodeInterface, FormatAwareInterface, 
     }
 
     /**
-     * @return FileSystemWrapperInterface
+     * @return FilesystemWrapperInterface
      */
     public function getFilesystem()
     {
