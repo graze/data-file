@@ -16,7 +16,6 @@ namespace Graze\DataFile\IO;
 use Graze\DataFile\Format\Formatter\FormatterInterface;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use InvalidArgumentException;
-use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LogLevel;
 use Traversable;
@@ -27,15 +26,15 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
 
     /** @var FormatterInterface */
     private $formatter;
-    /** @var StreamInterface */
+    /** @var resource */
     private $stream;
 
     /**
-     * @param StreamInterface    $stream
+     * @param resource           $stream
      * @param FormatterInterface $formatter  Optional formatter, if not specified shall be determined based on the
      *                                       format of the file
      */
-    public function __construct(StreamInterface $stream, FormatterInterface $formatter)
+    public function __construct($stream, FormatterInterface $formatter)
     {
         $this->stream = $stream;
         $this->formatter = $formatter;
@@ -56,8 +55,6 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
     {
         $this->writeBlock($rows);
 
-        $this->stream->close();
-
         return $this;
     }
 
@@ -73,12 +70,12 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
         $first = true;
         foreach ($rows as $row) {
             if ($first === false) {
-                $this->stream->write($this->formatter->getRowSeparator());
+                fwrite($this->stream, $this->formatter->getRowSeparator());
             }
-            $this->stream->write($this->formatter->format($row));
+            fwrite($this->stream, $this->formatter->format($row));
             $first = false;
         }
-        $this->stream->write($this->formatter->getClosingBlock());
+        fwrite($this->stream, $this->formatter->getClosingBlock());
     }
 
     /**
@@ -91,16 +88,16 @@ class StreamWriter implements WriterInterface, LoggerAwareInterface
     private function initialiseForWriting()
     {
         // move to the end of the file to always append
-        $this->stream->seek(0, SEEK_END);
+        fseek($this->stream, 0, SEEK_END);
 
-        if ($this->stream->tell() === 0) {
-            $this->stream->write($this->formatter->getInitialBlock());
+        if (ftell($this->stream) === 0) {
+            fwrite($this->stream, $this->formatter->getInitialBlock());
         } elseif (strlen($this->formatter->getClosingBlock()) > 0) {
             $endBlock = $this->formatter->getClosingBlock();
-            $this->stream->seek(strlen($endBlock) * -1, SEEK_CUR);
-            $this->stream->write($this->formatter->getRowSeparator());
+            fseek($this->stream, strlen($endBlock) * -1, SEEK_CUR);
+            fwrite($this->stream, $this->formatter->getRowSeparator());
         } elseif (strlen($this->formatter->getRowSeparator()) > 0) {
-            $this->stream->write($this->formatter->getRowSeparator());
+            fwrite($this->stream, $this->formatter->getRowSeparator());
         }
     }
 

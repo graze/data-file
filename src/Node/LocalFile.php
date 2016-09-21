@@ -16,10 +16,8 @@ namespace Graze\DataFile\Node;
 use Graze\DataFile\Helper\Builder\BuilderAwareInterface;
 use Graze\DataFile\Helper\Builder\BuilderTrait;
 use Graze\DataFile\Modify\Compress\CompressionFactory;
-use GuzzleHttp\Psr7\LazyOpenStream;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
-use Psr\Http\Message\StreamInterface;
 
 class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamInterface, BuilderAwareInterface
 {
@@ -58,10 +56,10 @@ class LocalFile extends FileNode implements LocalFileNodeInterface, NodeStreamIn
      *
      * @param string $mode
      *
-     * @return StreamInterface
+     * @return resource
      */
     public function getStream($mode = 'c+')
     {
-        return new LazyOpenStream($this->getPath(), $mode);
+        return fopen($this->getPath(), $mode);
     }
 }

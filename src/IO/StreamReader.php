@@ -17,7 +17,6 @@ use Graze\DataFile\Format\Parser\ParserInterface;
 use Graze\DataFile\Helper\OptionalLoggerTrait;
 use Graze\DataNode\IteratorNode;
 use Graze\DataNode\IteratorNodeInterface;
-use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerAwareInterface;
 
 class StreamReader extends IteratorNode implements ReaderInterface, LoggerAwareInterface, IteratorNodeInterface
@@ -25,10 +24,10 @@ class StreamReader extends IteratorNode implements ReaderInterface, LoggerAwareI
     use OptionalLoggerTrait;
 
     /**
-     * @param StreamInterface $stream
+     * @param resource        $stream
      * @param ParserInterface $parser
      */
-    public function __construct(StreamInterface $stream, ParserInterface $parser)
+    public function __construct($stream, ParserInterface $parser)
     {
         parent::__construct($parser->parse($stream));
     }

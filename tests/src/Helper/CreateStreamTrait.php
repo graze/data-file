@@ -13,21 +13,18 @@
 
 namespace Graze\DataFile\Test\Helper;
 
-use GuzzleHttp\Psr7\Stream;
-use Psr\Http\Message\StreamInterface;
-
 trait CreateStreamTrait
 {
     /**
      * @param string $string
      *
-     * @return StreamInterface
+     * @return resource
      */
     protected function createStream($string)
     {
         $stream = fopen('php://memory', 'r+');
         fwrite($stream, $string);
         rewind($stream);
-        return new Stream($stream);
+        return $stream;
     }
 }

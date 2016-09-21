@@ -19,23 +19,26 @@ use Graze\DataFile\Format\Formatter\CsvFormatter;
 use Graze\DataFile\Format\Formatter\FormatterInterface;
 use Graze\DataFile\IO\StreamWriter;
 use Graze\DataFile\Test\TestCase;
-use GuzzleHttp\Psr7\Stream;
 use Mockery as m;
-use Mockery\MockInterface;
-use Psr\Http\Message\StreamInterface;
 
 class StreamWriterTest extends TestCase
 {
     /**
-     * @var StreamInterface|MockInterface
+     * @var resource
      */
     private $stream;
 
     public function setUp()
     {
-        $this->stream = m::mock(new Stream(fopen('php://temp', 'r+')))->makePartial();
-        $this->stream->shouldReceive('close')
-                     ->andReturnNull();
+        $this->stream = fopen('php://temp', 'r+');
+    }
+
+    /**
+     * @return string
+     */
+    private function getContents()
+    {
+        return stream_get_contents($this->stream);
     }
 
     public function testInsertArray()
@@ -54,8 +57,8 @@ class StreamWriterTest extends TestCase
 "e","f","g","h"
 CSV;
 
-        $this->stream->rewind();
-        static::assertEquals($expected, $this->stream->getContents());
+        fseek($this->stream, 0, SEEK_SET);
+        static::assertEquals($expected, $this->getContents());
     }
 
     public function testInsertIterator()
@@ -74,8 +77,8 @@ CSV;
 "e","f","g","h"
 CSV;
 
-        $this->stream->rewind();
-        static::assertEquals($expected, $this->stream->getContents());
+        fseek($this->stream, 0, SEEK_SET);
+        static::assertEquals($expected, $this->getContents());
     }
 
     public function testInsertRow()
@@ -90,8 +93,8 @@ CSV;
 "e","f","g","h"
 CSV;
 
-        $this->stream->rewind();
-        static::assertEquals($expected, $this->stream->getContents());
+        fseek($this->stream, 0, SEEK_SET);
+        static::assertEquals($expected, $this->getContents());
     }
 
     public function testFormatterBlocks()
@@ -126,8 +129,8 @@ CSV;
 --init--"a","b","c","d"EOL"e","f","g","h"EOL"i","j","k","l"--end--
 CSV;
 
-        $this->stream->rewind();
-        static::assertEquals($expected, $this->stream->getContents());
+        fseek($this->stream, 0, SEEK_SET);
+        static::assertEquals($expected, $this->getContents());
 
         $formatter->shouldReceive('format')
                   ->with(['m', 'n', 'o', 'p'])
@@ -139,7 +142,7 @@ CSV;
 --init--"a","b","c","d"EOL"e","f","g","h"EOL"i","j","k","l"EOL"m","n","o","p"--end--
 CSV;
 
-        $this->stream->rewind();
-        static::assertEquals($expected, $this->stream->getContents());
+        fseek($this->stream, 0, SEEK_SET);
+        static::assertEquals($expected, $this->getContents());
     }
 }

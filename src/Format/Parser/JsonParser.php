@@ -18,7 +18,6 @@ use Graze\DataFile\Format\JsonFormatInterface;
 use Graze\DataFile\Helper\LineStreamIterator;
 use Graze\DataFile\Helper\MapIterator;
 use Iterator;
-use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 class JsonParser implements ParserInterface
@@ -39,11 +38,11 @@ class JsonParser implements ParserInterface
     }
 
     /**
-     * @param StreamInterface $stream
+     * @param resource $stream
      *
      * @return Iterator
      */
-    public function parse(StreamInterface $stream)
+    public function parse($stream)
     {
         if ($this->format->isEachLine()) {
             $iterator = new LineStreamIterator(
@@ -57,7 +56,7 @@ class JsonParser implements ParserInterface
             $iterator->setIgnoreBlank($this->format->isIgnoreBlankLines());
             return new MapIterator($iterator, [$this, 'decodeJson']);
         } else {
-            $json = $this->decodeJson($stream->getContents());
+            $json = $this->decodeJson(stream_get_contents($stream));
             if (is_array($json)) {
                 return new ArrayIterator($json);
             } else {
