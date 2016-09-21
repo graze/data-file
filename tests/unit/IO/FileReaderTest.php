@@ -35,12 +35,12 @@ class FileReaderTest extends TestCase
     use CreateStreamTrait;
 
     /**
-     * @param StreamInterface $stream
+     * @param resource        $stream
      * @param ParserInterface $parser
      *
      * @return FileReader
      */
-    private function buildFactoryReader(StreamInterface $stream, ParserInterface $parser)
+    private function buildFactoryReader($stream, ParserInterface $parser)
     {
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
@@ -93,7 +93,7 @@ class FileReaderTest extends TestCase
 
     public function testNodeWithNoFormatAndNoFormatSpecifiedWillThrowAnException()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = fopen('php://memory', 'r');
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
@@ -106,7 +106,7 @@ class FileReaderTest extends TestCase
 
     public function testNodeWithFormatWillUseThatFormat()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = fopen('php://memory', 'r');
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class, FormatAwareInterface::class);
         $file->shouldReceive('getStream')
@@ -125,7 +125,7 @@ class FileReaderTest extends TestCase
 
     public function testProvidingAParserFactoryWillUseTheFactory()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = fopen('php://memory', 'r');
         $iterator = m::mock(Iterator::class);
         $parser = m::mock(ParserInterface::class);
         $parser->shouldReceive('parse')

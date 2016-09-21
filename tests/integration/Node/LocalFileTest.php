@@ -17,7 +17,6 @@ use Graze\DataFile\Modify\Compress\Gzip;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\LocalFile;
 use Graze\DataFile\Test\AbstractFileTestCase;
-use Psr\Http\Message\StreamInterface;
 
 class LocalFileTest extends AbstractFileTestCase
 {
@@ -172,10 +171,10 @@ class LocalFileTest extends AbstractFileTestCase
 
         $stream = $file->getStream();
 
-        static::assertInstanceOf(StreamInterface::class, $stream);
+        static::assertInternalType('resource', $stream);
 
-        $stream->write('some text');
-        $stream->close();
+        fwrite($stream, 'some text');
+        fclose($stream);
 
         static::assertEquals('some text', $file->read());
     }

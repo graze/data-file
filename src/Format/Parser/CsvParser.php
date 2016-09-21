@@ -13,7 +13,6 @@
 
 namespace Graze\DataFile\Format\Parser;
 
-use ArrayIterator;
 use CallbackFilterIterator;
 use Graze\CsvToken\Parser;
 use Graze\CsvToken\Tokeniser\StreamTokeniser;
@@ -21,7 +20,6 @@ use Graze\DataFile\Format\CsvFormatInterface;
 use Graze\DataFile\Helper\MapIterator;
 use Iterator;
 use LimitIterator;
-use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 class CsvParser implements ParserInterface
@@ -40,11 +38,11 @@ class CsvParser implements ParserInterface
     }
 
     /**
-     * @param StreamInterface $stream
+     * @param resource $stream
      *
      * @return Iterator
      */
-    public function parse(StreamInterface $stream)
+    public function parse($stream)
     {
         $tokeniser = new StreamTokeniser($this->csvFormat, $stream);
         $parser = new Parser();
@@ -90,17 +88,16 @@ class CsvParser implements ParserInterface
     /**
      * Parse the rows looking for the header row and storing it locally
      *
-     * @param ArrayIterator $current
-     * @param int           $key
+     * @param array $current
+     * @param int   $key
      *
      * @return bool
      */
-    public function handleHeaderRow(ArrayIterator $current, $key)
+    public function handleHeaderRow(array $current, $key)
     {
         if ($key == $this->csvFormat->getHeaderRow() - 1) {
-            $arr = iterator_to_array($current);
-            if (count($arr) > 1 || strlen($arr[0]) > 0) {
-                $this->headerRow = $arr;
+            if (count($current) > 1 || strlen($current[0]) > 0) {
+                $this->headerRow = $current;
             }
         }
         return true;
@@ -109,23 +106,23 @@ class CsvParser implements ParserInterface
     /**
      * Map any headers found onto each element in the data
      *
-     * @param ArrayIterator $current
+     * @param array $current
      *
-     * @return ArrayIterator
+     * @return array
      */
-    public function mapHeaders(ArrayIterator $current)
+    public function mapHeaders(array $current)
     {
         if (count($this->headerRow) > 0) {
-            if (count($this->headerRow) !== $current->count()) {
+            if (count($this->headerRow) !== count($current)) {
                 throw new RuntimeException(
-                    "The number of entries in: " . implode(',', iterator_to_array($current)) .
+                    "The number of entries in: " . implode(',', $current) .
                     " does not match the header: " . implode(',', $this->headerRow)
                 );
             }
-            return new ArrayIterator(array_combine(
+            return array_combine(
                 $this->headerRow,
-                iterator_to_array($current)
-            ));
+                $current
+            );
         }
         return $current;
     }

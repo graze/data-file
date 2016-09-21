@@ -13,7 +13,7 @@
 
 namespace Graze\DataFile\Format;
 
-interface JsonFormatInterface
+interface JsonFormatInterface extends FormatInterface
 {
     const JSON_FILE_TYPE_EACH_LINE    = 1;
     const JSON_FILE_TYPE_SINGLE_BLOCK = 2;

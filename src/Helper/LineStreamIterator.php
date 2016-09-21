@@ -14,7 +14,6 @@
 namespace Graze\DataFile\Helper;
 
 use Iterator;
-use Psr\Http\Message\StreamInterface;
 
 class LineStreamIterator implements Iterator
 {
@@ -36,7 +35,7 @@ class LineStreamIterator implements Iterator
     private $current;
     /** @var bool */
     private $ignoreBlank = true;
-    /** @var StreamInterface */
+    /** @var resource */
     private $stream;
     /** @var bool */
     private $includeEnding;
@@ -44,10 +43,10 @@ class LineStreamIterator implements Iterator
     /**
      * LineStreamIterator constructor.
      *
-     * @param StreamInterface $stream
-     * @param array           $options
+     * @param resource $stream
+     * @param array    $options
      */
-    public function __construct(StreamInterface $stream, array $options = [])
+    public function __construct($stream, array $options = [])
     {
         $this->stream = $stream;
         $this->options = $options;
@@ -102,9 +101,9 @@ class LineStreamIterator implements Iterator
         $buffer = '';
         $len = strlen($ending);
         do {
-            $char = $this->stream->read(1);
+            $char = fread($this->stream, 1);
             $buffer .= $char;
-        } while ($char && substr($buffer, $len * -1) != $ending && !$this->stream->eof());
+        } while ($char && substr($buffer, $len * -1) != $ending && !feof($this->stream));
         return $buffer;
     }
 
@@ -113,7 +112,7 @@ class LineStreamIterator implements Iterator
      */
     private function readStream()
     {
-        if ($this->stream->eof()) {
+        if (feof($this->stream)) {
             $this->current = false;
             return false;
         } else {
@@ -181,7 +180,7 @@ class LineStreamIterator implements Iterator
     public function rewind()
     {
         $this->position = 0;
-        $this->stream->seek(0);
+        fseek($this->stream, 0, SEEK_SET);
         $this->readStream();
     }
 

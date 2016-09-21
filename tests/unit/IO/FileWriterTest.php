@@ -23,16 +23,14 @@ use Graze\DataFile\IO\WriterInterface;
 use Graze\DataFile\Node\FileNodeInterface;
 use Graze\DataFile\Node\NodeStreamInterface;
 use Graze\DataFile\Test\TestCase;
-use GuzzleHttp\Psr7\Stream;
 use InvalidArgumentException;
 use Mockery as m;
-use Psr\Http\Message\StreamInterface;
 
 class FileWriterTest extends TestCase
 {
     public function testNodeStreamFileWillGetAStream()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = $this->getStream();
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
@@ -57,7 +55,7 @@ class FileWriterTest extends TestCase
 
     public function testNodeWithNoFormatAndNoFormatSpecifiedWillThrowAnException()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = $this->getStream();
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
@@ -70,7 +68,7 @@ class FileWriterTest extends TestCase
 
     public function testNodeWithFormatWillUseThatFormat()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = $this->getStream();
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class, FormatAwareInterface::class);
         $file->shouldReceive('getStream')
@@ -90,7 +88,7 @@ class FileWriterTest extends TestCase
 
     public function testProvidingAParserFactoryWillUseTheFactory()
     {
-        $stream = m::mock(StreamInterface::class);
+        $stream = $this->getStream();
 
         $file = m::mock(FileNodeInterface::class, NodeStreamInterface::class);
         $file->shouldReceive('getStream')
@@ -111,14 +109,11 @@ class FileWriterTest extends TestCase
     }
 
     /**
-     * @return Stream
+     * @return resource
      */
     private function getStream()
     {
-        $stream = m::mock(new Stream(fopen('php://temp', 'r+')))->makePartial();
-        $stream->shouldReceive('close')
-               ->andReturnNull();
-        return $stream;
+        return fopen('php://temp', 'c+b');
     }
 
     public function testInsertAll()
@@ -165,8 +160,8 @@ CSV;
 
         $writer->insertAll($data);
 
-        $stream->rewind();
-        static::assertEquals($expected, $stream->getContents());
+        fseek($stream, 0, SEEK_SET);
+        static::assertEquals($expected, stream_get_contents($stream));
     }
 
     public function testInsertOne()
@@ -209,7 +204,7 @@ CSV;
         $writer->insert(['a', 'b', 'c', 'd']);
         $writer->insert(['e', 'f', 'g', 'h']);
 
-        $stream->rewind();
-        static::assertEquals($expected, $stream->getContents());
+        fseek($stream, 0, SEEK_SET);
+        static::assertEquals($expected, stream_get_contents($stream));
     }
 }

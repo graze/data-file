@@ -39,7 +39,7 @@ class CsvParserTest extends TestCase
 
         $iterator = $parser->parse($this->createStream($line));
         $actual = iterator_to_array($iterator);
-        $actual = array_values(array_map('iterator_to_array', $actual));
+        $actual = array_values($actual);
 
         static::assertEquals($expected, $actual);
     }

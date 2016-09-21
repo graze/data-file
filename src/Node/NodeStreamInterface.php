@@ -13,8 +13,6 @@
 
 namespace Graze\DataFile\Node;
 
-use Psr\Http\Message\StreamInterface;
-
 interface NodeStreamInterface
 {
     /**
@@ -22,7 +20,7 @@ interface NodeStreamInterface
      *
      * @param string $mode
      *
-     * @return StreamInterface
+     * @return resource
      */
     public function getStream($mode = 'r+');
 }

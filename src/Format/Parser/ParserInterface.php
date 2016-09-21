@@ -21,9 +21,9 @@ interface ParserInterface
     /**
      * Parser a stream of data
      *
-     * @param StreamInterface $stream
+     * @param resource $stream
      *
      * @return Iterator
      */
-    public function parse(StreamInterface $stream);
+    public function parse($stream);
 }
