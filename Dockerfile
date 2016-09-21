@@ -1,4 +1,4 @@
-FROM graze/stats:7.0
+FROM graze/php-alpine
 
 RUN apk add --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/testing" \
     php7-mbstring \
@@ -7,10 +7,11 @@ RUN apk add --no-cache --repository "http://dl-cdn.alpinelinux.org/alpine/edge/t
     file \
     musl-utils \
     zip \
-    gzip
+    gzip \
+    bash
 
-ADD . /opt/graze/data-file
+ADD . /srv
 
-WORKDIR /opt/graze/data-file
+WORKDIR /srv
 
 CMD /bin/bash
